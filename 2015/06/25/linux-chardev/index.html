@@ -4,26 +4,26 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Hello Hexo | Embedded Linux Jam</title>
+    <title>Linux字符设备驱动笔记 | Embedded Linux Jam</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Jim Cao">
     
 
     
-    <meta name="description" content="hello world!
-1#include&amp;lt;stdio.h&amp;gt;">
+    <meta name="description" content="最近在给Soc的字符设备添加一些功能，记录下遇到的问题：
+ioctl方法很多资料都不推荐通过ioctl来控制设备，虽然至今我还没有明白这是为什么，不过好歹我知道可以用sysfs做一些简单的控制。这里引用内核文档的内容/linux/Documentation/ioctl/ioctl-number.txt，If you are adding new ioctl’s to the kernel, you">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello Hexo">
-<meta property="og:url" content="http://yoursite.com/2015/06/10/Hello-Hexo/index.html">
+<meta property="og:title" content="Linux字符设备驱动笔记">
+<meta property="og:url" content="http://yoursite.com/2015/06/25/linux-chardev/index.html">
 <meta property="og:site_name" content="Embedded Linux Jam">
-<meta property="og:description" content="hello world!
-1#include&amp;lt;stdio.h&amp;gt;">
-<meta property="og:updated_time" content="2015-06-10T01:53:34.431Z">
+<meta property="og:description" content="最近在给Soc的字符设备添加一些功能，记录下遇到的问题：
+ioctl方法很多资料都不推荐通过ioctl来控制设备，虽然至今我还没有明白这是为什么，不过好歹我知道可以用sysfs做一些简单的控制。这里引用内核文档的内容/linux/Documentation/ioctl/ioctl-number.txt，If you are adding new ioctl’s to the kernel, you">
+<meta property="og:updated_time" content="2015-06-25T08:33:37.730Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello Hexo">
-<meta name="twitter:description" content="hello world!
-1#include&amp;lt;stdio.h&amp;gt;">
+<meta name="twitter:title" content="Linux字符设备驱动笔记">
+<meta name="twitter:description" content="最近在给Soc的字符设备添加一些功能，记录下遇到的问题：
+ioctl方法很多资料都不推荐通过ioctl来控制设备，虽然至今我还没有明白这是为什么，不过好歹我知道可以用sysfs做一些简单的控制。这里引用内核文档的内容/linux/Documentation/ioctl/ioctl-number.txt，If you are adding new ioctl’s to the kernel, you">
 
     
     <link rel="alternative" href="/atom.xml" title="Embedded Linux Jam" type="application/atom+xml">
@@ -83,14 +83,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/06/10/Hello-Hexo/" title="Hello Hexo" itemprop="url">Hello Hexo</a>
+      <a href="/2015/06/25/linux-chardev/" title="Linux字符设备驱动笔记" itemprop="url">Linux字符设备驱动笔记</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Jim Cao" target="_blank" itemprop="author">Jim Cao</a>
 		
   <p class="article-time">
-    <time datetime="2015-06-10T01:51:07.000Z" itemprop="datePublished"> 發表於 2015-06-10</time>
+    <time datetime="2015-06-25T07:28:47.000Z" itemprop="datePublished"> 發表於 2015-06-25</time>
     
   </p>
 </header>
@@ -99,17 +99,36 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目錄</strong>
 		
-			
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ioctl方法"><span class="toc-number">1.</span> <span class="toc-text">ioctl方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内核与用户空间传递参数"><span class="toc-number">2.</span> <span class="toc-text">内核与用户空间传递参数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#大小端"><span class="toc-number">2.1.</span> <span class="toc-text">大小端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ioctl_args"><span class="toc-number">2.2.</span> <span class="toc-text">ioctl args</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#读写延时"><span class="toc-number">3.</span> <span class="toc-text">读写延时</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kconfig中depends_on和select的区别"><span class="toc-number">4.</span> <span class="toc-text">Kconfig中depends on和select的区别</span></a></li></ol>
 		
 		</div>
 		
-		<p>hello world!</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span>&lt;stdio.h&gt;</span></span><br></pre></td></tr></table></figure>
+		<p>最近在给Soc的字符设备添加一些功能，记录下遇到的问题：</p>
+<h2 id="ioctl方法">ioctl方法</h2><p>很多资料都不推荐通过ioctl来控制设备，虽然至今我还没有明白这是为什么，不过好歹我知道可以用sysfs做一些简单的控制。<br>这里引用内核文档的内容/linux/Documentation/ioctl/ioctl-number.txt，If you are adding new ioctl’s to the kernel, you should use the _IO macros defined in <linux ioctl.h="">，其他的注意事项也很详细的写在里面，虽然上面的很多ioctl号有很久没有更新了。</linux></p>
+<h2 id="内核与用户空间传递参数">内核与用户空间传递参数</h2><h3 id="大小端">大小端</h3><p>考虑到不同平台的可移植性，可以预先定义好传递的规则，比如用户空间强制把数据转换成大端，然后内核再强制把大端转换成自己体系结构的大小端：</p>
+<p>用户空间<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">uint8_t</span> buf[<span class="number">4</span>];	</span><br><span class="line">*(<span class="keyword">uint32_t</span> *)buf = htobe32(addr);</span><br><span class="line"></span><br><span class="line">ioctl(fd, IOC_IOREAD, buf);</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> be32toh(*(<span class="keyword">uint32_t</span> *)buf);</span><br></pre></td></tr></table></figure></p>
+<p>内核空间<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">u32 reg_val, reg_addr;</span><br><span class="line">u8 buf[<span class="number">4</span>];</span><br><span class="line"></span><br><span class="line">copy_from_user(buf, (<span class="keyword">char</span> *)arg, <span class="number">4</span>);</span><br><span class="line"></span><br><span class="line">reg_addr = <span class="keyword">be32_t</span>o_cpu(*(u32 *)buf);</span><br><span class="line">....</span><br><span class="line"><span class="comment">/* process data */</span></span><br><span class="line">....</span><br><span class="line"></span><br><span class="line">*(u32 *)buf = <span class="keyword">cpu_t</span>o_be32(reg_val);</span><br><span class="line"><span class="keyword">copy_t</span>o_user((<span class="keyword">char</span> *)arg, buf, <span class="number">4</span>);</span><br></pre></td></tr></table></figure></p>
+<h3 id="ioctl_args">ioctl args</h3><p>字符设备驱动中ioctl的args参数常常用作内核与用户空间通信的桥梁，在内核中读写该参数时切记要用copy_from_user或者copy_to_user，这2个函数其实是老生长谈了，主要原因还是因为<a href="http://blog.csdn.net/ce123_zhouwei/article/details/8454226" target="_blank" rel="external">用户空间传过来的指针是在虚拟地址空间上的，它指向的虚拟地址空间很可能还没有真正映射到实际的物理页面上</a>。</p>
+<h2 id="读写延时">读写延时</h2><p>一般在字符设备读写过程中可能会遇到不同程度的delay时序要求，但最好不要delay太久，比如delay 10ms算是一个比较大的时延了，如果是在允许睡眠的上下文中，换用msleep也不失为一种好的代替方案。</p>
+<h2 id="Kconfig中depends_on和select的区别">Kconfig中depends on和select的区别</h2><p>写完字符设备以后就要添加Kconfig规则，当遇到依赖关系时有两种选择：depends和select<br>这两个的区别在于depends on的目录项只有在依赖的宏被选上的情况下才会出现，而select是当选上该项以后会默认也勾上select选中的宏。</p>
+<blockquote>
+<ul>
+<li><p>某个程序依赖于某个library时，使用select</p>
+</li>
+<li><p>小的应用依赖于大的应用时，使用depends on<br>（比如某个audio driver依赖于alsa框架，这个时候应该用depends on）</p>
+</li>
+</ul>
+</blockquote>
   
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/字符设备/">字符设备</a>
+  </div>
 
 </div>
 
@@ -117,7 +136,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/06/10/Hello-Hexo/" data-title="Hello Hexo | Embedded Linux Jam" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/06/25/linux-chardev/" data-title="Linux字符设备驱动笔记 | Embedded Linux Jam" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -130,14 +149,14 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/06/24/notify/" title="搬迁">
-  <strong>上一篇：</strong><br/>
-  <span>
-  搬迁</span>
+
+<div class="next">
+<a href="/2015/06/25/coding-style/"  title="coding-style">
+ <strong>下一篇：</strong><br/> 
+ <span>coding-style
+</span>
 </a>
 </div>
-
 
 </nav>
 
@@ -149,7 +168,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目錄</strong>
  
- 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ioctl方法"><span class="toc-number">1.</span> <span class="toc-text">ioctl方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内核与用户空间传递参数"><span class="toc-number">2.</span> <span class="toc-text">内核与用户空间传递参数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#大小端"><span class="toc-number">2.1.</span> <span class="toc-text">大小端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ioctl_args"><span class="toc-number">2.2.</span> <span class="toc-text">ioctl args</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#读写延时"><span class="toc-number">3.</span> <span class="toc-text">读写延时</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kconfig中depends_on和select的区别"><span class="toc-number">4.</span> <span class="toc-text">Kconfig中depends on和select的区别</span></a></li></ol>
  
   </div>
 
@@ -166,6 +185,10 @@
 		
 			
 				<li><a href="/tags/我/" title="我">我<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/字符设备/" title="字符设备">字符设备<sup>1</sup></a></li>
 			
 		
 			
