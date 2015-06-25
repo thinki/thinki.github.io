@@ -4,22 +4,29 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Embedded Linux Jam</title>
+    <title>coding-style | Embedded Linux Jam</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Jim Cao">
     
 
     
-    <meta name="description">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Embedded Linux Jam">
-<meta property="og:url" content="http://yoursite.com/index.html">
+    <meta name="description" content="在写代码的过程中发现自己存在不少问题，虽然已经在加强这方面，但还是有不少空间可以改进，现在把这些记录下来
+类型检查函数参数合法性检查：123int func(unsigned char *byte_val, unsigned int byte_index)if (byte_val == NULL)	return -1;
+保持整体代码风格一致原来代码中有一段这样的数据结构：1234567891011">
+<meta property="og:type" content="article">
+<meta property="og:title" content="coding-style">
+<meta property="og:url" content="http://yoursite.com/2015/06/25/coding-style/index.html">
 <meta property="og:site_name" content="Embedded Linux Jam">
-<meta property="og:description">
+<meta property="og:description" content="在写代码的过程中发现自己存在不少问题，虽然已经在加强这方面，但还是有不少空间可以改进，现在把这些记录下来
+类型检查函数参数合法性检查：123int func(unsigned char *byte_val, unsigned int byte_index)if (byte_val == NULL)	return -1;
+保持整体代码风格一致原来代码中有一段这样的数据结构：1234567891011">
+<meta property="og:updated_time" content="2015-06-25T07:20:46.850Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Embedded Linux Jam">
-<meta name="twitter:description">
+<meta name="twitter:title" content="coding-style">
+<meta name="twitter:description" content="在写代码的过程中发现自己存在不少问题，虽然已经在加强这方面，但还是有不少空间可以改进，现在把这些记录下来
+类型检查函数参数合法性检查：123int func(unsigned char *byte_val, unsigned int byte_index)if (byte_val == NULL)	return -1;
+保持整体代码风格一致原来代码中有一段这样的数据结构：1234567891011">
 
     
     <link rel="alternative" href="/atom.xml" title="Embedded Linux Jam" type="application/atom+xml">
@@ -73,12 +80,10 @@
 </div>
     </header>
     <div id="container">
-      <div id="main">
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
   <h1 itemprop="name">
     
       <a href="/2015/06/25/coding-style/" title="coding-style" itemprop="url">coding-style</a>
@@ -92,9 +97,16 @@
     
   </p>
 </header>
-    <div class="article-content">
-        
-        <p>在写代码的过程中发现自己存在不少问题，虽然已经在加强这方面，但还是有不少空间可以改进，现在把这些记录下来</p>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目錄</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#类型检查"><span class="toc-number">1.</span> <span class="toc-text">类型检查</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#保持整体代码风格一致"><span class="toc-number">2.</span> <span class="toc-text">保持整体代码风格一致</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#变量命名"><span class="toc-number">3.</span> <span class="toc-text">变量命名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#规则检查"><span class="toc-number">4.</span> <span class="toc-text">规则检查</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#添加patch"><span class="toc-number">5.</span> <span class="toc-text">添加patch</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Describe_your_changes"><span class="toc-number">5.1.</span> <span class="toc-text">Describe your changes</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Seperate_your_changes"><span class="toc-number">5.2.</span> <span class="toc-text">Seperate your changes</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#关于如何选择开源的库"><span class="toc-number">6.</span> <span class="toc-text">关于如何选择开源的库</span></a></li></ol>
+		
+		</div>
+		
+		<p>在写代码的过程中发现自己存在不少问题，虽然已经在加强这方面，但还是有不少空间可以改进，现在把这些记录下来</p>
 <h2 id="类型检查">类型检查</h2><p>函数参数合法性检查：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">func</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">char</span> *byte_val, <span class="keyword">unsigned</span> <span class="keyword">int</span> byte_index)</span></span><br><span class="line"><span class="title">if</span> <span class="params">(byte_val == NULL)</span></span><br><span class="line">	return -1</span>;</span><br></pre></td></tr></table></figure></p>
 <h2 id="保持整体代码风格一致">保持整体代码风格一致</h2><p>原来代码中有一段这样的数据结构：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> regs &#123;</span><br><span class="line">	u32 cfg;</span><br><span class="line"></span><br><span class="line">	u32 ctl;</span><br><span class="line"></span><br><span class="line">	u32 cnt;</span><br><span class="line"></span><br><span class="line">	u32 read_dat;</span><br><span class="line"></span><br><span class="line">	u32 dat[<span class="number">6</span>];</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
 <p>在访问寄存器时最好使用该数据结构，不要再加上类似于下面的这些宏定义：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* reg addr */</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> EFUSE_CFG 0x0	</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> EFUSE_CTL 0x4	</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> EFUSE_CNT 0x8	</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> EFUSE_RDATA 0xc	</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> EFUSE_OUT0 0x10	</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> EFUSE_OUT1 0x14	</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> EFUSE_OUT2 0x18	</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> EFUSE_OUT3 0x1c	</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> EFUSE_OUT4 0x20	</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> EFUSE_OUT5 0x24</span></span><br></pre></td></tr></table></figure></p>
@@ -107,14 +119,9 @@
 <h3 id="Seperate_your_changes">Seperate your changes</h3><p>Separate each <em>logical change</em> into a separate patch.</p>
 <p>For example, if your changes include both bug fixes and performance<br>enhancements for a single driver, separate those changes into two<br>or more patches.  If your changes include an API update, and a new<br>driver which uses that new API, separate those into two patches.</p>
 <h2 id="关于如何选择开源的库">关于如何选择开源的库</h2><p>这个问题也是我看了free electrons的<a href="http://free-electrons.com/docs/" target="_blank" rel="external">training material</a>才知道的，主要的思路就是看它的contributions，对各个平台的支持，有时候看看sourceforge上的下载量也能反映一些问题</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
+  
+	</div>
+		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
 
@@ -127,133 +134,43 @@
 
 
 
-
-<div class="comments-count">
+	<div class="article-share" id="share">
 	
-</div>
+	  <div data-url="http://yoursite.com/2015/06/25/coding-style/" data-title="coding-style | Embedded Linux Jam" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
 
 </footer>
 
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/24/notify/" title="搬迁" itemprop="url">搬迁</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jim Cao" target="_blank" itemprop="author">Jim Cao</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-24T01:51:07.000Z" itemprop="datePublished"> 發表於 2015-06-24</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id=""> </h2><p>5月份毕业从六朝古都搬到姑苏城，为了姑苏城放弃了Marvell和Nvidia的机会，又赌气放弃了fsl的offer，那个我曾经最想留的公司，来到后知后觉让我失望的地方rs，失望源自我太高的期望，期望它兼有fsl的好又能弥补fsl不足的地方，我总是习惯把事物想得太理想化亦或是太极端化，也许这是我需要成长的地方，就把它当成是对我的磨练吧，毕竟rs虽是我的起点，但不会是我的终点，fsl也不一定是。</p>
-<p>毕业以后，工作场所从学校变成了公司，周围没有人对我表示认可，这与之前在学校被大家夸赞的情况形成了鲜明的对比，我开始觉得自己毫无存在感，以至于有一段时间难以适应这样的节奏，这才意识到我是多么得享受一鸣惊人的这种感受。此刻想到tracy跟我说的话：真正的自信是即使在自己不如意的时候也始终相信自己。才发现自己是内心多么脆弱的一个人，如此在意别人的眼光，太希望得到肯定，就像曾经在fsl实习时Lily对我肯定的那样，就像校招时享受offer收割机过程中各个公司对我的肯定，我的自信心随着这些肯定极度膨胀，这才是我的软肋。</p>
-<p>我是网易的忠实用户，在网易博客上写技术有一两年了，却越来越少关注自己，已经很久没有静下心来去想想过去和未来，又想到了同学的QQ签名：不忘初心，方得始终。我似乎在忙碌中忘了曾经对技术的热爱，我是享受这个过程的，就像《Three idiots》中的男主在追求卓越的过程中获得成功，我也该找回那份赤诚之心。换了生活和工作环境，现在是到了改变的时候，博客也该搬迁了，搬迁不是为了抛弃过去，而是更好地展望未来。现在的我已经不在去忘记过去了，它们的存在是见证我成长的过程，也是人生必不可少的一部分！</p>
-<p>Jump for the sun, at least you land on the moon!</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/我/">我</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
+   	       
+	</article>
 	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/06/24/notify/"  title="搬迁">
+ <strong>下一篇：</strong><br/> 
+ <span>搬迁
+</span>
+</a>
 </div>
 
-</footer>
+</nav>
 
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/10/Hello-Hexo/" title="Hello Hexo" itemprop="url">Hello Hexo</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jim Cao" target="_blank" itemprop="author">Jim Cao</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-10T01:51:07.000Z" itemprop="datePublished"> 發表於 2015-06-10</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>hello world!</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span>&lt;stdio.h&gt;</span></span><br></pre></td></tr></table></figure>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-</div>
-
-
-
-
-<div class="comments-count">
 	
-</div>
 
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-
-</div>
+</div>  
       <div class="openaside"><a class="navbutton" href="#" title="顯示側邊欄"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目錄</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#类型检查"><span class="toc-number">1.</span> <span class="toc-text">类型检查</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#保持整体代码风格一致"><span class="toc-number">2.</span> <span class="toc-text">保持整体代码风格一致</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#变量命名"><span class="toc-number">3.</span> <span class="toc-text">变量命名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#规则检查"><span class="toc-number">4.</span> <span class="toc-text">规则检查</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#添加patch"><span class="toc-number">5.</span> <span class="toc-text">添加patch</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Describe_your_changes"><span class="toc-number">5.1.</span> <span class="toc-text">Describe your changes</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Seperate_your_changes"><span class="toc-number">5.2.</span> <span class="toc-text">Seperate your changes</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#关于如何选择开源的库"><span class="toc-number">6.</span> <span class="toc-text">关于如何选择开源的库</span></a></li></ol>
+ 
+  </div>
 
 <div id="asidepart">
 <div class="closeaside"><a class="closebutton" href="#" title="隱藏側邊欄"></a></div>
@@ -393,12 +310,69 @@ $(document).ready(function(){
       m.removeClass('moveMain');
       a.css('display', 'block').removeClass('fadeOut');
       o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
         
     }
   });
 });
 </script>
 
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
 
 
 
@@ -464,4 +438,4 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <!-- Tiny_search End -->
 
   </body>
- </html>
+</html>
