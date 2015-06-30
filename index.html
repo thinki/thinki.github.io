@@ -75,273 +75,83 @@
     <div id="container">
       <div id="main">
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/30/ubuntu-pppoe-server/" title="ubuntu搭建pppoe server测试环境" itemprop="url">ubuntu搭建pppoe server测试环境</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jim Cao" target="_blank" itemprop="author">Jim Cao</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-30T04:54:26.000Z" itemprop="datePublished"> 發表於 2015-06-30</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>最近需要Port PPPoE dial up软件，但是又没有现成的ISP提供的PPPoE端口，索性就自己搭一个吧，其实过程也不复杂，不过中途遇到了一些问题，在此记录下来，以备日后温故而知新。</p>
-<h2 id="硬件要求">硬件要求</h2><p>首先需要的是两张以太网卡，一般主板会自带一张，另一张的话自己去网上买个PCIE Ethernet Adapter，蟹厂的东西还是比较便宜的，Ubuntu上一般也是自带了驱动。</p>
-<h2 id="软件要求">软件要求</h2><h3 id="1-_Ubuntu上装软件了：">1. Ubuntu上装软件了：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install ppp</span><br></pre></td></tr></table></figure>
-<p>这里讲一下关系，PPPoE全程是PPP over Ethernet，也就是在PPP协议的基础上实现的，所以需要安装ppp包，然后这里可以安装一个PPPoE的client，方便配置脚本等等。</p>
-<h3 id="2-_下载rp-pppoe并解压安装，注意sudo权限">2. 下载rp-pppoe并解压安装，注意sudo权限</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wget http://www.roaringpenguin.com/files/download/rp-pppoe-<span class="number">3.10</span>.tar.gz</span><br><span class="line">tar xvf rp-pppoe-<span class="number">3.10</span>.tar.gz</span><br><span class="line"><span class="built_in">cd</span> rp-pppoe-<span class="number">3.10</span>/src</span><br><span class="line">./configure</span><br><span class="line">make</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
-<h3 id="3-_编辑PPPoE_server配置文件">3. 编辑PPPoE server配置文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/ppp/pppoe-server-options</span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">require-chap</span><br><span class="line"><span class="comment">#login</span></span><br><span class="line">lcp-echo-interval <span class="number">10</span></span><br><span class="line">lcp-echo-failure <span class="number">2</span></span><br><span class="line">ms-dns <span class="number">8.8</span>.<span class="number">8.8</span>  <span class="comment">#dns需要修改，国内开源dns已被封</span></span><br><span class="line">defaultroute</span><br></pre></td></tr></table></figure>
-<p>如果加上login选项，那么<a href="http://blog.csdn.net/pdcxs007/article/details/44599885" target="_blank" rel="external">登陆的用户名必需和linux系统下的一个用户名相同</a></p>
-<h3 id="4-_添加拨号账号密码">4. 添加拨号账号密码</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/ppp/chap-secrets</span><br></pre></td></tr></table></figure>
-<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># Secrets for authentication using CHAP</span></span><br><span class="line"><span class="preprocessor"># client server secret IP addresses</span></span><br><span class="line"> </span><br><span class="line"><span class="preprocessor">#USERNAME       SERVER		PASSWORD			CLIENT IP ADDRESS</span></span><br><span class="line"><span class="string">"cristanhuza"</span>	*<span class="string">"		"</span>My_s3cret<span class="string">"			*</span></span><br><span class="line"><span class="string">"friend1"</span>	*		<span class="string">"My_friend"</span>			<span class="number">192.168</span>.<span class="number">1.2</span></span><br></pre></td></tr></table></figure>
-<h3 id="5-_开启PPPoE_Server">5. 开启PPPoE Server</h3><p>这里假定eth0是默认的上网口，eth1是PPPoE实验端口<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">pppoe-server</span> <span class="tag">-I</span> <span class="tag">eth1</span> <span class="tag">-L</span> 192<span class="class">.168</span><span class="class">.0</span><span class="class">.20</span> <span class="tag">-R</span> 192<span class="class">.168</span><span class="class">.0</span><span class="class">.30</span> <span class="tag">-N</span> 10</span><br></pre></td></tr></table></figure></p>
-<p>-I eth1 指定pppoe服务器在那个网卡接口监听连接请求</p>
-<p>-L 192.168.0.20 指定pppoe服务器的ip地址。（注意：此IP地址不是网卡的IP地址，而是PPPOE服务器的虚拟IP）</p>
-<p>-R 192.168.0.30 pppoe服务器分配给客户端的IP地址，从192.168.0.30开始，递增</p>
-<p>-N 10 指定最多可以连接pppoe服务器的客户端数量</p>
-<h3 id="6-_使能packet_forwarding">6. 使能packet forwarding</h3><p>注意这里需要先切换root用户才能够操作成功<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo -i</span><br><span class="line"><span class="built_in">echo</span> <span class="number">1</span> &gt; /proc/sys/net/ipv4/ip_forward</span><br></pre></td></tr></table></figure></p>
-<h3 id="7-_iptables添加NAT规则">7. iptables添加NAT规则</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo iptables -t nat -A POSTROUTING <span class="operator">-s</span> <span class="number">192.168</span>.<span class="number">0.0</span>/<span class="number">24</span> -o eth0 -j MASQUERADE</span><br></pre></td></tr></table></figure>
-<h3 id="Windows_NT拨号">Windows NT拨号</h3><p>到这里基本上算是配置完成，在windows端配置PPPoE这里就不再阐述，值得注意的是由于PPPoE属于PPP点到点协议，因此分配到的netmask是255.255.255.255，并且也不需要配置网络端口的IP，PPPoE拨号成功后会另外分配IP到宽带拨号适配器上</p>
-<p>参考链接：</p>
-<ol>
-<li><a href="http://blog.csdn.net/linweig/article/details/5481355" target="_blank" rel="external">Ubuntu上架设PPPoE Server</a></li>
-<li><a href="http://www.howtodoityourself.org/pppoe-server-how-to-do-it-yourself.html" target="_blank" rel="external">PPPoE Server – How To Do It Yourself</a></li>
-<li><a href="http://blog.csdn.net/pdcxs007/article/details/44599885" target="_blank" rel="external">Linux下搭建 PPPoE Server 问题总结</a></li>
-</ol>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
   
-  <span></span> <a href="/tags/PPPoE/">PPPoE</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/25/linux-chardev/" title="Linux字符设备驱动笔记" itemprop="url">Linux字符设备驱动笔记</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jim Cao" target="_blank" itemprop="author">Jim Cao</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-25T07:28:47.000Z" itemprop="datePublished"> 發表於 2015-06-25</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>最近在给Soc的字符设备添加一些功能，记录下遇到的问题：</p>
-<h2 id="ioctl方法">ioctl方法</h2><p>很多资料都不推荐通过ioctl来控制设备，虽然至今我还没有明白这是为什么，不过好歹我知道可以用sysfs做一些简单的控制。<br>这里引用内核文档的内容/linux/Documentation/ioctl/ioctl-number.txt，If you are adding new ioctl’s to the kernel, you should use the _IO macros defined in <linux ioctl.h="">，其他的注意事项也很详细的写在里面，虽然上面的很多ioctl号有很久没有更新了。</linux></p>
-<h2 id="内核与用户空间传递参数">内核与用户空间传递参数</h2><h3 id="大小端">大小端</h3><p>考虑到不同平台的可移植性，可以预先定义好传递的规则，比如用户空间强制把数据转换成大端，然后内核再强制把大端转换成自己体系结构的大小端：</p>
-<p>用户空间<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">uint8_t</span> buf[<span class="number">4</span>];	</span><br><span class="line">*(<span class="keyword">uint32_t</span> *)buf = htobe32(addr);</span><br><span class="line"></span><br><span class="line">ioctl(fd, IOC_IOREAD, buf);</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> be32toh(*(<span class="keyword">uint32_t</span> *)buf);</span><br></pre></td></tr></table></figure></p>
-<p>内核空间<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">u32 reg_val, reg_addr;</span><br><span class="line">u8 buf[<span class="number">4</span>];</span><br><span class="line"></span><br><span class="line">copy_from_user(buf, (<span class="keyword">char</span> *)arg, <span class="number">4</span>);</span><br><span class="line"></span><br><span class="line">reg_addr = <span class="keyword">be32_t</span>o_cpu(*(u32 *)buf);</span><br><span class="line">....</span><br><span class="line"><span class="comment">/* process data */</span></span><br><span class="line">....</span><br><span class="line"></span><br><span class="line">*(u32 *)buf = <span class="keyword">cpu_t</span>o_be32(reg_val);</span><br><span class="line"><span class="keyword">copy_t</span>o_user((<span class="keyword">char</span> *)arg, buf, <span class="number">4</span>);</span><br></pre></td></tr></table></figure></p>
-<h3 id="ioctl_args">ioctl args</h3><p>字符设备驱动中ioctl的args参数常常用作内核与用户空间通信的桥梁，在内核中读写该参数时切记要用copy_from_user或者copy_to_user，这2个函数其实是老生长谈了，主要原因还是因为<a href="http://blog.csdn.net/ce123_zhouwei/article/details/8454226" target="_blank" rel="external">用户空间传过来的指针是在虚拟地址空间上的，它指向的虚拟地址空间很可能还没有真正映射到实际的物理页面上</a>。</p>
-<h2 id="读写延时">读写延时</h2><p>一般在字符设备读写过程中可能会遇到不同程度的delay时序要求，但最好不要delay太久，比如delay 10ms算是一个比较大的时延了，如果是在允许睡眠的上下文中，换用msleep也不失为一种好的代替方案。</p>
-<h2 id="Kconfig中depends_on和select的区别">Kconfig中depends on和select的区别</h2><p>写完字符设备以后就要添加Kconfig规则，当遇到依赖关系时有两种选择：depends和select<br>这两个的区别在于depends on的目录项只有在依赖的宏被选上的情况下才会出现，而select是当选上该项以后会默认也勾上select选中的宏。</p>
-<blockquote>
-<ul>
-<li><p>某个程序依赖于某个library时，使用select</p>
-</li>
-<li><p>小的应用依赖于大的应用时，使用depends on<br>（比如某个audio driver依赖于alsa框架，这个时候应该用depends on）</p>
-</li>
-</ul>
-</blockquote>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
+<section class="post" itemscope itemprop="blogitem">
   
-  <span></span> <a href="/tags/字符设备/">字符设备</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/25/coding-style/" title="coding-style" itemprop="url">coding-style</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jim Cao" target="_blank" itemprop="author">Jim Cao</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-25T06:47:20.000Z" itemprop="datePublished"> 發表於 2015-06-25</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>在写代码的过程中发现自己存在不少问题，虽然已经在加强这方面，但还是有不少空间可以改进，现在把这些记录下来</p>
-<h2 id="类型检查">类型检查</h2><p>函数参数合法性检查：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">func</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">char</span> *byte_val, <span class="keyword">unsigned</span> <span class="keyword">int</span> byte_index)</span></span><br><span class="line"><span class="title">if</span> <span class="params">(byte_val == NULL)</span></span><br><span class="line">	return -1</span>;</span><br></pre></td></tr></table></figure></p>
-<h2 id="保持整体代码风格一致">保持整体代码风格一致</h2><p>原来代码中有一段这样的数据结构：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> regs &#123;</span><br><span class="line">	u32 cfg;</span><br><span class="line"></span><br><span class="line">	u32 ctl;</span><br><span class="line"></span><br><span class="line">	u32 cnt;</span><br><span class="line"></span><br><span class="line">	u32 read_dat;</span><br><span class="line"></span><br><span class="line">	u32 dat[<span class="number">6</span>];</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>在访问寄存器时最好使用该数据结构，不要再加上类似于下面的这些宏定义：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* reg addr */</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> EFUSE_CFG 0x0	</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> EFUSE_CTL 0x4	</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> EFUSE_CNT 0x8	</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> EFUSE_RDATA 0xc	</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> EFUSE_OUT0 0x10	</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> EFUSE_OUT1 0x14	</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> EFUSE_OUT2 0x18	</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> EFUSE_OUT3 0x1c	</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> EFUSE_OUT4 0x20	</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> EFUSE_OUT5 0x24</span></span><br></pre></td></tr></table></figure></p>
-<p>而是应该使用类似下面风格的代码：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* assign base address */</span></span><br><span class="line"><span class="keyword">struct</span> regs *_regs = <span class="number">0</span>xXXXXXXXX;</span><br><span class="line">readl(&amp;_regs-&gt;cfg);</span><br></pre></td></tr></table></figure></p>
-<h2 id="变量命名">变量命名</h2><p>变量命名之前应该好好斟酌名字是否会造成歧义，虽然之前看过《The art of readable code》，但真正自己去命名时才发现要区取一个好名字还是很不容易的。</p>
-<h2 id="规则检查">规则检查</h2><p>内核源码中有一个很不错的coding style检查脚本，位置是./script/checkpatch.pl，即使是应用程序也可以用这个工具检查，用法自行google吧。</p>
-<h2 id="添加patch">添加patch</h2><p>关于如何提交patch，内核中有专门的文档讲这个，位置是./doc/Documentation/SubmittingPatches，目前对我最有用的是</p>
-<h3 id="Describe_your_changes">Describe your changes</h3><p>Describe user-visible impact.  Straight up crashes and lockups are<br>pretty convincing, but not all bugs are that blatant.  Even if the<br>problem was spotted during code review, describe the impact you think<br>it can have on users.  Keep in mind that the majority of Linux<br>installations run kernels from secondary stable trees or<br>vendor/product-specific trees that cherry-pick only specific patches<br>from upstream, so include anything that could help route your change<br>downstream: provoking circumstances, excerpts from dmesg, crash<br>descriptions, performance regressions, latency spikes, lockups, etc.</p>
-<p>Quantify optimizations and trade-offs.  If you claim improvements in<br>performance, memory consumption, stack footprint, or binary size,<br>include numbers that back them up.  But also describe non-obvious<br>costs.  Optimizations usually aren’t free but trade-offs between CPU,<br>memory, and readability; or, when it comes to heuristics, between<br>different workloads.  Describe the expected downsides of your<br>optimization so that the reviewer can weigh costs against benefits.</p>
-<h3 id="Seperate_your_changes">Seperate your changes</h3><p>Separate each <em>logical change</em> into a separate patch.</p>
-<p>For example, if your changes include both bug fixes and performance<br>enhancements for a single driver, separate those changes into two<br>or more patches.  If your changes include an API update, and a new<br>driver which uses that new API, separate those into two patches.</p>
-<h2 id="关于如何选择开源的库">关于如何选择开源的库</h2><p>这个问题也是我看了free electrons的<a href="http://free-electrons.com/docs/" target="_blank" rel="external">training material</a>才知道的，主要的思路就是看它的contributions，对各个平台的支持，有时候看看sourceforge上的下载量也能反映一些问题</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
+    <a href="/2015/06/30/ubuntu-pppoe-server/" title="ubuntu搭建pppoe server测试环境" itemprop="url">
   
-  <span></span> <a href="/tags/代码风格/">代码风格</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
+    <h1 itemprop="name">ubuntu搭建pppoe server测试环境</h1>
     
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
+     
+           <p itemprop="description" >最近需要Port PPPoE dial up软件，但是又没有现成的ISP提供的PPPoE端口，索性就自己搭一个吧，其实过程也不复杂，不过中途遇到了一些问题，在此记录下来，以备日后温故而知新。
+硬件要求首先需要的是两张以太网卡，一般主板会自带一张，另一张的话自己去网上买个PCIE </p>
+        
     
-      <a href="/2015/06/24/notify/" title="搬迁" itemprop="url">搬迁</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jim Cao" target="_blank" itemprop="author">Jim Cao</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-24T01:51:07.000Z" itemprop="datePublished"> 發表於 2015-06-24</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id=""> </h2><p>5月份毕业从六朝古都搬到姑苏城，为了姑苏城放弃了Marvell和Nvidia的机会，又赌气放弃了fsl的offer，那个我曾经最想留的公司，来到后知后觉让我失望的地方rs，失望源自我太高的期望，期望它兼有fsl的好又能弥补fsl不足的地方，我总是习惯把事物想得太理想化亦或是太极端化，也许这是我需要成长的地方，就把它当成是对我的磨练吧，毕竟rs虽是我的起点，但不会是我的终点，fsl也不一定是。</p>
-<p>毕业以后，工作场所从学校变成了公司，周围没有人对我表示认可，这与之前在学校被大家夸赞的情况形成了鲜明的对比，我开始觉得自己毫无存在感，以至于有一段时间难以适应这样的节奏，这才意识到我是多么得享受一鸣惊人的这种感受。此刻想到tracy跟我说的话：真正的自信是即使在自己不如意的时候也始终相信自己。才发现自己是内心多么脆弱的一个人，如此在意别人的眼光，太希望得到肯定，就像曾经在fsl实习时Lily对我肯定的那样，就像校招时享受offer收割机过程中各个公司对我的肯定，我的自信心随着这些肯定极度膨胀，这才是我的软肋。</p>
-<p>我是网易的忠实用户，在网易博客上写技术有一两年了，却越来越少关注自己，已经很久没有静下心来去想想过去和未来，又想到了同学的QQ签名：不忘初心，方得始终。我似乎在忙碌中忘了曾经对技术的热爱，我是享受这个过程的，就像《Three idiots》中的男主在追求卓越的过程中获得成功，我也该找回那份赤诚之心。换了生活和工作环境，现在是到了改变的时候，博客也该搬迁了，搬迁不是为了抛弃过去，而是更好地展望未来。现在的我已经不在去忘记过去了，它们的存在是见证我成长的过程，也是人生必不可少的一部分！</p>
-<p>Jump for the sun, at least you land on the moon!</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
+    <time datetime="2015-06-30T04:54:26.000Z" itemprop="datePublished">2015-06-30</time>
+  </a>
+</section>
 
 
-  <div class="article-tags">
+
+
+
+
   
-  <span></span> <a href="/tags/我/">我</a>
-  </div>
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2015/06/25/linux-chardev/" title="Linux字符设备驱动笔记" itemprop="url">
+  
+    <h1 itemprop="name">Linux字符设备驱动笔记</h1>
+    
+     
+           <p itemprop="description" >最近在给Soc的字符设备添加一些功能，记录下遇到的问题：
+ioctl方法很多资料都不推荐通过ioctl来控制设备，虽然至今我还没有明白这是为什么，不过好歹我知道可以用sysfs做一些简单的控制。这里引用内核文档的内容/linux/Documentation/ioctl/ioctl</p>
+        
+    
+    <time datetime="2015-06-25T07:28:47.000Z" itemprop="datePublished">2015-06-25</time>
+  </a>
+</section>
 
-</div>
 
 
 
 
-<div class="comments-count">
-	
-</div>
 
-</footer>
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2015/06/25/coding-style/" title="coding-style" itemprop="url">
+  
+    <h1 itemprop="name">coding-style</h1>
+    
+     
+           <p itemprop="description" >在写代码的过程中发现自己存在不少问题，虽然已经在加强这方面，但还是有不少空间可以改进，现在把这些记录下来
+类型检查函数参数合法性检查：123int func(unsigned char *byte_val, unsigned int byte_index)if (byte_val</p>
+        
+    
+    <time datetime="2015-06-25T06:47:20.000Z" itemprop="datePublished">2015-06-25</time>
+  </a>
+</section>
 
 
-    </article>
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2015/06/24/notify/" title="搬迁" itemprop="url">
+  
+    <h1 itemprop="name">搬迁</h1>
+    
+     
+           <p itemprop="description" >5月份毕业从六朝古都搬到姑苏城，为了姑苏城放弃了Marvell和Nvidia的机会，又赌气放弃了fsl的offer，那个我曾经最想留的公司，来到后知后觉让我失望的地方rs，失望源自我太高的期望，期望它兼有fsl的好又能弥补fsl不足的地方，我总是习惯把事物想得太理想化亦或是太极端</p>
+        
+    
+    <time datetime="2015-06-24T01:51:07.000Z" itemprop="datePublished">2015-06-24</time>
+  </a>
+</section>
 
 
 
@@ -506,6 +316,18 @@ $(document).ready(function(){
 
 
 
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"Jim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
 
 
 

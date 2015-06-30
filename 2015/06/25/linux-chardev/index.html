@@ -19,7 +19,7 @@ ioctl方法很多资料都不推荐通过ioctl来控制设备，虽然至今我�
 <meta property="og:site_name" content="Embedded Linux Jam">
 <meta property="og:description" content="最近在给Soc的字符设备添加一些功能，记录下遇到的问题：
 ioctl方法很多资料都不推荐通过ioctl来控制设备，虽然至今我还没有明白这是为什么，不过好歹我知道可以用sysfs做一些简单的控制。这里引用内核文档的内容/linux/Documentation/ioctl/ioctl-number.txt，If you are adding new ioctl’s to the kernel, you">
-<meta property="og:updated_time" content="2015-06-25T08:33:37.730Z">
+<meta property="og:updated_time" content="2015-06-30T05:47:34.284Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux字符设备驱动笔记">
 <meta name="twitter:description" content="最近在给Soc的字符设备添加一些功能，记录下遇到的问题：
@@ -99,12 +99,14 @@ ioctl方法很多资料都不推荐通过ioctl来控制设备，虽然至今我�
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目錄</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ioctl方法"><span class="toc-number">1.</span> <span class="toc-text">ioctl方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内核与用户空间传递参数"><span class="toc-number">2.</span> <span class="toc-text">内核与用户空间传递参数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#大小端"><span class="toc-number">2.1.</span> <span class="toc-text">大小端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ioctl_args"><span class="toc-number">2.2.</span> <span class="toc-text">ioctl args</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#读写延时"><span class="toc-number">3.</span> <span class="toc-text">读写延时</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kconfig中depends_on和select的区别"><span class="toc-number">4.</span> <span class="toc-text">Kconfig中depends on和select的区别</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ioctl方法"><span class="toc-number">1.</span> <span class="toc-text">ioctl方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#void指针"><span class="toc-number">2.</span> <span class="toc-text">void指针</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内核与用户空间传递参数"><span class="toc-number">3.</span> <span class="toc-text">内核与用户空间传递参数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#大小端"><span class="toc-number">3.1.</span> <span class="toc-text">大小端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ioctl_args"><span class="toc-number">3.2.</span> <span class="toc-text">ioctl args</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#读写延时"><span class="toc-number">4.</span> <span class="toc-text">读写延时</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kconfig中depends_on和select的区别"><span class="toc-number">5.</span> <span class="toc-text">Kconfig中depends on和select的区别</span></a></li></ol>
 		
 		</div>
 		
 		<p>最近在给Soc的字符设备添加一些功能，记录下遇到的问题：</p>
 <h2 id="ioctl方法">ioctl方法</h2><p>很多资料都不推荐通过ioctl来控制设备，虽然至今我还没有明白这是为什么，不过好歹我知道可以用sysfs做一些简单的控制。<br>这里引用内核文档的内容/linux/Documentation/ioctl/ioctl-number.txt，If you are adding new ioctl’s to the kernel, you should use the _IO macros defined in <linux ioctl.h="">，其他的注意事项也很详细的写在里面，虽然上面的很多ioctl号有很久没有更新了。</linux></p>
+<h2 id="void指针">void指针</h2><p>driver常常需要操作寄存器，一次不经意间把int <em>指针的递增与void </em>的递增混淆了，我误认为int *指针递增1实际地址也是递增1，这是非常严重的错误，还好后来发现了囧</p>
+<p><a href="http://blog.csdn.net/geekcome/article/details/6249151" target="_blank" rel="external">在ANSIC标准中，不允许对void指针进行算术运算如pvoid++或pvoid+=1等，而在GNU中则允许，因为在缺省情况下，GNU认为void <em>与char </em>一样。sizeof(*pvoid)==sizeof(char)</a></p>
 <h2 id="内核与用户空间传递参数">内核与用户空间传递参数</h2><h3 id="大小端">大小端</h3><p>考虑到不同平台的可移植性，可以预先定义好传递的规则，比如用户空间强制把数据转换成大端，然后内核再强制把大端转换成自己体系结构的大小端：</p>
 <p>用户空间<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">uint8_t</span> buf[<span class="number">4</span>];	</span><br><span class="line">*(<span class="keyword">uint32_t</span> *)buf = htobe32(addr);</span><br><span class="line"></span><br><span class="line">ioctl(fd, IOC_IOREAD, buf);</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> be32toh(*(<span class="keyword">uint32_t</span> *)buf);</span><br></pre></td></tr></table></figure></p>
 <p>内核空间<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">u32 reg_val, reg_addr;</span><br><span class="line">u8 buf[<span class="number">4</span>];</span><br><span class="line"></span><br><span class="line">copy_from_user(buf, (<span class="keyword">char</span> *)arg, <span class="number">4</span>);</span><br><span class="line"></span><br><span class="line">reg_addr = <span class="keyword">be32_t</span>o_cpu(*(u32 *)buf);</span><br><span class="line">....</span><br><span class="line"><span class="comment">/* process data */</span></span><br><span class="line">....</span><br><span class="line"></span><br><span class="line">*(u32 *)buf = <span class="keyword">cpu_t</span>o_be32(reg_val);</span><br><span class="line"><span class="keyword">copy_t</span>o_user((<span class="keyword">char</span> *)arg, buf, <span class="number">4</span>);</span><br></pre></td></tr></table></figure></p>
@@ -169,6 +171,10 @@ ioctl方法很多资料都不推荐通过ioctl来控制设备，虽然至今我�
 </nav>
 
 	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/06/25/linux-chardev/" data-title="Linux字符设备驱动笔记" data-url="http://yoursite.com/2015/06/25/linux-chardev/"></div>
+</section>
+
 
 </div>  
       <div class="openaside"><a class="navbutton" href="#" title="顯示側邊欄"></a></div>
@@ -176,7 +182,7 @@ ioctl方法很多资料都不推荐通过ioctl来控制设备，虽然至今我�
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目錄</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ioctl方法"><span class="toc-number">1.</span> <span class="toc-text">ioctl方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内核与用户空间传递参数"><span class="toc-number">2.</span> <span class="toc-text">内核与用户空间传递参数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#大小端"><span class="toc-number">2.1.</span> <span class="toc-text">大小端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ioctl_args"><span class="toc-number">2.2.</span> <span class="toc-text">ioctl args</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#读写延时"><span class="toc-number">3.</span> <span class="toc-text">读写延时</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kconfig中depends_on和select的区别"><span class="toc-number">4.</span> <span class="toc-text">Kconfig中depends on和select的区别</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ioctl方法"><span class="toc-number">1.</span> <span class="toc-text">ioctl方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#void指针"><span class="toc-number">2.</span> <span class="toc-text">void指针</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内核与用户空间传递参数"><span class="toc-number">3.</span> <span class="toc-text">内核与用户空间传递参数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#大小端"><span class="toc-number">3.1.</span> <span class="toc-text">大小端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ioctl_args"><span class="toc-number">3.2.</span> <span class="toc-text">ioctl args</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#读写延时"><span class="toc-number">4.</span> <span class="toc-text">读写延时</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kconfig中depends_on和select的区别"><span class="toc-number">5.</span> <span class="toc-text">Kconfig中depends on和select的区别</span></a></li></ol>
  
   </div>
 
@@ -391,6 +397,18 @@ $(document).ready(function(){
 </script>
 
 
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"Jim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
 
 
 
