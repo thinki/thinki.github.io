@@ -81,6 +81,84 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/06/30/ubuntu-pppoe-server/" title="ubuntu搭建pppoe server测试环境" itemprop="url">ubuntu搭建pppoe server测试环境</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jim Cao" target="_blank" itemprop="author">Jim Cao</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-30T04:54:26.000Z" itemprop="datePublished"> 發表於 2015-06-30</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>最近需要Port PPPoE dial up软件，但是又没有现成的ISP提供的PPPoE端口，索性就自己搭一个吧，其实过程也不复杂，不过中途遇到了一些问题，在此记录下来，以备日后温故而知新。</p>
+<h2 id="硬件要求">硬件要求</h2><p>首先需要的是两张以太网卡，一般主板会自带一张，另一张的话自己去网上买个PCIE Ethernet Adapter，蟹厂的东西还是比较便宜的，Ubuntu上一般也是自带了驱动。</p>
+<h2 id="软件要求">软件要求</h2><h3 id="1-_Ubuntu上装软件了：">1. Ubuntu上装软件了：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install ppp</span><br></pre></td></tr></table></figure>
+<p>这里讲一下关系，PPPoE全程是PPP over Ethernet，也就是在PPP协议的基础上实现的，所以需要安装ppp包，然后这里可以安装一个PPPoE的client，方便配置脚本等等。</p>
+<h3 id="2-_下载rp-pppoe并解压安装，注意sudo权限">2. 下载rp-pppoe并解压安装，注意sudo权限</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wget http://www.roaringpenguin.com/files/download/rp-pppoe-<span class="number">3.10</span>.tar.gz</span><br><span class="line">tar xvf rp-pppoe-<span class="number">3.10</span>.tar.gz</span><br><span class="line"><span class="built_in">cd</span> rp-pppoe-<span class="number">3.10</span>/src</span><br><span class="line">./configure</span><br><span class="line">make</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
+<h3 id="3-_编辑PPPoE_server配置文件">3. 编辑PPPoE server配置文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/ppp/pppoe-server-options</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">require-chap</span><br><span class="line"><span class="comment">#login</span></span><br><span class="line">lcp-echo-interval <span class="number">10</span></span><br><span class="line">lcp-echo-failure <span class="number">2</span></span><br><span class="line">ms-dns <span class="number">8.8</span>.<span class="number">8.8</span>  <span class="comment">#dns需要修改，国内开源dns已被封</span></span><br><span class="line">defaultroute</span><br></pre></td></tr></table></figure>
+<p>如果加上login选项，那么<a href="http://blog.csdn.net/pdcxs007/article/details/44599885" target="_blank" rel="external">登陆的用户名必需和linux系统下的一个用户名相同</a></p>
+<h3 id="4-_添加拨号账号密码">4. 添加拨号账号密码</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/ppp/chap-secrets</span><br></pre></td></tr></table></figure>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># Secrets for authentication using CHAP</span></span><br><span class="line"><span class="preprocessor"># client server secret IP addresses</span></span><br><span class="line"> </span><br><span class="line"><span class="preprocessor">#USERNAME       SERVER		PASSWORD			CLIENT IP ADDRESS</span></span><br><span class="line"><span class="string">"cristanhuza"</span>	*<span class="string">"		"</span>My_s3cret<span class="string">"			*</span></span><br><span class="line"><span class="string">"friend1"</span>	*		<span class="string">"My_friend"</span>			<span class="number">192.168</span>.<span class="number">1.2</span></span><br></pre></td></tr></table></figure>
+<h3 id="5-_开启PPPoE_Server">5. 开启PPPoE Server</h3><p>这里假定eth0是默认的上网口，eth1是PPPoE实验端口<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">pppoe-server</span> <span class="tag">-I</span> <span class="tag">eth1</span> <span class="tag">-L</span> 192<span class="class">.168</span><span class="class">.0</span><span class="class">.20</span> <span class="tag">-R</span> 192<span class="class">.168</span><span class="class">.0</span><span class="class">.30</span> <span class="tag">-N</span> 10</span><br></pre></td></tr></table></figure></p>
+<p>-I eth1 指定pppoe服务器在那个网卡接口监听连接请求</p>
+<p>-L 192.168.0.20 指定pppoe服务器的ip地址。（注意：此IP地址不是网卡的IP地址，而是PPPOE服务器的虚拟IP）</p>
+<p>-R 192.168.0.30 pppoe服务器分配给客户端的IP地址，从192.168.0.30开始，递增</p>
+<p>-N 10 指定最多可以连接pppoe服务器的客户端数量</p>
+<h3 id="6-_使能packet_forwarding">6. 使能packet forwarding</h3><p>注意这里需要先切换root用户才能够操作成功<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo -i</span><br><span class="line"><span class="built_in">echo</span> <span class="number">1</span> &gt; /proc/sys/net/ipv4/ip_forward</span><br></pre></td></tr></table></figure></p>
+<h3 id="7-_iptables添加NAT规则">7. iptables添加NAT规则</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo iptables -t nat -A POSTROUTING <span class="operator">-s</span> <span class="number">192.168</span>.<span class="number">0.0</span>/<span class="number">24</span> -o eth0 -j MASQUERADE</span><br></pre></td></tr></table></figure>
+<h3 id="Windows_NT拨号">Windows NT拨号</h3><p>到这里基本上算是配置完成，在windows端配置PPPoE这里就不再阐述，值得注意的是由于PPPoE属于PPP点到点协议，因此分配到的netmask是255.255.255.255，并且也不需要配置网络端口的IP，PPPoE拨号成功后会另外分配IP到宽带拨号适配器上</p>
+<p>参考链接：</p>
+<ol>
+<li><a href="http://blog.csdn.net/linweig/article/details/5481355" target="_blank" rel="external">Ubuntu上架设PPPoE Server</a></li>
+<li><a href="http://www.howtodoityourself.org/pppoe-server-how-to-do-it-yourself.html" target="_blank" rel="external">PPPoE Server – How To Do It Yourself</a></li>
+<li><a href="http://blog.csdn.net/pdcxs007/article/details/44599885" target="_blank" rel="external">Linux下搭建 PPPoE Server 问题总结</a></li>
+</ol>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/PPPoE/">PPPoE</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/06/25/linux-chardev/" title="Linux字符设备驱动笔记" itemprop="url">Linux字符设备驱动笔记</a>
   </h1>
   <p class="article-author">By
@@ -284,6 +362,10 @@
 <div class="tagslist">
 	<p class="asidetitle">標簽</p>
 		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/PPPoE/" title="PPPoE">PPPoE<sup>1</sup></a></li>
+			
 		
 			
 				<li><a href="/tags/我/" title="我">我<sup>1</sup></a></li>

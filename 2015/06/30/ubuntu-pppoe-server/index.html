@@ -1,0 +1,460 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>ubuntu搭建pppoe server测试环境 | Embedded Linux Jam</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Jim Cao">
+    
+
+    
+    <meta name="description" content="最近需要Port PPPoE dial up软件，但是又没有现成的ISP提供的PPPoE端口，索性就自己搭一个吧，其实过程也不复杂，不过中途遇到了一些问题，在此记录下来，以备日后温故而知新。
+硬件要求首先需要的是两张以太网卡，一般主板会自带一张，另一张的话自己去网上买个PCIE Ethernet Adapter，蟹厂的东西还是比较便宜的，Ubuntu上一般也是自带了驱动。
+软件要求1. Ubunt">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ubuntu搭建pppoe server测试环境">
+<meta property="og:url" content="http://yoursite.com/2015/06/30/ubuntu-pppoe-server/index.html">
+<meta property="og:site_name" content="Embedded Linux Jam">
+<meta property="og:description" content="最近需要Port PPPoE dial up软件，但是又没有现成的ISP提供的PPPoE端口，索性就自己搭一个吧，其实过程也不复杂，不过中途遇到了一些问题，在此记录下来，以备日后温故而知新。
+硬件要求首先需要的是两张以太网卡，一般主板会自带一张，另一张的话自己去网上买个PCIE Ethernet Adapter，蟹厂的东西还是比较便宜的，Ubuntu上一般也是自带了驱动。
+软件要求1. Ubunt">
+<meta property="og:updated_time" content="2015-06-30T05:35:14.332Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ubuntu搭建pppoe server测试环境">
+<meta name="twitter:description" content="最近需要Port PPPoE dial up软件，但是又没有现成的ISP提供的PPPoE端口，索性就自己搭一个吧，其实过程也不复杂，不过中途遇到了一些问题，在此记录下来，以备日后温故而知新。
+硬件要求首先需要的是两张以太网卡，一般主板会自带一张，另一张的话自己去网上买个PCIE Ethernet Adapter，蟹厂的东西还是比较便宜的，Ubuntu上一般也是自带了驱动。
+软件要求1. Ubunt">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Embedded Linux Jam" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Embedded Linux Jam" title="Embedded Linux Jam"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Embedded Linux Jam">Embedded Linux Jam</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜單">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/06/30/ubuntu-pppoe-server/" title="ubuntu搭建pppoe server测试环境" itemprop="url">ubuntu搭建pppoe server测试环境</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jim Cao" target="_blank" itemprop="author">Jim Cao</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-30T04:54:26.000Z" itemprop="datePublished"> 發表於 2015-06-30</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目錄</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#硬件要求"><span class="toc-number">1.</span> <span class="toc-text">硬件要求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#软件要求"><span class="toc-number">2.</span> <span class="toc-text">软件要求</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-_Ubuntu上装软件了："><span class="toc-number">2.1.</span> <span class="toc-text">1. Ubuntu上装软件了：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-_下载rp-pppoe并解压安装，注意sudo权限"><span class="toc-number">2.2.</span> <span class="toc-text">2. 下载rp-pppoe并解压安装，注意sudo权限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-_编辑PPPoE_server配置文件"><span class="toc-number">2.3.</span> <span class="toc-text">3. 编辑PPPoE server配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-_添加拨号账号密码"><span class="toc-number">2.4.</span> <span class="toc-text">4. 添加拨号账号密码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-_开启PPPoE_Server"><span class="toc-number">2.5.</span> <span class="toc-text">5. 开启PPPoE Server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-_使能packet_forwarding"><span class="toc-number">2.6.</span> <span class="toc-text">6. 使能packet forwarding</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-_iptables添加NAT规则"><span class="toc-number">2.7.</span> <span class="toc-text">7. iptables添加NAT规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Windows_NT拨号"><span class="toc-number">2.8.</span> <span class="toc-text">Windows NT拨号</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<p>最近需要Port PPPoE dial up软件，但是又没有现成的ISP提供的PPPoE端口，索性就自己搭一个吧，其实过程也不复杂，不过中途遇到了一些问题，在此记录下来，以备日后温故而知新。</p>
+<h2 id="硬件要求">硬件要求</h2><p>首先需要的是两张以太网卡，一般主板会自带一张，另一张的话自己去网上买个PCIE Ethernet Adapter，蟹厂的东西还是比较便宜的，Ubuntu上一般也是自带了驱动。</p>
+<h2 id="软件要求">软件要求</h2><h3 id="1-_Ubuntu上装软件了：">1. Ubuntu上装软件了：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install ppp</span><br></pre></td></tr></table></figure>
+<p>这里讲一下关系，PPPoE全程是PPP over Ethernet，也就是在PPP协议的基础上实现的，所以需要安装ppp包，然后这里可以安装一个PPPoE的client，方便配置脚本等等。</p>
+<h3 id="2-_下载rp-pppoe并解压安装，注意sudo权限">2. 下载rp-pppoe并解压安装，注意sudo权限</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wget http://www.roaringpenguin.com/files/download/rp-pppoe-<span class="number">3.10</span>.tar.gz</span><br><span class="line">tar xvf rp-pppoe-<span class="number">3.10</span>.tar.gz</span><br><span class="line"><span class="built_in">cd</span> rp-pppoe-<span class="number">3.10</span>/src</span><br><span class="line">./configure</span><br><span class="line">make</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
+<h3 id="3-_编辑PPPoE_server配置文件">3. 编辑PPPoE server配置文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/ppp/pppoe-server-options</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">require-chap</span><br><span class="line"><span class="comment">#login</span></span><br><span class="line">lcp-echo-interval <span class="number">10</span></span><br><span class="line">lcp-echo-failure <span class="number">2</span></span><br><span class="line">ms-dns <span class="number">8.8</span>.<span class="number">8.8</span>  <span class="comment">#dns需要修改，国内开源dns已被封</span></span><br><span class="line">defaultroute</span><br></pre></td></tr></table></figure>
+<p>如果加上login选项，那么<a href="http://blog.csdn.net/pdcxs007/article/details/44599885" target="_blank" rel="external">登陆的用户名必需和linux系统下的一个用户名相同</a></p>
+<h3 id="4-_添加拨号账号密码">4. 添加拨号账号密码</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/ppp/chap-secrets</span><br></pre></td></tr></table></figure>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># Secrets for authentication using CHAP</span></span><br><span class="line"><span class="preprocessor"># client server secret IP addresses</span></span><br><span class="line"> </span><br><span class="line"><span class="preprocessor">#USERNAME       SERVER		PASSWORD			CLIENT IP ADDRESS</span></span><br><span class="line"><span class="string">"cristanhuza"</span>	*<span class="string">"		"</span>My_s3cret<span class="string">"			*</span></span><br><span class="line"><span class="string">"friend1"</span>	*		<span class="string">"My_friend"</span>			<span class="number">192.168</span>.<span class="number">1.2</span></span><br></pre></td></tr></table></figure>
+<h3 id="5-_开启PPPoE_Server">5. 开启PPPoE Server</h3><p>这里假定eth0是默认的上网口，eth1是PPPoE实验端口<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">pppoe-server</span> <span class="tag">-I</span> <span class="tag">eth1</span> <span class="tag">-L</span> 192<span class="class">.168</span><span class="class">.0</span><span class="class">.20</span> <span class="tag">-R</span> 192<span class="class">.168</span><span class="class">.0</span><span class="class">.30</span> <span class="tag">-N</span> 10</span><br></pre></td></tr></table></figure></p>
+<p>-I eth1 指定pppoe服务器在那个网卡接口监听连接请求</p>
+<p>-L 192.168.0.20 指定pppoe服务器的ip地址。（注意：此IP地址不是网卡的IP地址，而是PPPOE服务器的虚拟IP）</p>
+<p>-R 192.168.0.30 pppoe服务器分配给客户端的IP地址，从192.168.0.30开始，递增</p>
+<p>-N 10 指定最多可以连接pppoe服务器的客户端数量</p>
+<h3 id="6-_使能packet_forwarding">6. 使能packet forwarding</h3><p>注意这里需要先切换root用户才能够操作成功<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo -i</span><br><span class="line"><span class="built_in">echo</span> <span class="number">1</span> &gt; /proc/sys/net/ipv4/ip_forward</span><br></pre></td></tr></table></figure></p>
+<h3 id="7-_iptables添加NAT规则">7. iptables添加NAT规则</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo iptables -t nat -A POSTROUTING <span class="operator">-s</span> <span class="number">192.168</span>.<span class="number">0.0</span>/<span class="number">24</span> -o eth0 -j MASQUERADE</span><br></pre></td></tr></table></figure>
+<h3 id="Windows_NT拨号">Windows NT拨号</h3><p>到这里基本上算是配置完成，在windows端配置PPPoE这里就不再阐述，值得注意的是由于PPPoE属于PPP点到点协议，因此分配到的netmask是255.255.255.255，并且也不需要配置网络端口的IP，PPPoE拨号成功后会另外分配IP到宽带拨号适配器上</p>
+<p>参考链接：</p>
+<ol>
+<li><a href="http://blog.csdn.net/linweig/article/details/5481355" target="_blank" rel="external">Ubuntu上架设PPPoE Server</a></li>
+<li><a href="http://www.howtodoityourself.org/pppoe-server-how-to-do-it-yourself.html" target="_blank" rel="external">PPPoE Server – How To Do It Yourself</a></li>
+<li><a href="http://blog.csdn.net/pdcxs007/article/details/44599885" target="_blank" rel="external">Linux下搭建 PPPoE Server 问题总结</a></li>
+</ol>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/PPPoE/">PPPoE</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://yoursite.com/2015/06/30/ubuntu-pppoe-server/" data-title="ubuntu搭建pppoe server测试环境 | Embedded Linux Jam" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/06/25/linux-chardev/"  title="Linux字符设备驱动笔记">
+ <strong>下一篇：</strong><br/> 
+ <span>Linux字符设备驱动笔记
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="顯示側邊欄"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目錄</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#硬件要求"><span class="toc-number">1.</span> <span class="toc-text">硬件要求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#软件要求"><span class="toc-number">2.</span> <span class="toc-text">软件要求</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-_Ubuntu上装软件了："><span class="toc-number">2.1.</span> <span class="toc-text">1. Ubuntu上装软件了：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-_下载rp-pppoe并解压安装，注意sudo权限"><span class="toc-number">2.2.</span> <span class="toc-text">2. 下载rp-pppoe并解压安装，注意sudo权限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-_编辑PPPoE_server配置文件"><span class="toc-number">2.3.</span> <span class="toc-text">3. 编辑PPPoE server配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-_添加拨号账号密码"><span class="toc-number">2.4.</span> <span class="toc-text">4. 添加拨号账号密码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-_开启PPPoE_Server"><span class="toc-number">2.5.</span> <span class="toc-text">5. 开启PPPoE Server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-_使能packet_forwarding"><span class="toc-number">2.6.</span> <span class="toc-text">6. 使能packet forwarding</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-_iptables添加NAT规则"><span class="toc-number">2.7.</span> <span class="toc-text">7. iptables添加NAT规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Windows_NT拨号"><span class="toc-number">2.8.</span> <span class="toc-text">Windows NT拨号</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隱藏側邊欄"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">標簽</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/PPPoE/" title="PPPoE">PPPoE<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/我/" title="我">我<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/字符设备/" title="字符设备">字符设备<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/代码风格/" title="代码风格">代码风格<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情鏈接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 訂閱</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Jim&#39;s blog <br/>
+			Jump for the sun, at least you land on the moon</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/1558050883" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/thinki" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		<a href="http://stackoverflow.com/users/4918498" target="_blank" class="icon-stack-overflow" title="stackoverflow"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="Jim Cao">Jim Cao</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Fbeff2c0516d185dbce605dc030598958' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回頂部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
