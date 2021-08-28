@@ -1,0 +1,962 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Freescale i.MX6 Linux Ethernet Driver驱动源码分析02 · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="linux_books.html" />
+    
+    
+    <link rel="prev" href="fsl_imx6_ethernet_01.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    About Me
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    网易博客存档
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="fsl_imx6_ethernet_01.html">
+            
+                <a href="fsl_imx6_ethernet_01.html">
+            
+                    
+                    Freescale i.MX6 Linux Ethernet Driver驱动源码分析01
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2.2" data-path="fsl_imx6_ethernet_02.html">
+            
+                <a href="fsl_imx6_ethernet_02.html">
+            
+                    
+                    Freescale i.MX6 Linux Ethernet Driver驱动源码分析02
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="linux_books.html">
+            
+                <a href="linux_books.html">
+            
+                    
+                    Linux Programming 经典书单
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../Cloud/">
+            
+                <a href="../Cloud/">
+            
+                    
+                    Cloud
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >Freescale i.MX6 Linux Ethernet Driver驱动源码分析02</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="freescale-imx6-linux-ethernet-driver&#x9A71;&#x52A8;&#x6E90;&#x7801;&#x5206;&#x6790;02">Freescale i.MX6 Linux Ethernet Driver&#x9A71;&#x52A8;&#x6E90;&#x7801;&#x5206;&#x6790;02</h1>
+<p><strong>&#x672C;&#x6587;&#x6700;&#x521D;&#x53D1;&#x8868;&#x4E8E;2014-08-03&#xFF0C;&#x7F51;&#x6613;&#x535A;&#x5BA2;</strong></p>
+<p>   &#x4E0A;&#x4E00;&#x7BC7;&#x6587;&#x7AE0;&#x5206;&#x6790;&#x4E86;Freescale i.MX6 Linux Ethernet Driver&#x7684;device&#x7684;&#x6DFB;&#x52A0;&#x548C;driver&#x7684;&#x52A0;&#x8F7D;&#x8FC7;&#x7A0B;&#xFF0C;&#x63A5;&#x4E0B;&#x6765;&#x5206;&#x6790;fec_enet_init()&#x51FD;&#x6570;&#xFF1A;</p>
+<p>&#x9996;&#x5148;&#x63D0;&#x4E00;&#x70B9;&#x8FD9;&#x4E2A;&#x51FD;&#x6570;&#x7684;&#x58F0;&#x660E;&#x662F;static int fec_enet_init(struct net_device *ndev)&#xFF0C;&#x5373;&#x4F20;&#x9012;&#x53C2;&#x6570;&#x4E3A;net_device&#xFF0C;&#x90A3;&#x4E48;&#x901A;&#x8FC7;netdev_priv(ndev)&#x5373;&#x53EF;&#x4EE5;&#x83B7;&#x53D6;&#x5230;&#x4E4B;&#x524D;alloc_etherdev()&#x51FD;&#x6570;&#x5206;&#x914D;&#x7684;&#x6307;&#x5411;&#x79C1;&#x6709;&#x6570;&#x636E;&#x7684;&#x5730;&#x5740;&#xFF1A;</p>
+<pre><code class="lang-c">ndev = alloc_etherdev(<span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">struct</span> fec_enet_private));
+<span class="hljs-keyword">struct</span> fec_enet_private *fep = netdev_priv(ndev);
+</code></pre>
+<p>&#x8FD9;&#x79CD;&#x901A;&#x8FC7;&#x7ED3;&#x6784;&#x4F53;&#x5185;&#x90E8;&#x6307;&#x9488;&#x4F20;&#x9012;&#x79C1;&#x6709;&#x6570;&#x636E;&#x7684;&#x65B9;&#x5F0F;&#x5728;driver&#x4E2D;&#x975E;&#x5E38;&#x5E38;&#x89C1;&#x3002;&#x51FD;&#x6570;&#x5F00;&#x5934;&#x5373;&#x4E3A;Ethernet Controller&#x7684;DMA &#x63A7;&#x5236;&#x5668;&#x5206;&#x914D;&#x76F8;&#x5E94;&#x7684;buffer&#x63CF;&#x8FF0;&#x7B26;&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* Allocate memory for buffer descriptors. */</span>
+cbd_base = dma_alloc_noncacheable(<span class="hljs-literal">NULL</span>, BUFDES_SIZE, &amp;fep-&gt;bd_dma,
+            GFP_KERNEL);
+<span class="hljs-keyword">if</span> (!cbd_base) {
+    printk(<span class="hljs-string">&quot;FEC: allocate descriptor memory failed?\n&quot;</span>);
+    <span class="hljs-keyword">return</span> -ENOMEM;
+}
+</code></pre>
+<p>&#x8FD9;&#x91CC;&#x5206;&#x914D;&#x7684;&#x7F13;&#x51B2;&#x533A;&#x5927;&#x5C0F;&#x662F;&#xFF08;tx buffer&#x4E2A;&#x6570;+rx buffer&#x4E2A;&#x6570;&#xFF09;&#xD7;buffer&#x63CF;&#x8FF0;&#x7B26;&#x5927;&#x5C0F;&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> BUFDES_SIZE ((RX_RING_SIZE + TX_RING_SIZE) * sizeof(struct bufdesc))</span>
+</code></pre>
+<p>&#x7531;&#x4E8E;buffer&#x63CF;&#x8FF0;&#x7B26;&#x4F1A;&#x88AB;CPU&#x4EE5;&#x53CA;DMA&#x63A7;&#x5236;&#x5668;&#x8BBF;&#x95EE;&#xFF0C;&#x56E0;&#x6B64;&#x4F1A;&#x5B58;&#x5728;Cache&#x4E00;&#x81F4;&#x6027;&#x95EE;&#x9898;&#xFF0C;&#x8FD9;&#x91CC;&#x91C7;&#x7528;&#x4E86;dma_alloc_noncacheable()&#x51FD;&#x6570;&#xFF0C;&#x5373;DMA&#x4E00;&#x81F4;&#x6027;&#x6620;&#x5C04;&#x3002;&#x8FD9;&#x91CC;&#x91C7;&#x7528;&#x4E00;&#x81F4;&#x6027;&#x6620;&#x5C04;&#x662F;&#x56E0;&#x4E3A;CPU&#x6216;&#x8005;DMA&#x63A7;&#x5236;&#x5668;&#x4F1A;&#x4EE5;&#x4E0D;&#x53EF;&#x9884;&#x77E5;&#x7684;&#x65B9;&#x5F0F;&#x53BB;&#x8BBF;&#x95EE;&#x8FD9;&#x6BB5;&#x5185;&#x5B58;&#x533A;&#xFF0C;&#x5728;Linux Kernel&#x4E2D;&#x89E3;&#x51B3;Cache&#x4E00;&#x81F4;&#x6027;&#x95EE;&#x9898;&#x6709;&#x4E24;&#x79CD;&#x65B9;&#x6848;&#xFF1A;DMA&#x6D41;&#x5F0F;&#x6620;&#x5C04;&#x548C;DMA&#x4E00;&#x81F4;&#x6027;&#x6620;&#x5C04;&#xFF0C;&#x5173;&#x4E8E;&#x8FD9;&#x4E24;&#x8005;&#x7684;&#x533A;&#x522B;&#x5728;&#x300A;Understanding Linux Kernel&#x300B;&#x4EE5;&#x53CA;&#x300A;LDD3&#x300B;&#x4E2D;&#x5747;&#x6709;&#x4ECB;&#x7ECD;&#xFF0C;&#x6211;&#x4E2A;&#x4EBA;&#x4E5F;&#x603B;&#x7ED3;&#x4E86;&#x4E00;&#x7BC7;&#x535A;&#x6587;&#x521D;&#x6B65;&#x8BB2;&#x8FF0;&#x4E86;&#x8FD9;&#x4E24;&#x8005;&#x7684;&#x533A;&#x522B;&#xFF1A;<a href="http://blog.163.com/thinki_cao/blog/static/83944875201362142939337&#x3002;" target="_blank">http://blog.163.com/thinki_cao/blog/static/83944875201362142939337&#x3002;</a></p>
+<p>&#x8FD9;&#x91CC;&#x5206;&#x6790;&#x4E00;&#x4E0B;DMA&#x63A7;&#x5236;&#x5668;&#xFF0C;i.MX6&#x7684;DMA&#x63A7;&#x5236;&#x5668;&#x91C7;&#x7528;&#x4E86;&#x73AF;&#x5F62;buffer&#x63CF;&#x8FF0;&#x7B26;&#xFF0C;&#x8FD9;&#x91CC;buffer&#x5206;&#x4E3A;&#x4E24;&#x79CD;&#xFF0C;Legacy buffer descriptor&#x662F;&#x4E3A;&#x4E86;&#x4FDD;&#x6301;&#x5BF9;&#x524D;&#x4EE3;Freescale&#x5668;&#x4EF6;&#x7684;&#x517C;&#x5BB9;&#x6027;&#xFF0C;&#x800C;Enhanced buffer descriptor&#x5219;&#x63D0;&#x4F9B;&#x4E86;&#x66F4;&#x591A;&#x7684;&#x529F;&#x80FD;&#xFF0C;&#x5F15;&#x7528;i.MX6Q&#x7684;reference manual&#x4E2D;&#x7684;&#x56FE;&#xFF1A;</p>
+<p> Legacy buffer descriptor&#x4E00;&#x5171;&#x6709;8&#x4E2A;&#x5B57;&#x8282;&#xFF0C;&#x6CE8;&#x610F;&#x8FD9;&#x91CC;&#x662F;&#x91C7;&#x7528;&#x5927;&#x7AEF;&#x5B58;&#x50A8;&#x6A21;&#x5F0F;&#x7684;&#x3002;(Picture Miss)</p>
+<p>&#x800C;Enhanced buffer descriptor&#x4E00;&#x4E2A;&#x6709;64&#x5B57;&#x8282;&#xFF0C;&#x4E5F;&#x662F;&#x91C7;&#x7528;&#x5927;&#x7AEF;&#x5B58;&#x50A8;&#x6A21;&#x5F0F;&#x7684;&#xFF0C;&#x4E2A;&#x4EBA;&#x89C9;&#x5F97;&#x8FD9;&#x4E2A;Ethernet IP&#x6709;&#x70B9;&#x50CF;&#x662F;&#x4ECE;PowerPC&#x90A3;&#x8FB9;&#x6263;&#x8FC7;&#x6765;&#x7684;&#x3002;(Picture Miss)</p>
+<p> &#x53EF;&#x4EE5;&#x4ECE;fec.h&#x6587;&#x4EF6;&#x4E2D;&#x627E;&#x5230;&#x5BF9;&#x8FD9;&#x4E24;&#x4E2A;&#x63CF;&#x8FF0;&#x7B26;&#x7684;&#x5B9A;&#x4E49;&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-keyword">struct</span> bufdesc {    
+    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">short</span> cbd_datlen;    <span class="hljs-comment">/* Data length */</span>    
+    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">short</span> cbd_sc;    <span class="hljs-comment">/* Control and status info */</span>    
+    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> cbd_bufaddr;    <span class="hljs-comment">/* Buffer address */</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">ifdef</span> CONFIG_ENHANCED_BD    </span>
+    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> cbd_esc;    
+    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> cbd_prot;
+    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> cbd_bdu;
+    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> ts;    
+    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">short</span> res0[<span class="hljs-number">4</span>];
+<span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span></span>
+</code></pre>
+<p>&#x5982;&#x679C;&#x5B9A;&#x4E49;&#x4E86;CONFIG_ENHANCED_BD&#x5B8F;&#xFF0C;&#x5219;&#x5F00;&#x542F;Enhanced buffer descriptor&#x7684;&#x652F;&#x6301;&#x3002;&#x4E0D;&#x8FC7;&#x7EB5;&#x89C2;&#x6574;&#x4E2A;driver&#x7A0B;&#x5E8F;&#xFF0C;3.0.35&#x7684;&#x5185;&#x6838;&#x5E76;&#x6CA1;&#x6709;&#x4F7F;&#x7528;enhanced buffer descriptor&#x4F7F;&#x7528;&#x7684;&#x4E00;&#x4E9B;&#x529F;&#x80FD;&#xFF0C;&#x6BD4;&#x5982;Enhanced transmit buffer descriptor&#x4E2D;&#x7684;offset+8&#x4F4D;&#x7F6E;&#x7684;PINS&#x548C;IINS&#x4F4D;&#xFF0C;&#x63D0;&#x4F9B;&#x4E86;&#x91C7;&#x7528;MAC&#x63D0;&#x4F9B;&#x7684;IP accelerator&#x8FDB;&#x884C;&#x786C;&#x4EF6;&#x6821;&#x9A8C;&#xFF0C;&#x63D0;&#x4F9B;&#x5BF9;&#x534F;&#x8BAE;&#x7684;&#x6821;&#x9A8C;&#x548C;IP&#x5934;&#x7684;&#x6821;&#x9A8C;&#x3002;&#x800C;&#x5728;yocto 3.10.17&#x5185;&#x6838;&#x4E0A;&#xFF0C;&#x8FD9;&#x4E9B;&#x5DF2;&#x7ECF;&#x652F;&#x6301;&#x4E86;&#xFF01;&#x8FD9;&#x4E5F;&#x662F;&#x4E3A;&#x4EC0;&#x4E48;3.0.35&#x4E0A;&#x7684;Ethernet driver&#x7684;&#x6027;&#x80FD;&#x4E0D;&#x5982;3.10.17&#x4E0A;&#x7684;&#x539F;&#x56E0;&#x4E4B;&#x4E00;&#x5427;&#x3002;&#x4E0B;&#x9762;&#x7EE7;&#x7EED;&#x5206;&#x6790;&#x4EE3;&#x7801;&#xFF1A;</p>
+<pre><code class="lang-c">spin_lock_init(&amp;fep-&gt;hw_lock); <span class="hljs-comment">/* &#x521D;&#x59CB;&#x5316;&#x81EA;&#x65CB;&#x9501; */</span>
+fep-&gt;netdev = ndev; <span class="hljs-comment">/*&#x628A;net_device&#x7684;&#x5730;&#x5740;&#x4F20;&#x7ED9;netdev*/</span>
+<span class="hljs-comment">/* Get the Ethernet address */</span>
+fec_get_mac(ndev);
+</code></pre>
+<p>fec_get_mac&#x4F1A;&#x4ECE;&#x591A;&#x4E2A;&#x5730;&#x65B9;&#x83B7;&#x53D6;mac&#x5730;&#x5740;&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> __<span class="hljs-function">inline__ <span class="hljs-title">fec_get_mac</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> net_device *ndev)</span></span>{    
+    <span class="hljs-keyword">struct</span> fec_enet_private *fep = netdev_priv(ndev);    
+    <span class="hljs-keyword">struct</span> fec_platform_data *pdata = fep-&gt;pdev-&gt;dev.platform_data;    
+    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">char</span> *iap, tmpaddr[ETH_ALEN];
+    <span class="hljs-comment">/*     
+     * try to get mac address in following order:     
+     *     
+     * 1) module parameter via kernel command line in form     
+     *    fec.macaddr=0x00,0x04,0x9f,0x01,0x30,0xe0     
+     */</span>    iap = macaddr;
+    <span class="hljs-comment">/*     
+     * 2) from flash or fuse (via platform data)     
+     */</span>    
+     <span class="hljs-keyword">if</span> (!is_valid_ether_addr(iap)) {        
+         <span class="hljs-keyword">if</span> (pdata)            
+             <span class="hljs-built_in">memcpy</span>(iap, pdata-&gt;mac, ETH_ALEN);    }
+    <span class="hljs-comment">/*     
+     * 3) FEC mac registers set by bootloader     
+     /    
+     if (!is_valid_ether_addr(iap)) {        
+         *((unsigned long *) &amp;tmpaddr[0]) =            
+             be32_to_cpu(readl(fep-&gt;hwp + FEC_ADDR_LOW));        
+         *((unsigned short *) &amp;tmpaddr[4]) =            
+             be16_to_cpu(readl(fep-&gt;hwp + FEC_ADDR_HIGH) &gt;&gt; 16);        
+         iap = &amp;tmpaddr[0];    
+     }
+    memcpy(ndev-&gt;dev_addr, iap, ETH_ALEN);
+    <span class="hljs-comment">/* Adjust MAC if using macaddr */</span>    
+    if (iap == macaddr)         
+        ndev-&gt;dev_addr[ETH_ALEN-1] = macaddr[ETH_ALEN-1] + fep-&gt;pdev-&gt;id;}
+</span></code></pre>
+<p>1&#xFF09;&#x9996;&#x5148;&#x662F;&#x4ECE;&#x5168;&#x5C40;&#x53D8;&#x91CF;macaddr&#x83B7;&#x53D6;ip&#x5730;&#x5740;&#xFF0C;macaddr&#x5B9A;&#x4E49;&#x76F8;&#x5173;&#x7684;&#x4EE3;&#x7801;&#x5982;&#x4E0B;&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-keyword">static</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">char</span> macaddr[ETH_ALEN];
+module_param_array(macaddr, byte, <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>);
+MODULE_PARM_DESC(macaddr, <span class="hljs-string">&quot;FEC Ethernet MAC address&quot;</span>);
+__setup(<span class="hljs-string">&quot;fec_mac=&quot;</span>, fec_mac_addr_setup);
+</code></pre>
+<p>&#x8FD9;&#x91CC;&#x7684;__setup&#x662F;&#x7528;&#x6765;&#x4ECE;uboot&#x4F20;&#x7ED9;&#x5185;&#x6838;&#x7684;&#x542F;&#x52A8;&#x53C2;&#x6570;&#x4E2D;&#x6355;&#x83B7;fec_mac&#xFF08;&#x5373;mac&#x5730;&#x5740;&#xFF09;&#x53C2;&#x6570;&#xFF0C;&#x5E76;&#x5C06;&#x8BE5;&#x53C2;&#x6570;&#x4F20;&#x9012;&#x7ED9;fec_mac_addr_setup(char *mac_addr)&#x51FD;&#x6570;&#x8FDB;&#x884C;&#x89E3;&#x6790;&#x7684;&#x3002;&#x5982;&#x679C;uboot&#x4E2D;&#x6CA1;&#x6709;&#x4F20;&#x9012;mac&#x53C2;&#x6570;&#xFF0C;&#x90A3;&#x4E48;macaddr&#x6570;&#x7EC4;&#x4E2D;&#x7684;&#x6210;&#x5458;&#x5168;&#x662F;0&#x3002;</p>
+<p>2&#xFF09;&#x68C0;&#x6D4B;1&#xFF09;&#x4E2D;&#x83B7;&#x53D6;&#x7684;mac&#x5730;&#x5740;&#x662F;&#x5426;&#x5408;&#x6CD5;&#xFF0C;&#x5982;&#x679C;&#x4E0D;&#x5408;&#x6CD5;&#xFF0C;&#x5219;&#x4ECE;&#x8BBE;&#x5907;&#x7684;&#x79C1;&#x6709;&#x6570;&#x636E;&#x7ED3;&#x6784;&#xFF08;&#x5982;&#x679C;pdata&#x6307;&#x9488;&#x4E0D;&#x4E3A;&#x7A7A;&#xFF09;struct fec_platform_data&#x4E2D;&#x83B7;&#x53D6;mac&#x6570;&#x7EC4;&#x7684;&#x503C;&#x3002;</p>
+<p>3&#xFF09;&#x68C0;&#x6D4B;2&#xFF09;&#x4E2D;&#x83B7;&#x53D6;&#x7684;mac&#x5730;&#x5740;&#x662F;&#x5426;&#x5408;&#x6CD5;&#xFF0C;&#x5982;&#x679C;&#x4E0D;&#x5408;&#x6CD5;&#xFF0C;&#x5219;&#x8BFB;&#x53D6;Ethernet&#x63A7;&#x5236;&#x5668;&#x7684;mac&#x5730;&#x5740;&#x5BC4;&#x5B58;&#x5668;&#x6765;&#x83B7;&#x53D6;mac&#x5730;&#x5740;&#x3002;</p>
+<p>&#x6700;&#x540E;&#x628A;mac&#x5730;&#x5740;&#x4F20;&#x9012;&#x7ED9;&#x5185;&#x6838;&#x4E2D;net_device&#x7ED3;&#x6784;&#x4F53;&#x4E2D;&#x7684;dev_addr&#x5B57;&#x6BB5;&#x3002;</p>
+<p>&#x63A5;&#x7740;&#x7EE7;&#x7EED;&#x5206;&#x6790;&#x4EE3;&#x7801;&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* Set receive and transmit descriptor base. */</span>
+fep-&gt;rx_bd_base = cbd_base;
+fep-&gt;tx_bd_base = cbd_base + RX_RING_SIZE;
+</code></pre>
+<p>&#x8BBE;&#x7F6E;tx_bd_base&#x548C;rx_bd_base&#xFF0C;&#x5373;tx buffer descriptor base &#x548C;rx buffer descriptor base&#xFF0C;&#x793A;&#x610F;&#x56FE;&#x5982;&#x4E0B;&#xFF1A;(Picture Miss)</p>
+<p> &#x63A5;&#x7740;&#x5C31;&#x662F;net_device&#x5DF2;&#x7ECF;fec_enet_private&#x7B49;&#x7ED3;&#x6784;&#x4F53;&#x7684;&#x8BBE;&#x7F6E;&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* The FEC Ethernet specific entries in the device structure */</span>
+ndev-&gt;watchdog_timeo = TX_TIMEOUT; <span class="hljs-comment">/* watchdong&#x5B9A;&#x65F6;&#x5668;&#x5524;&#x9192;&#x95F4;&#x9694; */</span>
+ndev-&gt;netdev_ops = &amp;fec_netdev_ops;
+ndev-&gt;ethtool_ops = &amp;fec_enet_ethtool_ops;
+
+
+fep-&gt;use_napi = FEC_NAPI_ENABLE;
+fep-&gt;napi_weight = FEC_NAPI_WEIGHT;
+<span class="hljs-keyword">if</span> (fep-&gt;use_napi) {
+    fec_rx_int_is_enabled(ndev, <span class="hljs-literal">false</span>);
+    netif_napi_add(ndev, &amp;fep-&gt;napi, fec_rx_poll, fep-&gt;napi_weight);
+}
+</code></pre>
+<p>&#x4E0B;&#x9762;netdev_ops&#x662F;&#x4E00;&#x4E2A;&#x6BD4;&#x8F83;&#x91CD;&#x8981;&#x7684;&#x7ED3;&#x6784;&#x4F53;&#x6307;&#x9488;&#xFF0C;&#x540C;&#x6837;&#x5730;ethtool_ops&#x4E5F;&#x662F;&#x4E00;&#x4E2A;&#x5E38;&#x7528;&#x7684;&#x7ED3;&#x6784;&#x4F53;&#x6307;&#x9488;&#xFF0C;&#x6211;&#x4EEC;&#x5728;&#x7A0D;&#x540E;&#x8BB2;&#x89E3;&#x3002;&#x5148;&#x5206;&#x6790;&#x5269;&#x4F59;&#x7684;&#x5185;&#x5BB9;&#x3002;&#x8FD9;&#x91CC;&#x6D89;&#x53CA;&#x5230;&#x4E86;&#x4E00;&#x4E2A;&#x65B0;&#x7684;&#x4E1C;&#x897F;napi&#xFF08;&#x7406;&#x89E3;&#x4E3A;new api&#xFF09;&#xFF0C;&#x5B83;&#x4E3B;&#x8981;&#x4E3A;&#x4E86;&#x63D0;&#x5347;&#x5728;&#x7F51;&#x7EDC;&#x8D1F;&#x8377;&#x8F83;&#x5927;&#x7684;&#x60C5;&#x51B5;&#x4E0B;&#x7684;&#x6027;&#x80FD;&#x3002;&#x4E00;&#x822C;&#x6765;&#x8BF4;&#xFF0C;&#x7F51;&#x7EDC;&#x63A5;&#x6536;&#x6570;&#x636E;&#x5305;&#x662F;&#x901A;&#x8FC7;&#x4E2D;&#x65AD;&#x6765;&#x901A;&#x77E5;&#x5185;&#x6838;&#x7684;&#xFF0C;&#x4F46;&#x662F;napi&#x4F1A;&#x5224;&#x65AD;&#x5728;&#x7F51;&#x7EDC;&#x8D1F;&#x8377;&#x8F83;&#x5927;&#x7684;&#x60C5;&#x51B5;&#x4E0B;&#x6539;&#x4E3A;&#x8F6E;&#x8BE2;&#x5904;&#x7406;&#x63A5;&#x6536;&#x6570;&#x636E;&#x5305;&#xFF0C;&#x8FD9;&#x6837;&#x663E;&#x5F97;&#x66F4;&#x52A0;&#x9AD8;&#x6548;&#xFF0C;&#x540C;&#x65F6;napi&#x4E5F;&#x4F1A;&#x5728;&#x7F51;&#x7EDC;&#x8D1F;&#x8377;&#x8F83;&#x5C0F;&#x7684;&#x60C5;&#x51B5;&#x4E0B;&#x6539;&#x4E3A;&#x4E2D;&#x65AD;&#x63A5;&#x6536;&#x6570;&#x636E;&#x5305;&#xFF0C;&#x8FD9;&#x91CC;napi_weight&#x4E2A;&#x4EBA;&#x7406;&#x89E3;&#x662F;&#x7528;&#x4E8E;&#x5224;&#x65AD;&#x662F;&#x5426;&#x5F00;&#x542F;&#x8F6E;&#x8BE2;&#x6A21;&#x5F0F;&#x7684;&#x6743;&#x503C;&#xFF0C;&#x4E00;&#x822C;&#x60C5;&#x51B5;&#x4E0B;64&#x7528;&#x7684;&#x6BD4;&#x8F83;&#x591A;&#x3002;&#x63A5;&#x7740;&#x5224;&#x65AD;&#x5982;&#x679C;&#x5F00;&#x542F;&#x4E86;napi&#xFF0C;&#x90A3;&#x4E48;&#x9996;&#x5148;&#x7981;&#x6B62;rx&#x7684;&#x4E2D;&#x65AD;&#xFF0C;&#x63A5;&#x7740;&#x518D;&#x6CE8;&#x518C;napi&#xFF0C;&#x540C;&#x65F6;&#x63D0;&#x4F9B;&#x4E00;&#x4E2A;&#x8F6E;&#x8BE2;&#x7684;&#x51FD;&#x6570;fec_rx_poll()&#xFF0C;&#x8FD9;&#x4E2A;&#x5728;&#x7A0D;&#x540E;&#x548C;netdev_ops&#x4E00;&#x8D77;&#x8BB2;&#x89E3;&#x3002;</p>
+<p>&#x63A5;&#x7740;&#x521D;&#x59CB;&#x5316;rx buffer descriptor&#xFF08;tx&#x7684;&#x539F;&#x7406;&#x76F8;&#x540C;&#xFF0C;&#x8FD9;&#x91CC;&#x7565;&#x53BB;&#xFF09;</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* Initialize the receive buffer descriptors. */</span>
+    bdp = fep-&gt;rx_bd_base;
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; RX_RING_SIZE; i++) {
+
+
+        <span class="hljs-comment">/* Initialize the BD for every fragment in the page. */</span>
+        bdp-&gt;cbd_sc = <span class="hljs-number">0</span>;
+        bdp-&gt;cbd_bufaddr = <span class="hljs-number">0</span>;
+        bdp++;
+    }
+
+
+    <span class="hljs-comment">/* Set the last buffer to wrap */</span>
+    bdp--;
+    bdp-&gt;cbd_sc |= BD_SC_WRAP;
+</code></pre>
+<p>&#x9ED8;&#x8BA4;&#x60C5;&#x51B5;&#x4E0B;rx buffer&#x7684;&#x63A7;&#x5236;&#x5B57;&#x6BB5;&#x548C;rx buffer&#x7684;&#x5730;&#x5740;&#x90FD;&#x5E94;&#x8BE5;&#x662F;0&#xFF0C;&#x6700;&#x540E;&#x5728;&#x672B;&#x5C3E;&#x7684;buffer&#x5904;&#x8BBE;&#x7F6E;wrap&#xFF0C;&#x793A;&#x610F;&#x56FE;&#x5982;&#x4E0B;&#xFF1A;(Picture Miss)</p>
+<p> &#x6700;&#x540E;&#x6574;&#x4E2A;Ethernet restart&#xFF1A;</p>
+<pre><code class="lang-c">fec_restart(ndev, <span class="hljs-number">0</span>);
+</code></pre>
+<p>&#x4E0B;&#x9762;&#x5206;&#x5206;&#x6790;&#x8FD9;&#x4E2A;&#x51FD;&#x6570;&#xFF0C;&#x4E00;&#x5F00;&#x59CB;&#x662F;&#x5BF9;&#x5BC4;&#x5B58;&#x5668;&#x8FDB;&#x884C;&#x64CD;&#x4F5C;&#xFF0C;&#x6CE8;&#x91CA;&#x5199;&#x5F97;&#x5F88;&#x660E;&#x767D;&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* Whack a reset.  We should wait for this. */</span>
+writel(<span class="hljs-number">1</span>, fep-&gt;hwp + FEC_ECNTRL);
+udelay(<span class="hljs-number">10</span>);
+
+
+<span class="hljs-comment">/* if uboot don&apos;t set MAC address, get MAC address
+    * from command line; if command line don&apos;t set MAC
+    * address, get from OCOTP; otherwise, allocate random
+    * address.
+    */</span>
+<span class="hljs-built_in">memcpy</span>(&amp;temp_mac, dev-&gt;dev_addr, ETH_ALEN);
+writel(cpu_to_be32(temp_mac[<span class="hljs-number">0</span>]), fep-&gt;hwp + FEC_ADDR_LOW);
+writel(cpu_to_be32(temp_mac[<span class="hljs-number">1</span>]), fep-&gt;hwp + FEC_ADDR_HIGH);
+
+
+<span class="hljs-comment">/* Clear any outstanding interrupt. */</span>
+writel(<span class="hljs-number">0xffc00000</span>, fep-&gt;hwp + FEC_IEVENT);
+
+
+<span class="hljs-comment">/* Reset all multicast.    */</span>
+writel(<span class="hljs-number">0</span>, fep-&gt;hwp + FEC_GRP_HASH_TABLE_HIGH);
+writel(<span class="hljs-number">0</span>, fep-&gt;hwp + FEC_GRP_HASH_TABLE_LOW);
+
+ <span class="hljs-comment">/* Set maximum receive buffer size. */</span>
+writel(PKT_MAXBLR_SIZE, fep-&gt;hwp + FEC_R_BUFF_SIZE);
+
+
+<span class="hljs-comment">/* Set receive and transmit descriptor base. */</span>
+writel(fep-&gt;bd_dma, fep-&gt;hwp + FEC_R_DES_START);
+writel((<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>)fep-&gt;bd_dma + <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">struct</span> bufdesc) * RX_RING_SIZE,
+        fep-&gt;hwp + FEC_X_DES_START);
+</code></pre>
+<p>&#x6700;&#x540E;&#x4E00;&#x53E5;&#x8BBE;&#x7F6E;rx&#x548C;tx&#x63CF;&#x8FF0;&#x7B26;&#x57FA;&#x5730;&#x5740;&#xFF0C;&#x8FD9;&#x91CC;&#x7531;&#x4E8E;DMA&#x63A7;&#x5236;&#x5668;&#x8BBF;&#x95EE;&#x7684;&#x662F;&#x7269;&#x7406;&#x5730;&#x5740;&#xFF0C;&#x56E0;&#x6B64;&#x9700;&#x8981;&#x6211;&#x4EEC;&#x628A;tx/tx descriptor base&#x7684;&#x7269;&#x7406;&#x5730;&#x5740;&#x5199;&#x8FDB;&#x5BC4;&#x5B58;&#x5668;&#xFF0C;fep-&gt;bd_dma&#x662F;&#x5728;dma_alloc_noncacheable()&#x51FD;&#x6570;&#x4E2D;&#x8D4B;&#x503C;&#x7684;&#x3002;&#x540C;&#x6837;&#x5730;&#x4E5F;&#x662F;RX&#x5730;&#x5740;&#x5728;&#x524D;&#xFF0C;TX&#x5730;&#x5740;&#x5728;&#x540E;&#x3002;</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* Reinit transmit descriptors */</span>
+fec_enet_txbd_init(dev);
+
+
+fep-&gt;dirty_tx = fep-&gt;cur_tx = fep-&gt;tx_bd_base;
+fep-&gt;cur_rx = fep-&gt;rx_bd_base;
+
+
+<span class="hljs-comment">/* Reset SKB transmit buffers. */</span>
+fep-&gt;skb_cur = fep-&gt;skb_dirty = <span class="hljs-number">0</span>;
+<span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt;= TX_RING_MOD_MASK; i++) {
+    <span class="hljs-keyword">if</span> (fep-&gt;tx_skbuff[i]) {
+        dev_kfree_skb_any(fep-&gt;tx_skbuff[i]);
+        fep-&gt;tx_skbuff[i] = <span class="hljs-literal">NULL</span>;
+    }
+}
+</code></pre>
+<p>&#x8FD9;&#x91CC;&#x4E3B;&#x8981;&#x662F;&#x9488;&#x5BF9;descriptor&#x6307;&#x9488;&#x7684;&#x521D;&#x59CB;&#x5316;&#xFF0C;dirty_tx&#x6307;&#x5411;&#x8FD8;&#x6CA1;&#x6709;&#x91CA;&#x653E;&#x7684;buffer&#x5BF9;&#x5E94;&#x7684;descriptor&#xFF0C;cur_tx,cur_rx&#x5206;&#x522B;&#x6307;&#x5411;&#x5F53;&#x524D;&#x5DF2;&#x7ECF;&#x586B;&#x5145;&#x7684;buffer&#x5BF9;&#x5E94;&#x7684;descriptor&#x3002;&#x6700;&#x540E;&#x590D;&#x4F4D;Socket Buffer &#x53D1;&#x9001;&#x7F13;&#x51B2;&#x533A;&#xFF0C;&#x8FD9;&#x91CC;&#x4E5F;&#x5BF9;&#x5E94;&#x4E86;&#x4E24;&#x4E2A;&#x8BA1;&#x6570;&#x503C;&#xFF0C;skb_cur,skb_dirty&#xFF0C;&#x7528;&#x4E8E;&#x6307;&#x5411;&#x8FD8;&#x6CA1;&#x6709;&#x91CA;&#x653E;&#x7684;buffer&#x4EE5;&#x53CA;&#x5F53;&#x524D;&#x5DF2;&#x7ECF;&#x586B;&#x5145;&#x7684;buffer&#xFF1A;(Picture Miss)</p>
+<p>&#x540C;&#x65F6;&#x904D;&#x5386;&#x6574;&#x4E2A; tx_skbuff[]&#x6307;&#x9488;&#x6570;&#x7EC4;&#xFF0C;&#x91CA;&#x653E;&#x975E;&#x7A7A;&#x6307;&#x9488;&#xFF0C;socket buffer&#x6307;&#x9488;&#x6570;&#x7EC4;&#xFF1A;struct sk_buff* tx_skbuff[TX_RING_SIZE]&#x7684;&#x793A;&#x610F;&#x56FE;&#x5982;&#x4E0B;&#xFF08;&#x8BF7;&#x6CE8;&#x610F;&#x56FE;&#x4E2D;&#x7684;&#x7EA2;&#x8272;&#x5B57;&#x4F53;&#xFF01;&#xFF09;&#xFF1A;(Picture Miss)</p>
+<p>&#x63A5;&#x4E0B;&#x6765;&#x8BBE;&#x7F6E;&#x534A;&#x53CC;&#x5DE5;&#x6216;&#x8005;&#x5168;&#x53CC;&#x5DE5;&#x6A21;&#x5F0F;&#xFF0C;&#x9ED8;&#x8BA4;&#x60C5;&#x51B5;&#x4E0B;&#x662F;&#x534A;&#x53CC;&#x5DE5;&#x6A21;&#x5F0F;&#xFF08;&#x5373;&#x53D1;&#x9001;&#x65F6;&#x4E0D;&#x63A5;&#x53D7;&#x6570;&#x636E;&#xFF09; </p>
+<pre><code class="lang-c"><span class="hljs-comment">/* Enable MII mode */</span>
+<span class="hljs-keyword">if</span> (duplex) {
+    <span class="hljs-comment">/* MII enable / FD enable */</span>
+    writel(OPT_FRAME_SIZE | <span class="hljs-number">0x04</span>, fep-&gt;hwp + FEC_R_CNTRL);
+    writel(<span class="hljs-number">0x04</span>, fep-&gt;hwp + FEC_X_CNTRL);
+} <span class="hljs-keyword">else</span> {
+    <span class="hljs-comment">/* MII enable / No Rcv on Xmit */</span>
+    writel(OPT_FRAME_SIZE | <span class="hljs-number">0x06</span>, fep-&gt;hwp + FEC_R_CNTRL);
+    writel(<span class="hljs-number">0x0</span>, fep-&gt;hwp + FEC_X_CNTRL);
+}
+fep-&gt;full_duplex = duplex;
+
+
+<span class="hljs-comment">/* Set MII speed */</span>
+writel(fep-&gt;phy_speed, fep-&gt;hwp + FEC_MII_SPEED);
+</code></pre>
+<p>&#x4E0B;&#x9762;&#x7528;&#x4E8E;&#x8BBE;&#x7F6E;&#x7269;&#x7406;&#x5C42;&#x63A5;&#x53E3;&#x76F8;&#x5173;&#x7684;&#x90E8;&#x5206;&#x7701;&#x7565;&#x8FC7;&#x3002;&#x63A5;&#x7740;&#x662F;&#x5F00;&#x542F;IEEE 1588&#x7684;&#x5B9A;&#x65F6;&#x5668;&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-keyword">if</span> (fep-&gt;ptimer_present) {
+    <span class="hljs-comment">/* Set Timer count */</span>
+    ret = fec_ptp_start(fep-&gt;ptp_priv);
+    <span class="hljs-keyword">if</span> (ret) {
+        fep-&gt;ptimer_present = <span class="hljs-number">0</span>;
+        reg = <span class="hljs-number">0x0</span>;
+    } <span class="hljs-keyword">else</span>
+        reg = <span class="hljs-number">0x0</span>;
+} <span class="hljs-keyword">else</span>
+    reg = <span class="hljs-number">0x0</span>;
+</code></pre>
+<p>&#x4E0B;&#x9762;&#x4E0E;&#x5BC4;&#x5B58;&#x5668;&#x76F8;&#x5173;&#x7684;&#x4E00;&#x4E9B;&#x63A5;&#x53E3;&#x8FD9;&#x91CC;&#x7701;&#x7565;&#xFF0C;&#x90A3;&#x4E48;&#x5230;&#x4E86;&#x8FD9;&#x91CC;MAC&#x5C42;&#x76F8;&#x5173;&#x7684;driver&#x5C31;&#x53EA;&#x5269;&#x4E0B;ndev-&gt;netdev_ops&#x5165;&#x53E3;&#x4EE5;&#x53CA;ndev-&gt;ethtool_ops&#x5165;&#x53E3;&#x4E86;&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-keyword">static</span> <span class="hljs-keyword">const</span> <span class="hljs-keyword">struct</span> net_device_ops fec_netdev_ops = {
+    .ndo_open        = fec_enet_open,
+    .ndo_stop        = fec_enet_close,
+    .ndo_start_xmit        = fec_enet_start_xmit,
+    .ndo_set_multicast_list = set_multicast_list,
+    .ndo_change_mtu        = eth_change_mtu,
+    .ndo_validate_addr    = eth_validate_addr,
+    .ndo_tx_timeout        = fec_timeout,
+    .ndo_set_mac_address    = fec_set_mac_address,
+    .ndo_do_ioctl        = fec_enet_ioctl,
+<span class="hljs-meta">#<span class="hljs-meta-keyword">ifdef</span> CONFIG_NET_POLL_CONTROLLER</span>
+    .ndo_poll_controller    = fec_enet_netpoll,
+<span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span></span>
+};
+</code></pre>
+<p>&#x8FD9;&#x91CC;&#x91CD;&#x70B9;&#x4ECB;&#x7ECD;&#x7684;&#x662F;&#x524D;&#x9762;&#x4E09;&#x4E2A;&#x51FD;&#x6570;&#xFF0C;&#x5373;open,stop,start_xmit&#x3002;</p>
+<p>&#x9996;&#x5148;&#x770B;open&#x51FD;&#x6570;&#xFF0C;&#x90A3;&#x4E48;open&#x51FD;&#x6570;&#x5BF9;&#x5E94;&#x7740;&#x7528;&#x6237;&#x7A7A;&#x95F4;&#x7A0B;&#x5E8F;ifconfig&#x7684;up&#x64CD;&#x4F5C;&#xFF0C;&#x5F53;&#x6211;&#x4EEC;&#x6267;&#x884C;ifconfig eth0 up&#x7684;&#x65F6;&#x5019;&#x5373;&#x4F1A;&#x8C03;&#x7528;open&#xFF0C;&#x540C;&#x6837;&#x5730;&#xFF0C;down&#x64CD;&#x4F5C;&#x65F6;&#x4E5F;&#x4F1A;&#x5BF9;&#x5E94;stop&#x3002;&#x9996;&#x5148;&#x662F;napi&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-keyword">if</span> (fep-&gt;use_napi)
+    napi_enable(&amp;fep-&gt;napi);
+</code></pre>
+<p>&#x5982;&#x679C;&#x5F00;&#x542F;&#x4E86;napi&#xFF0C;&#x90A3;&#x4E48;&#x5C31;&#x8981;enable&#x3002;&#x63A5;&#x4E0B;&#x6765;&#x662F;clock&#x7684;enable&#xFF1A;</p>
+<pre><code class="lang-c">clk_enable(fep-&gt;clk);
+</code></pre>
+<p>&#x63A5;&#x7740;&#x662F;&#x4E3A;&#x63A5;&#x6536;&#x7F13;&#x51B2;&#x533A;&#x5206;&#x914D;buffer&#xFF0C;&#x524D;&#x9762;&#x8BF4;&#x8FC7;tx buffer&#x662F;&#x7531;&#x5185;&#x6838;&#x7684;&#x7F51;&#x7EDC;&#x5B50;&#x7CFB;&#x7EDF;&#x5206;&#x914D;&#x7684;&#xFF0C; &#x800C;rx buffer&#x662F;&#x7531;Ethernet&#x9A71;&#x52A8;&#x5206;&#x914D;&#x3002;</p>
+<pre><code class="lang-c">ret = fec_enet_alloc_buffers(ndev);
+<span class="hljs-keyword">if</span> (ret)
+    <span class="hljs-keyword">return</span> ret;
+</code></pre>
+<p>&#x8FD9;&#x4E2A;&#x51FD;&#x6570;&#x4E0E;&#x4E4B;&#x524D;&#x521D;&#x59CB;&#x5316;buffer descriptor&#x7684;&#x7C7B;&#x4F3C;&#xFF0C;&#x8FD9;&#x91CC;&#x9700;&#x8981;&#x6CE8;&#x610F;&#x7684;&#x662F;&#x5BF9;rx socket buffer&#x4F7F;&#x7528;&#x4E86;&#x6D41;&#x5F0F;&#x6620;&#x5C04;&#xFF0C;&#x6211;&#x4E2A;&#x4EBA;&#x4EE5;&#x524D;&#x5E38;&#x5E38;&#x5BF9;&#x4E8E;&#x6D41;&#x5F0F;&#x6620;&#x5C04;&#x7684;&#x65B9;&#x5411;&#x641E;&#x4E0D;&#x6E05;&#x695A;&#xFF0C;&#x8FD9;&#x91CC;&#x518D;&#x591A;&#x8BF4;&#x4E00;&#x4E9B;&#xFF1A;</p>
+<p>DMA_FROM_DEVICE</p>
+<p>&#x200B;    &#x4F20;&#x8F93;&#x65B9;&#x5411;&#x662F;&#x4ECE;device&#x90A3;&#x8FB9;&#x7684;&#x5F80;ram&#x5199;&#x6570;&#x636E;&#xFF0C;&#x56E0;&#x6B64;&#x5176;&#x5B9E;&#x662F;&#x63A5;&#x6536;&#x5916;&#x90E8;&#x53D1;&#x9001;&#x7684;&#x6570;&#x636E;&#x3002;</p>
+<p>DMA_TO_DEVICE</p>
+<p>&#x200B;    &#x4F20;&#x8F93;&#x65B9;&#x5411;&#x662F;&#x4ECE;ram&#x5F80;device&#x90A3;&#x8FB9;&#x4F20;&#x6570;&#x636E;&#xFF0C;&#x56E0;&#x6B64;&#x5176;&#x5B9E;&#x662F;&#x53D1;&#x9001;&#x6570;&#x636E;&#x5230;&#x5916;&#x90E8;&#x3002;</p>
+<p>&#x63A5;&#x6536;&#x7F13;&#x51B2;&#x533A;&#x7684;&#x793A;&#x610F;&#x56FE;&#x5982;&#x4E0B;&#xFF0C;&#x8FD9;&#x91CC;&#x8981;&#x6CE8;&#x610F;&#x7684;&#x662F;&#x63A5;&#x6536;&#x7F13;&#x51B2;&#x533A;&#x662F;&#x6709;Ethernet Driver&#x5206;&#x914D;&#x7684;&#xFF0C;&#x4E0D;&#x662F;&#x7531;&#x5185;&#x6838;&#x7F51;&#x7EDC;&#x5B50;&#x7CFB;&#x7EDF;&#x5206;&#x914D;&#x7684;&#xFF1A;&#xFF08;Picture Miss)</p>
+<p>&#x5BF9;&#x4E8E;tx buffer descriptor&#x90E8;&#x5206;&#x6765;&#x8BF4;&#xFF0C;&#x8FD9;&#x91CC;tx_bounce&#x6307;&#x5411;&#x7684;&#x5206;&#x914D;&#x7684;&#x5185;&#x5B58;&#x662F;&#x7528;&#x6765;&#x8FDB;&#x884C;buffer&#x5B57;&#x8282;&#x5BF9;&#x9F50;&#x7684;&#xFF0C;&#x5BF9;&#x5E94;&#x7684;tx buffer descriptor&#x76F8;&#x5173;&#x7684;&#x793A;&#x610F;&#x56FE;&#xFF1A;(Picture Miss)</p>
+<p>&#x7136;&#x540E;&#x662F;&#x4E0E;&#x7269;&#x7406;&#x5C42;&#x7684;&#x76F8;&#x5173;&#x7684;&#x51FD;&#x6570;&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* Probe and connect to PHY when open the interface */</span>
+ret = fec_enet_mii_probe(ndev);
+<span class="hljs-keyword">if</span> (ret) {
+    fec_enet_free_buffers(ndev);
+    <span class="hljs-keyword">return</span> ret;
+}
+
+
+phy_start(fep-&gt;phy_dev);
+netif_start_queue(ndev);
+fep-&gt;opened = <span class="hljs-number">1</span>;
+
+
+ret = -EINVAL;
+<span class="hljs-keyword">if</span> (pdata-&gt;init &amp;&amp; pdata-&gt;init(fep-&gt;phy_dev))
+    <span class="hljs-keyword">return</span> ret;
+
+
+<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>
+</code></pre>
+<p>&#x8FD9;&#x90E8;&#x5206;&#x7B49;&#x5230;MAC&#x5C42;&#x76F8;&#x5173;&#x7684;&#x5185;&#x5BB9;&#x5168;&#x90E8;&#x4ECB;&#x7ECD;&#x5B8C;&#x518D;&#x8BB2;&#x89E3;&#x3002;&#x5BF9;&#x5E94;fec_enet_close&#x6240;&#x4F5C;&#x7684;&#x4E8B;&#x60C5;&#x53CD;&#x4E4B;&#xFF0C;&#x4E0D;&#x518D;&#x8BB2;&#x89E3;&#x3002;</p>
+<p><strong>&#x4E0B;&#x9762;&#x8BB2;&#x8FF0;fec_enet_start_xmit&#xFF1A;</strong></p>
+<p>&#x9996;&#x5148;&#x5173;&#x95ED;&#x5168;&#x5C40;&#x4E2D;&#x65AD;</p>
+<pre><code class="lang-c">spin_lock_irqsave(&amp;fep-&gt;hw_lock, flags);
+</code></pre>
+<p>&#x63A5;&#x7740;&#x5224;&#x65AD;link&#x662F;&#x5426;&#x65AD;&#x5F00;&#xFF0C;&#x8FD9;&#x91CC;&#x4E2A;&#x4EBA;&#x4E0D;&#x662F;&#x592A;&#x660E;&#x767D;&#xFF0C;&#x53D1;&#x9001;&#x8FC7;&#x7A0B;&#x4E2D;link&#x662F;&#x5426;&#x4F1A;&#x4E2D;&#x65AD;&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-keyword">if</span> (!fep-&gt;link) {
+    <span class="hljs-comment">/* Link is down or autonegotiation is in progress. */</span>
+    netif_stop_queue(ndev);
+    spin_unlock_irqrestore(&amp;fep-&gt;hw_lock, flags);
+    <span class="hljs-keyword">return</span> NETDEV_TX_BUSY;
+}
+</code></pre>
+<p>&#x63A5;&#x7740;&#x4ECE;&#x53D1;&#x9001;&#x961F;&#x5217;&#x4E2D;&#x83B7;&#x53D6;&#x5F85;&#x53D1;&#x9001;buffer&#x5BF9;&#x5E94;&#x7684;buffer&#x63CF;&#x8FF0;&#x7B26;&#x6307;&#x9488;&#xFF0C;&#x5E76;&#x83B7;&#x53D6;&#x5F53;&#x524D;&#x63CF;&#x8FF0;&#x7B26;&#x7684;&#x72B6;&#x6001;&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* Fill in a Tx ring entry */</span>
+bdp = fep-&gt;cur_tx;
+status = bdp-&gt;cbd_sc;
+</code></pre>
+<p>&#x63A5;&#x7740;&#x5224;&#x65AD;&#x5F53;&#x524D;buffer&#x63CF;&#x8FF0;&#x7B26;&#x7684;&#x72B6;&#x6001;&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-keyword">if</span> (status &amp; BD_ENET_TX_READY) {
+    <span class="hljs-comment">/* Ooops.  All transmit buffers are full.  Bail out.
+     * This should not happen, since ndev-&gt;tbusy should be set.
+     */</span>
+    printk(<span class="hljs-string">&quot;%s: tx queue full!.\n&quot;</span>, ndev-&gt;name);
+    netif_stop_queue(ndev);
+    spin_unlock_irqrestore(&amp;fep-&gt;hw_lock, flags);
+    <span class="hljs-keyword">return</span> NETDEV_TX_BUSY;
+}
+</code></pre>
+<p>&#x5982;&#x679C;&#x5F53;&#x524D;buffer&#x63CF;&#x8FF0;&#x72B6;&#x6001;&#x7684;BD_ENET_TX_READY&#x4F4D;&#x8FD8;&#x6CA1;&#x6709;&#x88AB;DMA&#x63A7;&#x5236;&#x5668;&#x6E05;&#x96F6;&#xFF0C;&#x90A3;&#x4E48;&#x8BF4;&#x660E;&#x5F53;&#x524D;&#x7684;buffer&#x8FD8;&#x6CA1;&#x6709;&#x88AB;&#x53D1;&#x9001;&#x51FA;&#x53BB;&#xFF0C;&#x4E5F;&#x5C31;&#x662F;&#x53D1;&#x9001;&#x961F;&#x5217;&#x6EE1;&#xFF0C;&#x56E0;&#x6B64;&#x9700;&#x8981;&#x6211;&#x4EEC;&#x9700;&#x8981;&#x505C;&#x6B62;&#x5185;&#x6838;&#x7F51;&#x7EDC;&#x7CFB;&#x7EDF;&#x7684;&#x53D1;&#x9001;&#x961F;&#x5217;&#xFF0C;&#x5E76;&#x4E14;&#x6062;&#x590D;&#x4E2D;&#x65AD;&#x73B0;&#x573A;&#xFF0C;&#x8FD4;&#x56DE;BUSY&#x72B6;&#x6001;&#x3002;</p>
+<p>&#x4E0B;&#x9762;&#x63A5;&#x7740;&#x662F;&#x961F;&#x5217;&#x6CA1;&#x6709;&#x6EE1;&#x7684;&#x60C5;&#x51B5;&#x4E0B;&#x6267;&#x884C;&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* Clear all of the status flags */</span>
+status &amp;= ~BD_ENET_TX_STATS;
+
+
+<span class="hljs-comment">/* Set buffer length and buffer pointer */</span>
+bufaddr = skb-&gt;data;
+bdp-&gt;cbd_datlen = skb-&gt;len;
+</code></pre>
+<p>&#x5F88;&#x7B80;&#x5355;&#xFF0C;&#x628A;&#x4ECE;buffer&#x63CF;&#x8FF0;&#x7B26;&#x4E2D;&#x83B7;&#x53D6;&#x7684;status&#x6E05;&#x96F6;&#xFF0C;&#x5E76;&#x4E14;&#x4ECE;&#x5185;&#x6838;&#x7F51;&#x7EDC;&#x5C42;&#x4F20;&#x8FC7;&#x6765;&#x7684;socket buffer&#x7ED3;&#x6784;&#x4F53;&#x4E2D;&#x83B7;&#x53D6;&#x8981;&#x53D1;&#x9001;&#x7684;buffer&#x7684;&#x903B;&#x8F91;&#x5730;&#x5740;&#xFF08;&#x6CE8;&#x610F;&#xFF0C;&#x8FD9;&#x91CC;&#x662F;&#x903B;&#x8F91;&#x5730;&#x5740;&#xFF0C;&#x540E;&#x9762;&#x4F1A;&#x6709;&#x7269;&#x7406;&#x5730;&#x5740;&#xFF09;&#x548C;&#x957F;&#x5EA6;&#x3002;&#x63A5;&#x7740;&#x662F;&#x5B57;&#x8282;&#x5BF9;&#x9F50;&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-comment">/*
+ * On some FEC implementations data must be aligned on
+ * 4-byte boundaries. Use bounce buffers to copy data
+ * and get it aligned. Ugh.
+ */</span>
+<span class="hljs-keyword">if</span> (((<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>) bufaddr) &amp; FEC_ALIGNMENT) {
+    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> index;
+    index = bdp - fep-&gt;tx_bd_base;
+    bufaddr = PTR_ALIGN(fep-&gt;tx_bounce[index], FEC_ALIGNMENT + <span class="hljs-number">1</span>);
+    <span class="hljs-built_in">memcpy</span>(bufaddr, (<span class="hljs-keyword">void</span> *)skb-&gt;data, skb-&gt;len);
+}
+</code></pre>
+<p>Ethernet driver&#x5355;&#x72EC;&#x5206;&#x914D;&#x4E86;tx_bounce[]&#x6307;&#x9488;&#x6570;&#x7EC4;&#x7528;&#x6765;&#x8FDB;&#x884C;&#x5B57;&#x8282;&#x5BF9;&#x9F50;&#xFF0C;&#x6211;&#x5E38;&#x5E38;&#x5728;&#x60F3;&#x6709;&#x66F4;&#x9AD8;&#x6548;&#x7684;&#x89E3;&#x51B3;&#x65B9;&#x6CD5;&#x5462;&#xFF0C;&#x6BD5;&#x7ADF;&#x8FD8;&#x662F;&#x5360;&#x7528;&#x4E86;&#x4E0D;&#x5C11;ram&#xFF0C;&#x4E0D;&#x8FC7;&#x80FD;&#x89E3;&#x51B3;&#x95EE;&#x9898;&#x5C31;&#x597D;&#x3002;&#x63A5;&#x7740;&#x662F;IEEE 1588&#x534F;&#x8BAE;&#x7684;&#x652F;&#x6301;&#xFF0C;&#x5373;&#x6807;&#x8BB0;&#x65F6;&#x95F4;&#x6233;&#xFF1A;</p>
+<pre><code class="lang-c">    <span class="hljs-keyword">if</span> (fep-&gt;ptimer_present) {
+        <span class="hljs-keyword">if</span> (fec_ptp_do_txstamp(skb)) {
+            estatus = BD_ENET_TX_TS;
+            status |= BD_ENET_TX_PTP;
+        } <span class="hljs-keyword">else</span>
+            estatus = <span class="hljs-number">0</span>;
+<span class="hljs-meta">#<span class="hljs-meta-keyword">ifdef</span> CONFIG_ENHANCED_BD</span>
+        bdp-&gt;cbd_esc = (estatus | BD_ENET_TX_INT);
+        bdp-&gt;cbd_bdu = <span class="hljs-number">0</span>;
+<span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span></span>
+    }
+</code></pre>
+<p>&#x540C;&#x65F6;&#x8FD9;&#x91CC;&#x8FD8;&#x63D0;&#x4F9B;&#x4E86;&#x5BF9;ENHANCED BUFFER DESCRIPTOR&#x7684;&#x652F;&#x6301;&#xFF0C;&#x5728;yocto 3.10.17-ga&#x4E2D;&#x4F1A;&#x652F;&#x6301;&#x5730;&#x66F4;&#x597D;&#x3002;&#x63A5;&#x7740;&#x662F;&#x5927;&#x5C0F;&#x7AEF;&#x7684;&#x8F6C;&#x6362;&#xFF0C;&#x6709;&#x4E00;&#x90E8;&#x5206;IP&#x7528;&#x7684;&#x662F;&#x5927;&#x7AEF;&#x6A21;&#x5F0F;&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-comment">/*
+ * Some design made an incorrect assumption on endian mode of
+ * the system that it&apos;s running on. As the result, driver has to
+ * swap every frame going to and coming from the controller.
+ */</span>
+<span class="hljs-keyword">if</span> (id_entry-&gt;driver_data &amp; FEC_QUIRK_SWAP_FRAME)
+    swap_buffer(bufaddr, skb-&gt;len);
+</code></pre>
+<p>&#x63A5;&#x7740;&#x5C31;&#x662F;&#x628A;socket buffer&#x6307;&#x9488;&#x653E;&#x8FDB;&#x4E4B;&#x524D;&#x5206;&#x914D;&#x597D;&#x7684;TX&#x6307;&#x9488;&#x6570;&#x7EC4;&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* Save skb pointer */</span>
+fep-&gt;tx_skbuff[fep-&gt;skb_cur] = skb;
+
+
+ndev-&gt;stats.tx_bytes += skb-&gt;len;
+fep-&gt;skb_cur = (fep-&gt;skb_cur+<span class="hljs-number">1</span>) &amp; TX_RING_MOD_MASK;
+</code></pre>
+<p>&#x540C;&#x65F6;&#x5BF9;net_device&#x7ED3;&#x6784;&#x4F53;&#x4E2D;&#x7684;&#x7EDF;&#x8BA1;&#x6570;&#x636E;&#x8FDB;&#x884C;&#x66F4;&#x65B0;&#xFF08;&#x4E2A;&#x4EBA;&#x89C9;&#x5F97;&#x8FD9;&#x4E00;&#x5757;&#x653E;&#x5728;&#x53D1;&#x9001;&#x5B8C;&#x6210;&#x7684;&#x51FD;&#x6570;&#x4E2D;&#x66F4;&#x597D;&#xFF09;&#xFF0C;&#x7136;&#x540E;TX&#x6307;&#x9488;&#x6570;&#x7EC4;&#x4E0B;&#x6807;&#x9012;&#x589E;&#x3002;&#x63A5;&#x7740;&#x5C31;&#x662F;&#x5BF9;&#x5F85;&#x53D1;&#x9001;&#x7684;socket buffer&#x8FDB;&#x884C;DMA&#x6620;&#x5C04;&#xFF0C;&#x6620;&#x5C04;&#x7684;&#x8FC7;&#x7A0B;&#x4E5F;&#x5C31;&#x662F;&#x5237;&#x65B0;Data Cache&#x7684;&#x8FC7;&#x7A0B;&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* Push the data cache so the CPM does not get stale memory
+ * data.
+ */</span>
+bdp-&gt;cbd_bufaddr = dma_map_single(&amp;fep-&gt;pdev-&gt;dev, bufaddr,
+        FEC_ENET_TX_FRSIZE, DMA_TO_DEVICE);
+
+
+<span class="hljs-comment">/* Send it on its way.  Tell FEC it&apos;s ready, interrupt when done,
+ * it&apos;s the last BD of the frame, and to put the CRC on the end.
+ */</span>
+status |= (BD_ENET_TX_READY | BD_ENET_TX_INTR
+        | BD_ENET_TX_LAST | BD_ENET_TX_TC);
+bdp-&gt;cbd_sc = status;
+</code></pre>
+<p>&#x6620;&#x5C04;&#x5B8C;&#x6BD5;&#x540E;&#x6807;&#x8BB0;status&#x53D8;&#x91CF;READY,INTR,LAST,TC&#x7B49;&#x6807;&#x5FD7;&#x4F4D;&#xFF0C;&#x6700;&#x540E;&#x5199;&#x56DE;&#x5F53;&#x524D;socket buffer&#x5BF9;&#x5E94;&#x7684;buffer descriptor&#x7684;&#x72B6;&#x6001;&#x5B57;&#x8282;&#x3002;&#x4E0B;&#x9762;&#x5C31;&#x662F;&#x5199;&#x5BC4;&#x5B58;&#x5668;&#x89E6;&#x53D1;&#x786C;&#x4EF6;&#x7684;&#x53D1;&#x9001;&#x64CD;&#x4F5C;&#xFF1A;</p>
+<pre><code class="lang-c">    <span class="hljs-comment">/* Trigger transmission start */</span>
+    writel(<span class="hljs-number">0</span>, fep-&gt;hwp + FEC_X_DES_ACTIVE);
+</code></pre>
+<p>&#x4E0B;&#x9762;&#x8FD9;&#x884C;&#x4EE3;&#x7801;&#x672C;&#x6765;&#x5E94;&#x8BE5;&#x662F;&#x6CA1;&#x6709;&#x7684;&#xFF0C;&#x6211;&#x53EA;&#x80FD;&#x7406;&#x89E3;&#x4E3A;IC&#x7684;BUG : (    &#xFF0C;&#x672C;&#x8D28;&#x4E0A;&#x5C31;&#x662F;DMA&#x53D1;&#x9001;&#x5230;&#x67D0;&#x4E2A;&#x4F4D;&#x7F6E;&#x5E76;&#x6EE1;&#x8DB3;&#x67D0;&#x4E9B;&#x6761;&#x4EF6;&#x989D;&#x60C5;&#x51B5;&#x4E0B;&#xFF0C;&#x8C03;&#x5EA6;&#x5DE5;&#x4F5C;&#x961F;&#x5217;&#x6765;&#xFF0C;&#x5DE5;&#x4F5C;&#x961F;&#x5217;&#x4E2D;&#x5C31;&#x662F;&#x89E3;&#x51B3;&#x8FD9;&#x4E2A;BUG&#x7684;&#x4EE3;&#x7801;&#x3002;</p>
+<pre><code class="lang-c">bdp_pre = fec_enet_get_pre_txbd(ndev);
+<span class="hljs-keyword">if</span> ((id_entry-&gt;driver_data &amp; FEC_QUIRK_BUG_TKT168103) &amp;&amp;
+    !(bdp_pre-&gt;cbd_sc &amp; BD_ENET_TX_READY))
+    schedule_delayed_work(&amp;fep-&gt;fixup_trigger_tx,
+                 msecs_to_jiffies(<span class="hljs-number">1</span>));
+</code></pre>
+<p>&#x4E0B;&#x9762;&#x9012;&#x589E;buffer&#x63CF;&#x8FF0;&#x7B26;&#x6307;&#x9488;&#xFF0C;&#x5982;&#x679C;&#x5F53;&#x524D;&#x5904;&#x5728;&#x73AF;&#x7684;&#x672B;&#x5C3E;&#x5C31;&#x8DF3;&#x5230;&#x5F00;&#x5934;&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* If this was the last BD in the ring, start at the beginning again. */</span>
+    <span class="hljs-keyword">if</span> (status &amp; BD_ENET_TX_WRAP)
+        bdp = fep-&gt;tx_bd_base;
+    <span class="hljs-keyword">else</span>
+        bdp++;
+</code></pre>
+<p>&#x5982;&#x679C;cur_tx&#x548C;dirty_tx&#x6307;&#x9488;&#x6307;&#x5411;&#x540C;&#x4E00;&#x5757;&#x5730;&#x65B9;&#x7684;&#x8BDD;&#xFF0C;&#x8868;&#x793A;&#x8F6F;&#x4EF6;&#x8FD8;&#x6CA1;&#x6709;&#x6765;&#x5F97;&#x53CA;&#x91CA;&#x653E;&#x5DF2;&#x7ECF;&#x53D1;&#x9001;&#x5B8C;&#x6210;&#x7684;buffer&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-keyword">if</span> (bdp == fep-&gt;dirty_tx) {
+    fep-&gt;tx_full = <span class="hljs-number">1</span>;
+    netif_stop_queue(ndev);
+}
+
+
+fep-&gt;cur_tx = bdp;
+</code></pre>
+<p>&#x8FD9;&#x91CC;&#x7684;full&#x533A;&#x522B;&#x4E8E;&#x4E00;&#x5F00;&#x59CB;&#x7684;full&#xFF0C;&#x4E00;&#x5F00;&#x59CB;&#x7684;full&#x662F;&#x7531;&#x4E8E;DMA&#x4F20;&#x9001;&#x6BD4;&#x53D1;&#x9001;&#x51FD;&#x6570;&#x7684;&#x586B;&#x5145;&#x8981;&#x6162;&#xFF0C;&#x800C;&#x8FD9;&#x91CC;&#x7684;full&#x662F;&#x7531;socket buffer&#x91CA;&#x653E;&#x5730;&#x6BD4;&#x53D1;&#x9001;&#x51FD;&#x6570;&#x586B;&#x5145;&#x5730;&#x6162;&#x5BFC;&#x81F4;&#x7684;&#x3002;&#x6700;&#x540E;cur_tx&#x6307;&#x9488;&#x6307;&#x5411;&#x5F53;&#x524D;&#x7684;&#x63CF;&#x8FF0;&#x7B26;&#xFF0C;&#x5E76;&#x6062;&#x590D;&#x4E2D;&#x65AD;&#x4E0A;&#x4E0B;&#x6587;&#xFF0C;&#x8FD4;&#x56DE;&#x53D1;&#x9001;&#x6210;&#x529F;&#xFF1A;</p>
+<pre><code class="lang-c">spin_unlock_irqrestore(&amp;fep-&gt;hw_lock, flags);
+
+
+<span class="hljs-keyword">return</span> NETDEV_TX_OK;
+</code></pre>
+<p>&#x5982;&#x679C;&#x5B9E;&#x9645;&#x786C;&#x4EF6;&#x53D1;&#x9001;&#x6210;&#x529F;&#x4E4B;&#x540E;&#xFF0C;&#x4F1A;&#x89E6;&#x53D1;&#x53D1;&#x9001;&#x4E2D;&#x65AD;&#xFF0C;&#x800C;&#x4E2D;&#x65AD;&#x5165;&#x53E3;&#x51FD;&#x6570;&#x5C31;&#x662F;&#x5728;fec_probe&#x51FD;&#x6570;&#x4E2D;&#x6CE8;&#x518C;&#x7684;fec_enet_interrupt()&#x51FD;&#x6570;&#xFF0C;&#x5E76;&#x4E14;&#x5982;&#x679C;&#x63A5;&#x53D7;&#x7F51;&#x7EDC;&#x4F20;&#x9001;&#x8FC7;&#x4E86;&#x7684;&#x6570;&#x636E;&#x5305;&#x4E4B;&#x540E;&#x4E5F;&#x4F1A;&#x89E6;&#x53D1;&#x8FD9;&#x4E2A;&#x4E2D;&#x65AD;&#x3002;</p>
+<p><strong>&#x4E0B;&#x9762;&#x6765;&#x5206;&#x6790;&#x8FD9;&#x4E2A;&#x4E2D;&#x65AD;&#x51FD;&#x6570;fec_enet_interrupt()&#xFF1A;</strong></p>
+<pre><code class="lang-c"><span class="hljs-keyword">do</span> {
+    int_events = readl(fep-&gt;hwp + FEC_IEVENT);
+    writel(int_events, fep-&gt;hwp + FEC_IEVENT);
+&#x2026;&#x2026;&#x2026;&#x2026;
+&#x2026;&#x2026;&#x2026;&#x2026;
+} <span class="hljs-keyword">while</span> (int_events);
+</code></pre>
+<p>&#x7EB5;&#x89C2;&#x6574;&#x4E2A;&#x51FD;&#x6570;&#x975E;&#x5E38;&#x77ED;&#x5C0F;&#xFF08;&#x5F53;&#x7136;&#x8FD9;&#x662F;&#x5E94;&#x8BE5;&#x7684;&#xFF0C;&#x5927;&#x5BB6;&#x90FD;&#x77E5;&#x9053;&#x9876;&#x534A;&#x90E8;&#x5E94;&#x8BE5;&#x505A;&#x91CD;&#x8981;&#x7684;&#x4E8B;&#x60C5;&#xFF0C;&#x4E0D;&#x91CD;&#x8981;&#x7684;&#x7559;&#x7ED9;&#x5E95;&#x534A;&#x90E8;&#xFF09;&#xFF0C;&#x5E76;&#x4E14;&#x662F;&#x4E00;&#x4E2A;do while&#x5FAA;&#x73AF;&#xFF0C;&#x9996;&#x5148;&#x662F;&#x8BFB;&#x53D6;FEC_IEVENT&#x5BC4;&#x5B58;&#x5668;&#xFF0C;&#x7136;&#x540E;&#x518D;&#x5199;&#x76F8;&#x540C;&#x7684;&#x503C;&#x6E05;&#x6389;&#x8FD9;&#x4E9B;&#x5BC4;&#x5B58;&#x5668;&#x4F4D;&#xFF0C;&#x8FD9;&#x91CC;&#x5F88;&#x660E;&#x663E;&#x662F;&#x5199;1&#x6E05;&#x96F6;&#xFF0C;&#x7136;&#x540E;&#x518D;&#x8BFB;&#x6709;&#x6CA1;&#x6709;&#x4E2D;&#x65AD;&#x8FC7;&#x6765;&#xFF0C;&#x6709;&#x7684;&#x8BDD;&#x518D;&#x6B21;&#x8FD9;&#x5904;&#x7406;&#x3002;&#x4E0B;&#x9762;&#x5206;&#x6790;while&#x5FAA;&#x73AF;&#x91CC;&#x9762;&#x7684;&#x5185;&#x5BB9;&#xFF1A;</p>
+<p>&#x5982;&#x679C;&#x662F;&#x63A5;&#x6536;&#x4E2D;&#x65AD;&#x7684;&#x8BDD;&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-keyword">if</span> (int_events &amp; FEC_ENET_RXF) {
+    ret = IRQ_HANDLED;
+    spin_lock_irqsave(&amp;fep-&gt;hw_lock, flags);
+
+
+    <span class="hljs-keyword">if</span> (fep-&gt;use_napi) {
+        <span class="hljs-comment">/* Disable the RX interrupt */</span>
+        <span class="hljs-keyword">if</span> (napi_schedule_prep(&amp;fep-&gt;napi)) {
+            fec_rx_int_is_enabled(ndev, <span class="hljs-literal">false</span>);
+            __napi_schedule(&amp;fep-&gt;napi);
+        }
+    } <span class="hljs-keyword">else</span>
+        fec_enet_rx(ndev);
+
+
+    spin_unlock_irqrestore(&amp;fep-&gt;hw_lock, flags);
+}
+</code></pre>
+<p>&#x90A3;&#x4E48;&#x9996;&#x5148;&#x662F;&#x8FDB;&#x5165;&#x4E34;&#x754C;&#x6BB5;&#x64CD;&#x4F5C;&#xFF0C;&#x7136;&#x540E;&#x4F7F;&#x5224;&#x65AD;&#x662F;&#x4E0D;&#x662F;&#x7528;&#x7684;napi&#xFF0C;&#x5982;&#x679C;&#x662F;&#x7684;&#x8BDD;&#x5C31;&#x8C03;&#x7528;napi_schedule_prep()&#x51FD;&#x6570;&#x68C0;&#x6D4B;&#x961F;&#x5217;&#x662F;&#x5426;&#x5DF2;&#x7ECF;&#x5728;&#x8C03;&#x5EA6;&#xFF0C;&#x5982;&#x679C;&#x6CA1;&#x6709;&#xFF08;&#x5373;&#x8FD4;&#x56DE;true&#xFF09;&#x5219;&#x6807;&#x8BB0;napi&#x5F00;&#x59CB;&#x8FD0;&#x884C;&#x3002;&#x7136;&#x540E;if&#x6761;&#x4EF6;&#xFF0C;&#x5173;&#x95ED;rx&#x4E2D;&#x65AD;&#x5E76;&#x8C03;&#x5EA6;napi&#x961F;&#x5217;&#x3002;&#x5982;&#x679C;&#x4E0D;&#x662F;napi&#x7684;&#x8BDD;&#x90A3;&#x4E48;&#x5C31;&#x76F4;&#x63A5;&#x6267;&#x884C;fec_enet_rx()&#x51FD;&#x6570;&#x3002;&#x63A5;&#x7740;&#x5982;&#x679C;&#x662F;&#x53D1;&#x9001;&#x4E2D;&#x65AD;&#x7684;&#x8BDD;&#xFF1A;</p>
+<pre><code class="lang-c">    <span class="hljs-comment">/* Transmit OK, or non-fatal error. Update the buffer
+    * descriptors. FEC handles all errors, we just discover
+    * them as part of the transmit process.
+    */</span>
+<span class="hljs-keyword">if</span> (int_events &amp; FEC_ENET_TXF) {
+    ret = IRQ_HANDLED;
+    fec_enet_tx(ndev);
+}
+</code></pre>
+<p>&#x76F4;&#x63A5;&#x6267;&#x884C;fec_enet_tx()&#x51FD;&#x6570;&#xFF0C;while&#x5FAA;&#x73AF;&#x540E;&#x9762;&#x8FD8;&#x6709;&#x4E24;&#x4E2A;&#x4E2D;&#x65AD;&#xFF0C;&#x5206;&#x522B;&#x662F;timestamp&#x5B9A;&#x65F6;&#x5668;&#x4E2D;&#x65AD;&#x548C;MII&#x4E2D;&#x65AD;&#xFF0C;&#x8FD9;&#x91CC;&#x7565;&#x8FC7;&#x3002;&#x4E0B;&#x9762;&#x6211;&#x5C31;&#x8981;&#x7740;&#x91CD;&#x5206;&#x6790;fec_enet_tx()&#x548C;fec_enet_rx()&#x51FD;&#x6570;&#x3002;</p>
+<p><strong>&#x9996;&#x5148;&#x770B;fec_enet_tx()&#x51FD;&#x6570;&#xFF1A;</strong></p>
+<p>&#x9996;&#x5148;&#x83B7;&#x53D6;dirty_tx&#x6307;&#x5411;&#x7684;&#x63CF;&#x8FF0;&#x7B26;&#xFF1A;</p>
+<pre><code class="lang-c">bdp = fep-&gt;dirty_tx;
+</code></pre>
+<p>&#x7136;&#x540E;&#x5C31;&#x662F;&#x4E00;&#x4E2A;&#x5927;&#x7684;while&#x5FAA;&#x73AF;&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-keyword">while</span> (((status = bdp-&gt;cbd_sc) &amp; BD_ENET_TX_READY) == <span class="hljs-number">0</span>) {
+&#x2026;&#x2026;&#x2026;&#x2026;
+&#x2026;&#x2026;&#x2026;&#x2026;
+    <span class="hljs-comment">/* Update pointer to next buffer descriptor to be transmitted */</span>
+    <span class="hljs-keyword">if</span> (status &amp; BD_ENET_TX_WRAP)
+        bdp = fep-&gt;tx_bd_base;
+    <span class="hljs-keyword">else</span>
+        bdp++;
+}
+</code></pre>
+<p>&#x8FD9;&#x91CC;&#x6211;&#x8C03;&#x6362;&#x4E86;&#x4E00;&#x4E0B;&#x524D;&#x540E;&#x7684;&#x987A;&#x5E8F;&#xFF0C;&#x4F46;&#x662F;&#x4E0D;&#x5F71;&#x54CD;&#x7A0B;&#x5E8F;&#x6267;&#x884C;&#x7684;&#x7ED3;&#x679C;&#xFF0C;&#x57FA;&#x672C;&#x7684;&#x5FAA;&#x73AF;&#x5C31;&#x662F;&#x4E00;&#x4E2A;&#x4E0D;&#x65AD;&#x9012;&#x589E;dirty_tx&#x6307;&#x9488;&#x7684;&#x8FC7;&#x7A0B;&#xFF0C;&#x9012;&#x589E;&#x4E00;&#x76F4;&#x9012;&#x589E;&#x5230;&#x5F85;&#x53D1;&#x9001;buffer&#x7684;&#x63CF;&#x8FF0;&#x7B26;&#x4E3A;&#x6B62;&#x3002;&#x4E0B;&#x9762;&#x5206;&#x6790;while&#x5FAA;&#x73AF;&#x4E2D;&#x7684;&#x4EE3;&#x7801;&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-keyword">if</span> (bdp == fep-&gt;cur_tx &amp;&amp; fep-&gt;tx_full == <span class="hljs-number">0</span>)
+    <span class="hljs-keyword">break</span>;
+</code></pre>
+<p>&#x8FD9;&#x6BB5;&#x4EE3;&#x7801;&#x4E00;&#x5F00;&#x59CB;&#x6BD4;&#x8F83;&#x96BE;&#x7406;&#x89E3;&#xFF0C;&#x4F46;&#x591A;&#x770B;&#x51E0;&#x904D;&#x5C31;&#x80FD;&#x60F3;&#x5230;&#x8FD9;&#x662F;&#x6574;&#x4E2A;&#x961F;&#x5217;&#x7A7A;&#x7684;&#x60C5;&#x51B5;&#xFF0C;&#x6B64;&#x65F6;dirty_tx&#x548C;cur_tx&#x6307;&#x5411;&#x540C;&#x4E00;&#x5757;&#x533A;&#x57DF;&#xFF0C;&#x5E76;&#x4E14;tx_full&#x4E3A;0&#xFF08;&#x8FD9;&#x91CC;&#x5B58;&#x5728;&#x4E24;&#x79CD;&#x60C5;&#x51B5;&#xFF0C;&#x5F53;dirty_tx==cur_tx&#x65F6;&#xFF0C;&#x65E2;&#x6709;&#x53EF;&#x80FD;&#x662F;&#x961F;&#x5217;&#x7A7A;&#x4E5F;&#x6709;&#x53EF;&#x80FD;&#x662F;&#x961F;&#x5217;&#x6EE1;&#xFF0C;&#x56E0;&#x6B64;&#x9700;&#x8981;tx_full&#x6765;&#x533A;&#x5206;&#xFF0C;&#x4F46;&#x662F;&#x5B9E;&#x9645;&#x6211;&#x89C9;&#x5F97;&#x4E0D;&#x5E94;&#x8BE5;&#x8FD9;&#x6837;&#x505A;&#xFF0C;&#x56E0;&#x4E3A;&#x8FD9;&#x6837;&#x4F1A;&#x589E;&#x52A0;&#x7A0B;&#x5E8F;&#x903B;&#x8F91;&#x7684;&#x590D;&#x6742;&#x6027;&#xFF0C;&#x800C;&#x5230;&#x4E86;3.10.17-ga&#x5185;&#x6838;&#x4E2D;&#xFF0C;&#x961F;&#x5217;&#x4E3A;&#x7A7A;&#x65F6;dirty_tx&#x4F1A;&#x6307;&#x5411;cur_tx&#x524D;&#x4E00;&#x5757;&#x63CF;&#x8FF0;&#x7B26;&#xFF09;&#x3002;&#x961F;&#x5217;&#x975E;&#x7A7A;&#x4E4B;&#x540E;&#x5C31;&#x5F00;&#x59CB;&#x91CA;&#x653E;&#x53D1;&#x9001;&#x6210;&#x529F;&#x7684;&#x7F13;&#x51B2;&#x533A;&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-keyword">if</span> (bdp-&gt;cbd_bufaddr)
+    dma_unmap_single(&amp;fep-&gt;pdev-&gt;dev, bdp-&gt;cbd_bufaddr,
+        FEC_ENET_TX_FRSIZE, DMA_TO_DEVICE);
+bdp-&gt;cbd_bufaddr = <span class="hljs-number">0</span>;
+</code></pre>
+<p>&#x4E0B;&#x9762;&#x662F;DMA UNMAP&#x64CD;&#x4F5C;&#xFF0C;&#x8FD9;&#x91CC;&#x5BF9;&#x5E94;&#x7684;&#x662F;skb = fep-&gt;tx_skbuff[fep-&gt;skb_dirty];DMA_TO_DEVICE&#x65B9;&#x5411;&#x3002;&#x4E0B;&#x9762;&#x662F;&#x4E00;&#x4E9B;&#x5217;&#x9519;&#x8BEF;&#x68C0;&#x67E5;&#xFF1A;</p>
+<pre><code class="lang-c">skb = fep-&gt;tx_skbuff[fep-&gt;skb_dirty];
+<span class="hljs-keyword">if</span> (!skb)
+    <span class="hljs-keyword">break</span>;
+</code></pre>
+<p>&#x4ECE;skb_dirty&#x4E0B;&#x6807;&#x83B7;&#x53D6;dirty&#xFF08;&#x8FD9;&#x91CC;dirty&#x8868;&#x793A;&#x4F7F;&#x7528;&#x5B8C;&#x8FD8;&#x6CA1;&#x6709;&#x91CA;&#x653E;&#xFF09;&#x7684;socket buffer&#xFF0C;&#x5224;&#x65AD;&#x662F;&#x5426;&#x975E;&#x7A7A;&#x3002;&#x63A5;&#x7740;&#x662F;net_device&#x7ED3;&#x6784;&#x4F53;&#x7684;&#x6570;&#x636E;&#x7EDF;&#x8BA1;&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* Check for errors. */</span>
+<span class="hljs-keyword">if</span> (status &amp; (BD_ENET_TX_HB | BD_ENET_TX_LC |
+            BD_ENET_TX_RL | BD_ENET_TX_UN |
+            BD_ENET_TX_CSL)) {
+    ndev-&gt;stats.tx_errors++;
+    <span class="hljs-keyword">if</span> (status &amp; BD_ENET_TX_HB)  <span class="hljs-comment">/* No heartbeat */</span>
+        ndev-&gt;stats.tx_heartbeat_errors++;
+    <span class="hljs-keyword">if</span> (status &amp; BD_ENET_TX_LC)  <span class="hljs-comment">/* Late collision */</span>
+        ndev-&gt;stats.tx_window_errors++;
+    <span class="hljs-keyword">if</span> (status &amp; BD_ENET_TX_RL)  <span class="hljs-comment">/* Retrans limit */</span>
+        ndev-&gt;stats.tx_aborted_errors++;
+    <span class="hljs-keyword">if</span> (status &amp; BD_ENET_TX_UN)  <span class="hljs-comment">/* Underrun */</span>
+        ndev-&gt;stats.tx_fifo_errors++;
+    <span class="hljs-keyword">if</span> (status &amp; BD_ENET_TX_CSL) <span class="hljs-comment">/* Carrier lost */</span>
+        ndev-&gt;stats.tx_carrier_errors++;
+} <span class="hljs-keyword">else</span> {
+    ndev-&gt;stats.tx_packets++;
+}
+</code></pre>
+<p>&#x4E0B;&#x9762;&#x7684;&#x8FD9;&#x6BB5;&#x4EE3;&#x7801;&#x57FA;&#x672C;&#x4E0D;&#x53EF;&#x80FD;&#x53D1;&#x751F;&#xFF0C;&#x4E2A;&#x4EBA;&#x8BA4;&#x4E3A;&#x662F;&#x4E3A;&#x4E86;Debug&#x7528;&#x7684;</p>
+<pre><code class="lang-c"><span class="hljs-keyword">if</span> (status &amp; BD_ENET_TX_READY)
+    printk(<span class="hljs-string">&quot;HEY! Enet xmit interrupt and TX_READY.\n&quot;</span>);
+</code></pre>
+<p>&#x63A5;&#x7740;&#x4F9D;&#x65E7;&#x662F;&#x6570;&#x636E;&#x7EDF;&#x8BA1;</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* Deferred means some collisions occurred during transmit,
+ * but we eventually sent the packet OK.
+ */</span>
+<span class="hljs-keyword">if</span> (status &amp; BD_ENET_TX_DEF)
+    ndev-&gt;stats.collisions++;
+</code></pre>
+<p>&#x4E0B;&#x9762;&#x7528;&#x6765;&#x6807;&#x8BB0;&#x53D1;&#x9001;&#x7684;&#x65F6;&#x95F4;&#x6233;&#xFF0C;&#x4E2A;&#x4EBA;&#x8FD8;&#x6CA1;&#x6709;&#x5B8C;&#x5168;&#x7406;&#x89E3;IEEE 1588&#x534F;&#x8BAE;&#x53CA;&#x5176;&#x5185;&#x6838;&#x9A71;&#x52A8;&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-meta">#<span class="hljs-meta-keyword">if</span> defined(CONFIG_ENHANCED_BD)</span>
+        <span class="hljs-keyword">if</span> (fep-&gt;ptimer_present) {
+            <span class="hljs-keyword">if</span> (bdp-&gt;cbd_esc &amp; BD_ENET_TX_TS)
+                fec_ptp_store_txstamp(fpp, skb, bdp);
+        }
+<span class="hljs-meta">#<span class="hljs-meta-keyword">elif</span> defined(CONFIG_IN_BAND)</span>
+        <span class="hljs-keyword">if</span> (fep-&gt;ptimer_present) {
+            <span class="hljs-keyword">if</span> (status &amp; BD_ENET_TX_PTP)
+                fec_ptp_store_txstamp(fpp, skb, bdp);
+        }
+<span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span></span>
+</code></pre>
+<p>&#x63A5;&#x7740;&#x5C31;&#x662F;&#x91CA;&#x653E;socket buffer&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* Free the sk buffer associated with this last transmit */</span>
+dev_kfree_skb_any(skb);
+fep-&gt;tx_skbuff[fep-&gt;skb_dirty] = <span class="hljs-literal">NULL</span>;
+fep-&gt;skb_dirty = (fep-&gt;skb_dirty + <span class="hljs-number">1</span>) &amp; TX_RING_MOD_MASK;
+</code></pre>
+<p>&#x540C;&#x65F6;TX&#x6307;&#x9488;&#x6570;&#x7EC4;&#x5BF9;&#x5E94;&#x7684;&#x6210;&#x5458;&#x6307;&#x5411;NULL&#xFF0C;skb_dirty&#x4E0B;&#x6807;&#x9012;&#x589E;&#x3002;&#x6700;&#x540E;&#x662F;&#x5904;&#x7406;tx_full&#x4E3A;1&#x7684;&#x60C5;&#x51B5;&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* Since we have freed up a buffer, the ring is no longer full
+*/</span>
+<span class="hljs-keyword">if</span> (fep-&gt;tx_full) {
+    fep-&gt;tx_full = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">if</span> (netif_queue_stopped(ndev))
+        netif_wake_queue(ndev);
+}
+</code></pre>
+<p>&#x5F53;&#x7136;&#x8FD9;&#x90E8;&#x5206;&#x5230;&#x4E86;3.10.17&#x4E5F;&#x88AB;&#x7CBE;&#x7B80;&#x4E86;&#x3002;&#x8DF3;&#x51FA;&#x4E86;while&#x5FAA;&#x73AF;&#x4E4B;&#x540E;&#x5C31;&#x66F4;&#x65B0;dirty_tx&#x6307;&#x9488;&#xFF1A;</p>
+<pre><code class="lang-c">fep-&gt;dirty_tx = bdp;
+</code></pre>
+<p><strong>&#x4E0B;&#x9762;&#x6765;&#x770B;fec_enet_rx()&#x51FD;&#x6570;&#xFF1A;</strong></p>
+<p>&#x7C7B;&#x4F3C;&#x4E8E;fec_enet_tx()&#x51FD;&#x6570;&#xFF0C;&#x4E5F;&#x662F;&#x4E00;&#x4E2A;&#x4E3B;while&#x5FAA;&#x73AF;&#xFF1A;</p>
+<pre><code class="lang-c">bdp = fep-&gt;cur_rx;
+
+
+<span class="hljs-keyword">while</span> (!((status = bdp-&gt;cbd_sc) &amp; BD_ENET_RX_EMPTY)) {
+&#x2026;&#x2026;&#x2026;&#x2026;&#x2026;&#x2026;
+    <span class="hljs-comment">/* Update BD pointer to next entry */</span>
+    <span class="hljs-keyword">if</span> (status &amp; BD_ENET_RX_WRAP)
+        bdp = fep-&gt;rx_bd_base;
+    <span class="hljs-keyword">else</span>
+        bdp++;
+
+
+}
+fep-&gt;cur_rx = bdp;
+</code></pre>
+<p>&#x4E5F;&#x5C31;&#x662F;&#x83B7;&#x53D6;&#x5F53;&#x524D;rx buffer&#x5BF9;&#x5E94;&#x7684;buffer&#x63CF;&#x8FF0;&#x7B26;&#x6307;&#x9488;cur_rx&#xFF0C;&#x7136;&#x540E;&#x4E0D;&#x505C;&#x5730;&#x5224;&#x65AD;&#x5176;BD_ENET_RX_EMPTY&#x4F4D;&#x662F;&#x5426;&#x4E3A;0&#xFF0C;&#x5982;&#x679C;&#x4E3A;0&#x5219;&#x8868;&#x793A;&#x8FD9;&#x4E2A;buffer&#x5DF2;&#x7ECF;&#x88AB;DMA&#x63A7;&#x5236;&#x5668;&#x5904;&#x7406;&#x8FC7;&#xFF0C;&#x63A5;&#x53D7;&#x5230;&#x4E86;&#x6570;&#x636E;&#xFF0C;&#x7136;&#x540E;&#x8FDB;&#x5165;while&#x5FAA;&#x73AF;&#x5904;&#x7406;&#xFF0C;&#x6700;&#x540E;&#x518D;&#x9012;&#x589E;&#x6307;&#x9488;&#x5E76;&#x66F4;&#x65B0;cur_rx&#x6307;&#x9488;&#x3002;&#x4E0B;&#x9762;&#x6765;&#x770B;while&#x5FAA;&#x73AF;&#x91CC;&#x9762;&#x7684;&#x5185;&#x5BB9;&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* Since we have allocated space to hold a complete frame,
+ * the last indicator should be set.
+ */</span>
+<span class="hljs-keyword">if</span> ((status &amp; BD_ENET_RX_LAST) == <span class="hljs-number">0</span>)
+    printk(<span class="hljs-string">&quot;FEC ENET: rcv is not +last\n&quot;</span>);
+</code></pre>
+<p>&#x8FD9;&#x6761;&#x8BED;&#x53E5;&#x7EAF;&#x7CB9;&#x662F;&#x7528;&#x6765;debug&#x7684;&#xFF0C;&#x4E00;&#x822C;&#x60C5;&#x51B5;&#x4E0B;&#x4E0D;&#x4F1A;&#x51FA;&#x73B0;BD_ENET_RX_LAST&#x4F4D;&#x6CA1;&#x6709;&#x7F6E;1&#x7684;&#x60C5;&#x51B5;&#x3002;&#x63A5;&#x7740;&#x5224;&#x65AD;&#x7269;&#x7406;&#x5C42;&#x8FDE;&#x63A5;&#x662F;&#x5426;&#x6253;&#x5F00;&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-keyword">if</span> (!fep-&gt;opened)
+    <span class="hljs-keyword">goto</span> rx_processing_done;
+</code></pre>
+<p>&#x4E0B;&#x9762;&#x5168;&#x662F;&#x8FDB;&#x884C;&#x9519;&#x8BEF;&#x68C0;&#x6D4B;&#x7684;&#x4EE5;&#x53CA;&#x6570;&#x636E;&#x7EDF;&#x8BA1;&#x7684;&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* Check for errors. */</span>
+<span class="hljs-keyword">if</span> (status &amp; (BD_ENET_RX_LG | BD_ENET_RX_SH | BD_ENET_RX_NO |
+       BD_ENET_RX_CR | BD_ENET_RX_OV)) {
+    ndev-&gt;stats.rx_errors++;
+    <span class="hljs-keyword">if</span> (status &amp; (BD_ENET_RX_LG | BD_ENET_RX_SH)) {
+        <span class="hljs-comment">/* Frame too long or too short. */</span>
+        ndev-&gt;stats.rx_length_errors++;
+    }
+    <span class="hljs-keyword">if</span> (status &amp; BD_ENET_RX_NO)    <span class="hljs-comment">/* Frame alignment */</span>
+        ndev-&gt;stats.rx_frame_errors++;
+    <span class="hljs-keyword">if</span> (status &amp; BD_ENET_RX_CR)    <span class="hljs-comment">/* CRC Error */</span>
+        ndev-&gt;stats.rx_crc_errors++;
+    <span class="hljs-keyword">if</span> (status &amp; BD_ENET_RX_OV)    <span class="hljs-comment">/* FIFO overrun */</span>
+        ndev-&gt;stats.rx_fifo_errors++;
+}
+<span class="hljs-comment">/* Report late collisions as a frame error.
+ * On this error, the BD is closed, but we don&apos;t know what we
+ * have in the buffer.  So, just drop this frame on the floor.
+ */</span>
+<span class="hljs-keyword">if</span> (status &amp; BD_ENET_RX_CL) {
+    ndev-&gt;stats.rx_errors++;
+    ndev-&gt;stats.rx_frame_errors++;
+    <span class="hljs-keyword">goto</span> rx_processing_done;
+}
+</code></pre>
+<p>&#x63A5;&#x4E0B;&#x6765;&#x4E5F;&#x662F;&#xFF0C;&#x7EDF;&#x8BA1;&#x63A5;&#x53D7;&#x7684;&#x6570;&#x636E;&#x5305;&#x548C;&#x5B57;&#x8282;&#x6570;&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* Process the incoming frame. */</span>
+ndev-&gt;stats.rx_packets++;
+pkt_len = bdp-&gt;cbd_datlen;
+ndev-&gt;stats.rx_bytes += pkt_len;
+</code></pre>
+<p>&#x63A5;&#x7740;&#x8FDB;&#x884C;DMA&#x53BB;&#x6620;&#x5C04;&#x548C;&#x5927;&#x5C0F;&#x7AEF;&#x8F6C;&#x6362;&#xFF1A;</p>
+<pre><code class="lang-c">data = (__u8 *)__va(bdp-&gt;cbd_bufaddr);
+
+
+<span class="hljs-keyword">if</span> (bdp-&gt;cbd_bufaddr)
+    dma_unmap_single(&amp;fep-&gt;pdev-&gt;dev, bdp-&gt;cbd_bufaddr,
+        FEC_ENET_RX_FRSIZE, DMA_FROM_DEVICE);
+
+
+<span class="hljs-keyword">if</span> (id_entry-&gt;driver_data &amp; FEC_QUIRK_SWAP_FRAME)
+    swap_buffer(data, pkt_len);
+</code></pre>
+<p>&#x4E0B;&#x9762;&#x8FDB;&#x884C;16&#x5B57;&#x8282;&#x8FB9;&#x754C;&#x5BF9;&#x9F50;&#xFF0C;&#x56E0;&#x4E3A;&#x5305;&#x5934;&#x662F;14&#x5B57;&#x8282;&#xFF0C;&#x6240;&#x4EE5;NET_IP_ALIGN&#x4E3A;2&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* This does 16 byte alignment, exactly what we need.
+    * The packet length includes FCS, but we don&apos;t want to
+    * include that when passing upstream as it messes up
+    * bridging applications.
+    */</span>
+skb = dev_alloc_skb(pkt_len - <span class="hljs-number">4</span> + NET_IP_ALIGN);
+
+
+<span class="hljs-keyword">if</span> (unlikely(!skb)) {
+    printk(<span class="hljs-string">&quot;%s: Memory squeeze, dropping packet.\n&quot;</span>,
+            ndev-&gt;name);
+    ndev-&gt;stats.rx_dropped++;
+} <span class="hljs-keyword">else</span> {
+    skb_reserve(skb, NET_IP_ALIGN);
+    skb_put(skb, pkt_len - <span class="hljs-number">4</span>);    <span class="hljs-comment">/* Make room */</span>
+    skb_copy_to_linear_data(skb, data, pkt_len - <span class="hljs-number">4</span>);
+    <span class="hljs-comment">/* 1588 messeage TS handle */</span>
+    <span class="hljs-keyword">if</span> (fep-&gt;ptimer_present)
+        fec_ptp_store_rxstamp(fpp, skb, bdp);
+    skb-&gt;protocol = eth_type_trans(skb, ndev);
+    netif_rx(skb);
+}
+</code></pre>
+<p>&#x5BF9;&#x9F50;&#x5B8C;&#x4E86;&#x4EE5;&#x540E;&#x8FD8;&#x8981;&#x5904;&#x7406;1588&#x7684;Timestamp&#x6807;&#x8BB0;&#x3002;&#x5173;&#x4E8E;skb_reserve&#x7684;&#x5BF9;&#x9F50;&#x4F5C;&#x7528;&#xFF0C;&#x627E;&#x4E86;&#x4E00;&#x7BC7;&#x535A;&#x5BA2;&#xFF0C;&#x6709;&#x56FE;&#x6709;&#x771F;&#x76F8;&#xFF1A;<a href="http://cooliron.blog.163.com/blog/static/124703138201322074856169/" target="_blank">http://cooliron.blog.163.com/blog/static/124703138201322074856169/</a></p>
+<p>&#x5BF9;&#x9F50;&#x5904;&#x7406;&#x5B8C;&#x4E86;&#x4EE5;&#x540E;&#x518D;&#x91CD;&#x65B0;&#x5EFA;&#x7ACB;dma&#x6620;&#x5C04;&#xFF1A;</p>
+<pre><code class="lang-c">bdp-&gt;cbd_bufaddr = dma_map_single(&amp;fep-&gt;pdev-&gt;dev, data,
+        FEC_ENET_TX_FRSIZE, DMA_FROM_DEVICE);
+</code></pre>
+<p>&#x63A5;&#x4E0B;&#x6765;&#x518D;&#x66F4;&#x65B0;dma buffer&#x63CF;&#x8FF0;&#x7B26;&#x4E2D;&#x7684;status&#x5B57;&#x6BB5;&#xFF1A;</p>
+<pre><code class="lang-c">rx_processing_done:
+        <span class="hljs-comment">/* Clear the status flags for this buffer */</span>
+        status &amp;= ~BD_ENET_RX_STATS;
+
+
+        <span class="hljs-comment">/* Mark the buffer empty */</span>
+        status |= BD_ENET_RX_EMPTY;
+        bdp-&gt;cbd_sc = status;
+<span class="hljs-meta">#<span class="hljs-meta-keyword">ifdef</span> CONFIG_ENHANCED_BD</span>
+        bdp-&gt;cbd_esc = BD_ENET_RX_INT;
+        bdp-&gt;cbd_prot = <span class="hljs-number">0</span>;
+        bdp-&gt;cbd_bdu = <span class="hljs-number">0</span>;
+<span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span></span>
+
+
+        <span class="hljs-comment">/* Update BD pointer to next entry */</span>
+        <span class="hljs-keyword">if</span> (status &amp; BD_ENET_RX_WRAP)
+            bdp = fep-&gt;rx_bd_base;
+        <span class="hljs-keyword">else</span>
+            bdp++;
+</code></pre>
+<p>while&#x5FAA;&#x73AF;&#x7684;&#x6700;&#x540E;&#xFF1A;</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* Doing this here will keep the FEC running while we process
+ * incoming frames.  On a heavily loaded network, we should be
+ * able to keep up at the expense of system resources.
+ */</span>
+writel(<span class="hljs-number">0</span>, fep-&gt;hwp + FEC_R_DES_ACTIVE);
+</code></pre>
+<p>&#x5904;&#x7406;&#x8F93;&#x5165;&#x5305;&#x7684;&#x540C;&#x65F6;&#x4E5F;&#x4FDD;&#x6301;FEC&#x8FD0;&#x884C;&#xFF0C;&#x63D0;&#x9AD8;&#x541E;&#x5410;&#x91CF;&#x3002;</p>
+<p>&#x8DF3;&#x51FA;while&#x5FAA;&#x73AF;&#x4EE5;&#x540E;&#x518D;&#x66F4;&#x65B0;cur_rx&#x6307;&#x9488;&#xFF1A;</p>
+<pre><code class="lang-c">fep-&gt;cur_rx = bdp;
+</code></pre>
+<p>&#x5230;&#x8FD9;&#x91CC;&#xFF0C;&#x4EE5;&#x592A;&#x7F51;&#x63A7;&#x5236;&#x5668;&#x7684;&#x53D1;&#x9001;&#x548C;&#x63A5;&#x53D7;&#x4EE5;&#x53CA;&#x4E2D;&#x65AD;&#x76F8;&#x5173;&#x7684;&#x51FD;&#x6570;&#x4ECB;&#x7ECD;&#x5730;&#x5DEE;&#x4E0D;&#x591A;&#x4E86;&#xFF0C;&#x5199;&#x5B8C;&#x4E00;&#x904D;&#x4E2A;&#x4EBA;&#x53D1;&#x73B0;&#x6709;&#x70B9;&#x6DF7;&#x4E71;&#xFF0C;&#x5BF9;&#x4E8E;&#x6BD4;&#x8F83;&#x5927;&#x578B;&#x7684;&#x7A0B;&#x5E8F;&#x4E5F;&#x6CA1;&#x6709;&#x592A;&#x591A;&#x7684;&#x7ECF;&#x9A8C;&#xFF0C;&#x6240;&#x4EE5;&#x53EF;&#x80FD;&#x4E0D;&#x592A;&#x597D;&#x7406;&#x89E3;&#xFF0C;&#x4EE5;&#x540E;&#x8981;&#x591A;&#x5206;&#x6790;&#x603B;&#x7ED3;&#xFF01;&#x76EE;&#x524D;&#x4EE5;&#x592A;&#x7F51;&#x7684;&#x9A71;&#x52A8;&#x5206;&#x6790;&#x6682;&#x65F6;&#x5230;&#x8FD9;&#x91CC;&#x5C31;&#x7ED3;&#x675F;&#x4E86;&#xFF0C;&#x800C;&#x5BF9;&#x4E8E;&#x7269;&#x7406;&#x5C42;&#x7684;&#x64CD;&#x4F5C;&#x5206;&#x6790;&#xFF0C;&#x7531;&#x4E8E;&#x7CBE;&#x529B;&#x6709;&#x9650;&#x52A0;&#x4E0A;&#x5BF9;&#x6B64;&#x8BA4;&#x8BC6;&#x5730;&#x4E0D;&#x591F;&#x900F;&#x5F7B;&#xFF0C;&#x53EA;&#x80FD;&#x6682;&#x65F6;&#x6401;&#x7F6E;&#x3002;</p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="fsl_imx6_ethernet_01.html" class="navigation navigation-prev " aria-label="Previous page: Freescale i.MX6 Linux Ethernet Driver驱动源码分析01">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="linux_books.html" class="navigation navigation-next " aria-label="Next page: Linux Programming 经典书单">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Freescale i.MX6 Linux Ethernet Driver驱动源码分析02","level":"1.2.2","depth":2,"next":{"title":"Linux Programming 经典书单","level":"1.2.3","depth":2,"path":"Archive/linux_books.md","ref":"Archive/linux_books.md","articles":[]},"previous":{"title":"Freescale i.MX6 Linux Ethernet Driver驱动源码分析01","level":"1.2.1","depth":2,"path":"Archive/fsl_imx6_ethernet_01.md","ref":"Archive/fsl_imx6_ethernet_01.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"Archive/fsl_imx6_ethernet_02.md","mtime":"2021-08-28T08:27:14.999Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-08-28T09:02:21.404Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
