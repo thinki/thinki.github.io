@@ -20,7 +20,7 @@
 
 《See Mips Run Linux》Dominic Sweetman
 
-# 《Essential Linux Device Drivers》Sreekrishnan Venkateswaran 译本《精通Linux设备驱动程序开发》
+《Essential Linux Device Drivers》Sreekrishnan Venkateswaran 译本《精通Linux设备驱动程序开发》
 
 《Linux Device Drivers》Jonathan Corbet 译本 《Linux设备驱动程序》
 
@@ -39,7 +39,7 @@
 《The New Standard C》Derek M. Jones
 
 《C Programming: A Modern Approach, 2nd Edition》 K. N. King（CSDN上可以下载到）
- 
+
 
  **代码重构相关：**
 
@@ -89,9 +89,7 @@
 
 《Learning the bash Shell》  Cameron Newham 译本《学习bash》
 
-《Mastering Regular Expressions》 Jeffrey E. F. Friedl 译本《精通正则表达式》
-
-同一系列的还有《Introducing Regular Expressions》
+《Mastering Regular Expressions》 Jeffrey E. F. Friedl 译本《精通正则表达式》同一系列的还有《Introducing Regular Expressions》
 
 《Profess Assembly Language》 Richard Blum  译本《汇编语言程序设计》
 
