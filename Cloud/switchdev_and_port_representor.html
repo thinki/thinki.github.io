@@ -239,6 +239,32 @@
             
         </li>
     
+        <li class="chapter " data-level="1.3.6" data-path="meson_build_for_local_lib.html">
+            
+                <a href="meson_build_for_local_lib.html">
+            
+                    
+                    Meson build guide for local installed library
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.7" data-path="cpu_memory_order_summary.html">
+            
+                <a href="cpu_memory_order_summary.html">
+            
+                    
+                    CPU memory order summary
+            
+                </a>
+            
+
+            
+        </li>
+    
 
             </ul>
             
@@ -290,6 +316,24 @@
                                 <section class="normal markdown-section">
                                 
                                 <h1 id="linux-switchdev-and-dpdk-port-representor">Linux switchdev and DPDK port representor</h1>
+<h1 id="1-linux-switchdev">1. Linux Switchdev</h1>
+<h2 id="11-intro">1.1 Intro</h2>
+<p>Initially, <a href="https://www.kernel.org/doc/Documentation/networking/switchdev.txt" target="_blank">switchdev</a> was introduced into Linux community due to below reasons:
+<a href="https://plvision.eu/rd-lab/blog/linux-kernel/switchdev-power-of-open-linux" target="_blank">https://plvision.eu/rd-lab/blog/linux-kernel/switchdev-power-of-open-linux</a></p>
+<h2 id="12-use-case">1.2 Use case</h2>
+<p>Mellanox was the first vendor who adopt switchdev in their product, some sharing from mlx and their customer:
+<a href="https://netdevconf.info/1.2/slides/oct6/04_gerlitz_efraim_introduction_to_switchdev_sriov_offloads.pdf" target="_blank">Introduction to switchdev SR-IOV offloads</a></p>
+<p><a href="https://blog.qrator.net/en/linux-switchdev-mellanox-way_104/" target="_blank">Linux Switchdev the Mellanox way</a></p>
+<p>One of the typical use case for switchdev is OVS exceptional path(OVS Re-injection).</p>
+<h1 id="2-dpdk-port-representor">2. DPDK port representor</h1>
+<h2 id="21-intro">2.1 Intro</h2>
+<p>Dpdk community was planned to use switchdev, but later introduced a similar but simpler thing called <a href="https://doc.dpdk.org/guides/prog_guide/switch_representation.html" target="_blank">port representor</a>.</p>
+<p>Mellanox was one of the main contributor for port representor:
+<a href="https://www.dpdk.org/wp-content/uploads/sites/35/2018/12/RonyEfraim_Using-New-DPDK-Port-Representor-by-Switch-Application-like-OVS_DPDK_Summit18_v3.pdf" target="_blank">https://www.dpdk.org/wp-content/uploads/sites/35/2018/12/RonyEfraim_Using-New-DPDK-Port-Representor-by-Switch-Application-like-OVS_DPDK_Summit18_v3.pdf</a></p>
+<h2 id="22-use-case">2.2 Use case</h2>
+<p>Except OVS exceptional path, another use case for port representor is<a href="https://doc.dpdk.org/dts/test_plans/port_representor_test_plan.html" target="_blank"> vlan filter</a>, for example, if customer wants to config vlan encap/decap for VF, port representor for VF can be leveraged for configuration.</p>
+<p>AFAIK, there is no other interface to config vlan stripping in DPDK. So VF vlan filtering maybe the only choice. This is recently merged in 21.02 as ice dcf port representor.</p>
+<p>Recently, CVL Linux driver adds support for switchdev support.</p>
 
                                 
                                 </section>
@@ -333,7 +377,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Linux switchdev and DPDK port representor","level":"1.3.3","depth":2,"next":{"title":"Dump function call trace in linux kernel/user","level":"1.3.4","depth":2,"path":"Cloud/dump_function_call.md","ref":"Cloud/dump_function_call.md","articles":[]},"previous":{"title":"Stateless offload: USO and UFO","level":"1.3.2","depth":2,"path":"Cloud/Stateless_offload_uso_ufo.md","ref":"Cloud/Stateless_offload_uso_ufo.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"Cloud/switchdev_and_port_representor.md","mtime":"2021-09-09T03:41:20.077Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-09-09T03:57:21.744Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Linux switchdev and DPDK port representor","level":"1.3.3","depth":2,"next":{"title":"Dump function call trace in linux kernel/user","level":"1.3.4","depth":2,"path":"Cloud/dump_function_call.md","ref":"Cloud/dump_function_call.md","articles":[]},"previous":{"title":"Stateless offload: USO and UFO","level":"1.3.2","depth":2,"path":"Cloud/Stateless_offload_uso_ufo.md","ref":"Cloud/Stateless_offload_uso_ufo.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"Cloud/switchdev_and_port_representor.md","mtime":"2021-12-28T09:51:42.852Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-12-28T10:49:07.053Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

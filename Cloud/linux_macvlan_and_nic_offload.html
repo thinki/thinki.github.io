@@ -239,6 +239,32 @@
             
         </li>
     
+        <li class="chapter " data-level="1.3.6" data-path="meson_build_for_local_lib.html">
+            
+                <a href="meson_build_for_local_lib.html">
+            
+                    
+                    Meson build guide for local installed library
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.7" data-path="cpu_memory_order_summary.html">
+            
+                <a href="cpu_memory_order_summary.html">
+            
+                    
+                    CPU memory order summary
+            
+                </a>
+            
+
+            
+        </li>
+    
 
             </ul>
             
@@ -290,6 +316,464 @@
                                 <section class="normal markdown-section">
                                 
                                 <h1 id="linux-macvlan-and-nic-offload">Linux Macvlan and NIC offload</h1>
+<h1 id="1-intro">1. Intro</h1>
+<h2 id="11-about">1.1 About</h2>
+<p>Macvlan is kind of simplified bridge.
+Refer to <a href="https://developers.redhat.com/blog/2018/10/22/introduction-to-linux-interfaces-for-virtual-networking#macvlan" target="_blank">https://developers.redhat.com/blog/2018/10/22/introduction-to-linux-interfaces-for-virtual-networking#macvlan</a> for more details</p>
+<h2 id="12-why-macvlan">1.2 Why macvlan</h2>
+<p>Some applications, especially legacy applications or applications which monitor network traffic, expect to be directly connected to the physical network. In this type of situation, you can use the macvlan network driver to assign a MAC address to each container&#x2019;s virtual network interface, making it appear to be a physical network interface directly connected to the physical network. from <a href="https://docs.docker.com/network/macvlan/" target="_blank">https://docs.docker.com/network/macvlan/</a></p>
+<p>There is some limitation for host container communication directly due to security concern while macvlan designing:
+<a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/virtualization_host_configuration_and_guest_installation_guide/app_macvtap" target="_blank">https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/virtualization_host_configuration_and_guest_installation_guide/app_macvtap</a></p>
+<p>Resolution:</p>
+<p>Create another macvlan and set host route table to make traffic to go through this macvlan interface.</p>
+<p><a href="https://rehtt.com/index.php/archives/236/" target="_blank">https://rehtt.com/index.php/archives/236/</a></p>
+<h1 id="2-deployment">2. Deployment</h1>
+<p>For example, we can create 2 iface from eth0 and then assign them to different namespaces</p>
+<pre><code class="lang-sh"><span class="hljs-comment"># ip link add macvlan1 link eth0 type macvlan mode bridge</span>
+<span class="hljs-comment"># ip link add macvlan2 link eth0 type macvlan mode bridge</span>
+<span class="hljs-comment"># ip netns add net1</span>
+<span class="hljs-comment"># ip netns add net2</span>
+<span class="hljs-comment"># ip link set macvlan1 netns net1</span>
+<span class="hljs-comment"># ip link set macvlan2 netns net2</span>
+</code></pre>
+<h1 id="3-internals">3. Internals</h1>
+<h2 id="31-key-data-structurers">3.1 key data structurers</h2>
+<p>When netlink command for creating macvlan is received in kernel, a new netdev will be allocated and registered into kernel net subsystem:</p>
+<pre><code class="lang-c"><span class="hljs-keyword">static</span> <span class="hljs-keyword">struct</span> rtnl_link_ops macvlan_link_ops = {
+&#x25B8;       .kind&#x25B8;  &#x25B8;       = <span class="hljs-string">&quot;macvlan&quot;</span>,
+&#x25B8;       .setup&#x25B8; &#x25B8;       = macvlan_setup,
+&#x25B8;       .newlink&#x25B8;       = macvlan_newlink,
+&#x25B8;       .dellink&#x25B8;       = macvlan_dellink,
+&#x25B8;       .get_link_net&#x25B8;  = macvlan_get_link_net,
+&#x25B8;       .priv_size      = <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">struct</span> macvlan_dev),
+};
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">macvlan_common_setup</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> net_device *dev)</span>
+</span>{
+&#x25B8;       ether_setup(dev);
+
+&#x25B8;       dev-&gt;min_mtu&#x25B8;   &#x25B8;       = <span class="hljs-number">0</span>;
+&#x25B8;       dev-&gt;max_mtu&#x25B8;   &#x25B8;       = ETH_MAX_MTU;
+&#x25B8;       dev-&gt;priv_flags&#x25B8;       &amp;= ~IFF_TX_SKB_SHARING;
+&#x25B8;       netif_keep_dst(dev);
+&#x25B8;       dev-&gt;priv_flags&#x25B8;       |= IFF_UNICAST_FLT;
+&#x25B8;       dev-&gt;netdev_ops&#x25B8;&#x25B8;       = &amp;macvlan_netdev_ops;
+&#x25B8;       dev-&gt;needs_free_netdev&#x25B8; = <span class="hljs-literal">true</span>;
+&#x25B8;       dev-&gt;header_ops&#x25B8;&#x25B8;       = &amp;macvlan_hard_header_ops;
+&#x25B8;       dev-&gt;ethtool_ops&#x25B8;       = &amp;macvlan_ethtool_ops;
+}
+EXPORT_SYMBOL_GPL(macvlan_common_setup);
+
+<span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">macvlan_setup</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> net_device *dev)</span>
+</span>{
+&#x25B8;       macvlan_common_setup(dev);
+&#x25B8;       dev-&gt;priv_flags |= IFF_NO_QUEUE;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">macvlan_common_newlink</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> net *src_net, <span class="hljs-keyword">struct</span> net_device *dev,
+&#x25B8;       &#x25B8;       &#x25B8;          <span class="hljs-keyword">struct</span> nlattr *tb[], <span class="hljs-keyword">struct</span> nlattr *data[],
+&#x25B8;       &#x25B8;       &#x25B8;          <span class="hljs-keyword">struct</span> netlink_ext_ack *extack)</span>
+</span>{
+...
+&#x25B8;       err = register_netdevice(dev);
+&#x25B8;       <span class="hljs-keyword">if</span> (err &lt; <span class="hljs-number">0</span>)
+&#x25B8;       &#x25B8;       <span class="hljs-keyword">goto</span> destroy_macvlan_port;
+
+&#x25B8;       dev-&gt;priv_flags |= IFF_MACVLAN;
+&#x25B8;       err = netdev_upper_dev_link(lowerdev, dev, extack);
+&#x25B8;       <span class="hljs-keyword">if</span> (err)
+&#x25B8;       &#x25B8;       <span class="hljs-keyword">goto</span> unregister_netdev;
+
+...
+}
+<span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> <span class="hljs-title">macvlan_newlink</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> net *src_net, <span class="hljs-keyword">struct</span> net_device *dev,
+&#x25B8;       &#x25B8;       &#x25B8;          <span class="hljs-keyword">struct</span> nlattr *tb[], <span class="hljs-keyword">struct</span> nlattr *data[],
+&#x25B8;       &#x25B8;       &#x25B8;          <span class="hljs-keyword">struct</span> netlink_ext_ack *extack)</span>
+</span>{
+&#x25B8;       <span class="hljs-keyword">return</span> macvlan_common_newlink(src_net, dev, tb, data, extack);
+}
+</code></pre>
+<h2 id="32-tx-path">3.2 tx path</h2>
+<p>In linux, the parent netdev is called lowerdev.</p>
+<p>When there is packets sent from macvlan netdev, xmit func will be called and route destination is determined by strategy :</p>
+<pre><code class="lang-c"><span class="hljs-function"><span class="hljs-keyword">static</span> netdev_tx_t <span class="hljs-title">macvlan_start_xmit</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> sk_buff *skb,
+&#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;             <span class="hljs-keyword">struct</span> net_device *dev)</span>
+</span>{
+&#x25B8;       <span class="hljs-keyword">struct</span> macvlan_dev *vlan = netdev_priv(dev);
+&#x25B8;       <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> len = skb-&gt;len;
+&#x25B8;       <span class="hljs-keyword">int</span> ret;
+
+&#x25B8;       <span class="hljs-keyword">if</span> (unlikely(netpoll_tx_running(dev)))
+&#x25B8;       &#x25B8;       <span class="hljs-keyword">return</span> macvlan_netpoll_send_skb(vlan, skb);
+
+&#x25B8;       ret = macvlan_queue_xmit(skb, dev);
+
+&#x25B8;       <span class="hljs-keyword">if</span> (likely(ret == NET_XMIT_SUCCESS || ret == NET_XMIT_CN)) {
+&#x25B8;       &#x25B8;       <span class="hljs-keyword">struct</span> vlan_pcpu_stats *pcpu_stats;
+
+&#x25B8;       &#x25B8;       pcpu_stats = this_cpu_ptr(vlan-&gt;pcpu_stats);
+&#x25B8;       &#x25B8;       u64_stats_update_begin(&amp;pcpu_stats-&gt;syncp);
+&#x25B8;       &#x25B8;       pcpu_stats-&gt;tx_packets++;
+&#x25B8;       &#x25B8;       pcpu_stats-&gt;tx_bytes += len;
+&#x25B8;       &#x25B8;       u64_stats_update_end(&amp;pcpu_stats-&gt;syncp);
+&#x25B8;       } <span class="hljs-keyword">else</span> {
+&#x25B8;       &#x25B8;       this_cpu_inc(vlan-&gt;pcpu_stats-&gt;tx_dropped);
+&#x25B8;       }
+&#x25B8;       <span class="hljs-keyword">return</span> ret;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> <span class="hljs-title">macvlan_queue_xmit</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> sk_buff *skb, <span class="hljs-keyword">struct</span> net_device *dev)</span>
+</span>{
+&#x25B8;       <span class="hljs-keyword">const</span> <span class="hljs-keyword">struct</span> macvlan_dev *vlan = netdev_priv(dev);
+&#x25B8;       <span class="hljs-keyword">const</span> <span class="hljs-keyword">struct</span> macvlan_port *port = vlan-&gt;port;
+&#x25B8;       <span class="hljs-keyword">const</span> <span class="hljs-keyword">struct</span> macvlan_dev *dest;
+
+&#x25B8;       <span class="hljs-keyword">if</span> (vlan-&gt;mode == MACVLAN_MODE_BRIDGE) {
+&#x25B8;       &#x25B8;       <span class="hljs-keyword">const</span> <span class="hljs-keyword">struct</span> ethhdr *eth = skb_eth_hdr(skb);
+
+&#x25B8;       &#x25B8;       <span class="hljs-comment">/* send to other bridge ports directly */</span>
+&#x25B8;       &#x25B8;       <span class="hljs-keyword">if</span> (is_multicast_ether_addr(eth-&gt;h_dest)) {
+&#x25B8;       &#x25B8;       &#x25B8;       skb_reset_mac_header(skb);
+&#x25B8;       &#x25B8;       &#x25B8;       macvlan_broadcast(skb, port, dev, MACVLAN_MODE_BRIDGE);
+&#x25B8;       &#x25B8;       &#x25B8;       <span class="hljs-keyword">goto</span> xmit_world;
+&#x25B8;       &#x25B8;       }
+
+&#x25B8;       &#x25B8;       dest = macvlan_hash_lookup(port, eth-&gt;h_dest);
+&#x25B8;       &#x25B8;       <span class="hljs-keyword">if</span> (dest &amp;&amp; dest-&gt;mode == MACVLAN_MODE_BRIDGE) {
+&#x25B8;       &#x25B8;       &#x25B8;       <span class="hljs-comment">/* send to lowerdev first for its network taps */</span>
+&#x25B8;       &#x25B8;       &#x25B8;       dev_forward_skb(vlan-&gt;lowerdev, skb);
+
+&#x25B8;       &#x25B8;       &#x25B8;       <span class="hljs-keyword">return</span> NET_XMIT_SUCCESS;
+&#x25B8;       &#x25B8;       }
+&#x25B8;       }
+xmit_world:
+&#x25B8;       skb-&gt;dev = vlan-&gt;lowerdev;
+&#x25B8;       <span class="hljs-keyword">return</span> dev_queue_xmit_accel(skb,
+&#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;           netdev_get_sb_channel(dev) ? dev : <span class="hljs-literal">NULL</span>);
+}
+</code></pre>
+<h2 id="33-rx-path">3.3 rx path</h2>
+<p>When there is packets sent from outside world, it will firstly go into lowerdev and then get forwarded:</p>
+<p>This is done by changing lowerdev rx handler by calling netdev_rx_handler_register() :</p>
+<pre><code class="lang-c"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> <span class="hljs-title">macvlan_port_create</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> net_device *dev)</span>
+</span>{
+...
+&#x25B8;       err = netdev_rx_handler_register(dev, macvlan_handle_frame, port);
+...
+}
+
+
+<span class="hljs-comment">/* called under rcu_read_lock() from netif_receive_skb */</span>
+<span class="hljs-function"><span class="hljs-keyword">static</span> rx_handler_result_t <span class="hljs-title">macvlan_handle_frame</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> sk_buff **pskb)</span>
+</span>{
+...
+&#x25B8;       port = macvlan_port_get_rcu(skb-&gt;dev);
+&#x25B8;       <span class="hljs-keyword">if</span> (is_multicast_ether_addr(eth-&gt;h_dest)) {
+...
+        }
+&#x25B8;       macvlan_forward_source(skb, port, eth-&gt;h_source);
+&#x25B8;       <span class="hljs-keyword">if</span> (macvlan_passthru(port))
+&#x25B8;       &#x25B8;       vlan = list_first_or_null_rcu(&amp;port-&gt;vlans,
+&#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;             <span class="hljs-keyword">struct</span> macvlan_dev, <span class="hljs-built_in">list</span>);
+&#x25B8;       <span class="hljs-keyword">else</span>
+&#x25B8;       &#x25B8;       vlan = macvlan_hash_lookup(port, eth-&gt;h_dest);
+&#x25B8;       <span class="hljs-keyword">if</span> (!vlan || vlan-&gt;mode == MACVLAN_MODE_SOURCE)
+&#x25B8;       &#x25B8;       <span class="hljs-keyword">return</span> RX_HANDLER_PASS;
+
+...
+&#x25B8;       ret = NET_RX_SUCCESS;
+...
+}
+</code></pre>
+<h1 id="4-macvlan-nic-offload">4. Macvlan NIC offload</h1>
+<h2 id="41-linux-offload-support">4.1 Linux offload support</h2>
+<p>Linux support offload macvlan through NETIF_F_HW_L2FW_DOFFLOAD netdev feature.</p>
+<p>While netdev open is being called, NETIF_F_HW_L2FW_DOFFLOAD will be checked and corresponding callback will be executed to offload L2 forwarding for unicast packets</p>
+<pre><code class="lang-c">
+<span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> <span class="hljs-title">macvlan_open</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> net_device *dev)</span>
+</span>{
+...
+&#x25B8;       <span class="hljs-comment">/* Attempt to populate accel_priv which is used to offload the L2
+&#x25B8;        * forwarding requests for unicast packets.
+&#x25B8;        */</span>
+&#x25B8;       <span class="hljs-keyword">if</span> (lowerdev-&gt;features &amp; NETIF_F_HW_L2FW_DOFFLOAD)
+&#x25B8;       &#x25B8;       vlan-&gt;accel_priv =
+&#x25B8;       &#x25B8;             lowerdev-&gt;netdev_ops-&gt;ndo_dfwd_add_station(lowerdev, dev);
+...
+}
+</code></pre>
+<h2 id="42-nic-support-for-l2-forward-offload">4.2 NIC support for l2 forward offload</h2>
+<p>NIC offload macvlan L2 forwarding by adding unique vsi per macvlan netdev. So each macvlan netdev has dedicated Queue, MSIX interrupt, etc.</p>
+<p>As a result, all L2 forward is done by embedded switch(VEB): check i40e_fwd_add() in kernel for details</p>
+<pre><code class="lang-c">NIC_fwd_add_macvlan(<span class="hljs-keyword">struct</span> net_device *netdev, <span class="hljs-keyword">struct</span> net_device *vdev)
+{
+...
+
+...
+&#x25B8;       ret = netdev_set_sb_channel(vdev, avail_id + <span class="hljs-number">1</span>);
+...
+
+&#x25B8;       <span class="hljs-comment">/* configure sbdev with the number of queues and offset within PF
+&#x25B8;        * queues range
+&#x25B8;        */</span>
+&#x25B8;       ret = netdev_bind_sb_channel_queue(netdev, vdev, <span class="hljs-number">0</span>, xxx-&gt;num_txq,
+&#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;          offset);
+...
+
+
+...
+}
+</code></pre>
+<h2 id="44-example">4.4 Example</h2>
+<p>Fortville/Columbiaville support macvlan offload by ethtool l2-fw-offload capability:</p>
+<pre><code>&#x279C;  ethtool -k enp137s0f1 | grep l2
+l2-fwd-offload: off
+</code></pre><p>By enabling this offload, we need to turn this capability:</p>
+<pre><code>&#x279C;  sudo ethtool -K enp137s0f0 l2-fwd-offload on
+</code></pre><p>Then using below scripts to test macvlan behavior:</p>
+<p>enp137s0f0 and enp137s0f1 are back-to-back connected to each other on the physical port</p>
+<pre><code class="lang-shell">sudo ifconfig enp137s0f0 0.0.0.0 up
+sudo ifconfig enp137s0f1 192.168.0.10 up
+sudo ip -all netns delete
+sudo ip link delete macvlan0
+sudo ip link delete macvlan1
+
+sudo ip link add link enp137s0f0 name macvlan0 type macvlan mode {MODE} #private, vepa, bridge
+sudo ip link add link enp137s0f0 name macvlan1 type macvlan mode {MODE} #private, vepa, bridge
+sudo ip netns add net0
+sudo ip netns add net1
+sudo ip link set macvlan0 netns net0
+sudo ip link set macvlan1 netns net1
+sudo ip netns exec net0 ifconfig macvlan0 192.168.0.100 up
+sudo ip netns exec net1 ifconfig macvlan1 192.168.0.101 up
+sudo ip netns exec net0 ping 192.168.0.10 -c 5
+sudo ip netns exec net0 ping 192.168.0.101
+</code></pre>
+<p>If using <strong>private/vepa</strong> mode, you may get below log:</p>
+<pre><code class="lang-shell">&#x279C;./macvlan.sh
+Cannot find device &quot;macvlan0&quot;
+Cannot find device &quot;macvlan1&quot;
+PING 192.168.0.10 (192.168.0.10) 56(84) bytes of data.
+64 bytes from 192.168.0.10: icmp_seq=1 ttl=64 time=0.226 ms
+64 bytes from 192.168.0.10: icmp_seq=2 ttl=64 time=0.197 ms
+64 bytes from 192.168.0.10: icmp_seq=3 ttl=64 time=0.205 ms
+64 bytes from 192.168.0.10: icmp_seq=4 ttl=64 time=0.199 ms
+64 bytes from 192.168.0.10: icmp_seq=5 ttl=64 time=0.207 ms
+
+--- 192.168.0.10 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4078ms
+rtt min/avg/max/mdev = 0.197/0.206/0.226/0.020 ms
+PING 192.168.0.10 (192.168.0.10) 56(84) bytes of data.
+64 bytes from 192.168.0.10: icmp_seq=1 ttl=64 time=0.197 ms
+64 bytes from 192.168.0.10: icmp_seq=2 ttl=64 time=0.227 ms
+64 bytes from 192.168.0.10: icmp_seq=3 ttl=64 time=0.203 ms
+64 bytes from 192.168.0.10: icmp_seq=4 ttl=64 time=0.202 ms
+64 bytes from 192.168.0.10: icmp_seq=5 ttl=64 time=0.200 ms
+
+--- 192.168.0.10 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4079ms
+rtt min/avg/max/mdev = 0.197/0.205/0.227/0.021 ms
+PING 192.168.0.101 (192.168.0.101) 56(84) bytes of data.
+^C
+--- 192.168.0.101 ping statistics ---
+5 packets transmitted, 0 received, 100% packet loss, time 4079ms
+</code></pre>
+<p>This means <strong>macvlan0/macvlan1 can communicate to outsider world(enp137s0f1), but they can&apos;t communicate with each other</strong>.</p>
+<p><img src="https://developers.redhat.com/sites/default/files/blog/2018/10/macvlan_01.png" alt="img"><img src="https://developers.redhat.com/blog/wp-content/uploads/2018/10/macvlan_02.png" alt="VEPA MACVLAN configuration"></p>
+<p>Notes: since we don&apos;t have vepa switch outside, so private and vepa results are the same.</p>
+<p>If using <strong>bridge</strong> mode, you may get:</p>
+<pre><code class="lang-sh">&#x279C; ./macvlan.sh
+Cannot find device <span class="hljs-string">&quot;macvlan0&quot;</span>
+Cannot find device <span class="hljs-string">&quot;macvlan1&quot;</span>
+PING 192.168.0.10 (192.168.0.10) 56(84) bytes of data.
+64 bytes from 192.168.0.10: icmp_seq=1 ttl=64 time=0.230 ms
+64 bytes from 192.168.0.10: icmp_seq=2 ttl=64 time=0.217 ms
+64 bytes from 192.168.0.10: icmp_seq=3 ttl=64 time=0.223 ms
+64 bytes from 192.168.0.10: icmp_seq=4 ttl=64 time=0.203 ms
+64 bytes from 192.168.0.10: icmp_seq=5 ttl=64 time=0.207 ms
+
+--- 192.168.0.10 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4086ms
+rtt min/avg/max/mdev = 0.203/0.216/0.230/0.010 ms
+PING 192.168.0.10 (192.168.0.10) 56(84) bytes of data.
+64 bytes from 192.168.0.10: icmp_seq=1 ttl=64 time=0.203 ms
+64 bytes from 192.168.0.10: icmp_seq=2 ttl=64 time=0.234 ms
+64 bytes from 192.168.0.10: icmp_seq=3 ttl=64 time=0.223 ms
+64 bytes from 192.168.0.10: icmp_seq=4 ttl=64 time=0.210 ms
+64 bytes from 192.168.0.10: icmp_seq=5 ttl=64 time=0.215 ms
+
+--- 192.168.0.10 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4079ms
+rtt min/avg/max/mdev = 0.203/0.217/0.234/0.010 ms
+PING 192.168.0.101 (192.168.0.101) 56(84) bytes of data.
+64 bytes from 192.168.0.101: icmp_seq=1 ttl=64 time=0.073 ms
+64 bytes from 192.168.0.101: icmp_seq=2 ttl=64 time=0.036 ms
+64 bytes from 192.168.0.101: icmp_seq=3 ttl=64 time=0.042 ms
+64 bytes from 192.168.0.101: icmp_seq=4 ttl=64 time=0.041 ms
+64 bytes from 192.168.0.101: icmp_seq=5 ttl=64 time=0.041 ms
+^C
+--- 192.168.0.101 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4075ms
+rtt min/avg/max/mdev = 0.036/0.046/0.073/0.015 ms
+</code></pre>
+<p>This means <strong>macvlan0/macvlan1 can communicate to outsider world(enp137s0f1), and they can communicate with each other, too</strong></p>
+<p><strong><img src="https://developers.redhat.com/blog/wp-content/uploads/2018/10/macvlan_03.png" alt="Bridge MACVLAN configuration"></strong></p>
+<p>Since NIC only do layer 2 forward offload, so there is no difference at functional level, but the performance may be different.</p>
+<h2 id="45-nic-l2-forward-offload-implementation-details">4.5 NIC l2 forward offload implementation details</h2>
+<p>EPG give a presentation about this on netdev conf: <strong>Hardware Acceleration of Container Networking Interfaces - Amritha Nambiar, Sridhar Samudrala, Kiran Patil:</strong> <a href="https://legacy.netdevconf.info/0x14/session.html?talk-hardware-acceleration-of-container-networking-interfaces" target="_blank">Intro</a>, <a href="https://legacy.netdevconf.info/0x14/pub/slides/27/HW Acceleration of Container Networking Interfaces.pdf" target="_blank">slides</a>, <a href="https://www.youtube.com/watch?v=da0C4bNl5dU" target="_blank">Video</a></p>
+<p>While doing offload for a newly created macvlan netdev, subordinate device is configed with queues within PF queue range by calling netdev_bind_sb_channel_queue(). So the stack traversal from macvlan to PF driver is like:
+app-&gt;socket-&gt;dev_queue_xmit-&gt;__dev_queue_xmit-&gt;dev_hard_start_xmit-&gt;macvlan_start_xmit-&gt;dev_queue_xmit_accel</p>
+<p>-&gt;<strong>dev_queue_xmit-&gt;</strong>qdisc_run-&gt;sch_direct_xmit-&gt;dev_hard_start_xmit-&gt;NIC_start_xmit</p>
+<p>As you can see that, there xmit callback function is called twice, 1st time is macvlan&apos;s xmit. In macvlan_start_xmit, dev_queue_xmit_accel is called with subordinate device, through this subdev, the queues provides by PF for l2 forward offloading if found and used for transmission. So this is the 2nd time to call the xmit callback function.</p>
+<pre><code>[ 3443.315336] NIC_start_xmit+0x786/0x10a0 [ice]
+[ 3443.315338] dev_hard_start_xmit+0xa8/0x200
+[ 3443.315339] sch_direct_xmit+0x116/0x390
+[ 3443.315340] __qdisc_run+0x165/0x530
+[ 3443.315341] __dev_queue_xmit+0x2a5/0x9b0
+[ 3443.315343] ? __alloc_skb+0x87/0x1e0
+[ 3443.315344] dev_queue_xmit_accel+0xe/0x10
+[ 3443.315346] macvlan_start_xmit+0x5a/0x130 [macvlan]
+[ 3443.315347] dev_hard_start_xmit+0xa8/0x200
+[ 3443.315348] __dev_queue_xmit+0x44e/0x9b0
+[ 3443.315349] dev_queue_xmit+0x10/0x20
+[ 3443.315351] ip_finish_output2+0x29c/0x3b0
+[ 3443.315351] ip_finish_output+0xfe/0x280
+[ 3443.315352] ip_output+0x70/0xe0
+[ 3443.315353] ? __ip_make_skb+0x309/0x430
+[ 3443.315354] ip_local_out+0x3b/0x50
+[ 3443.315355] ip_send_skb+0x19/0x40
+[ 3443.315357] udp_send_skb.isra.43+0x157/0x360
+[ 3443.315358] udp_sendmsg+0xa43/0xce0
+[ 3443.315361] inet_sendmsg+0x37/0xb0
+[ 3443.315362] ? inet_sendmsg+0x37/0xb0
+[ 3443.315363] sock_sendmsg+0x3e/0x50
+[ 3443.315364] sock_write_iter+0x8c/0xf0
+[ 3443.315366] __vfs_write+0x131/0x190
+[ 3443.315367] vfs_write+0xab/0x1b0
+[ 3443.315368] ksys_write+0x55/0xc0
+[ 3443.315369] __x64_sys_write+0x1a/0x20
+[ 3443.315371] do_syscall_64+0x5a/0x110
+[ 3443.315372] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+</code></pre><p>Some problems are found that if macvlan send traffic too fast, the network connection will be closed. This is caused by macvlan has no qdisc:</p>
+<pre><code class="lang-c"><span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> __dev_queue_xmit(<span class="hljs-keyword">struct</span> sk_buff *skb, <span class="hljs-keyword">struct</span> net_device *sb_dev)
+{
+...
+&#x25B8;       <span class="hljs-comment">/* The device has no queue. Common case for software devices:
+&#x25B8;        * loopback, all the sorts of tunnels...
+
+&#x25B8;        * Really, it is unlikely that netif_tx_lock protection is necessary
+&#x25B8;        * here.  (f.e. loopback and IP tunnels are clean ignoring statistics
+&#x25B8;        * counters.)
+&#x25B8;        * However, it is possible, that they rely on protection
+&#x25B8;        * made by us here.
+
+&#x25B8;        * Check this and shot the lock. It is not prone from deadlocks.
+&#x25B8;        *Either shot noqueue qdisc, it is even simpler 8)
+&#x25B8;        */</span>
+&#x25B8;       <span class="hljs-keyword">if</span> (dev-&gt;flags &amp; IFF_UP) {
+
+&#x25B8;...
+
+&#x25B8;       &#x25B8;       &#x25B8;       <span class="hljs-keyword">if</span> (!netif_xmit_stopped(txq) ) {
+
+&#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;       skb = dev_hard_start_xmit(skb, dev, txq, &amp;rc);
+&#x25B8;       &#x25B8;       &#x25B8;       }
+...
+
+&#x25B8;       rc = -ENETDOWN;
+&#x25B8;       rcu_read_unlock_bh();
+
+&#x25B8;       atomic_long_inc(&amp;dev-&gt;tx_dropped);
+&#x25B8;       kfree_skb_list(skb);
+&#x25B8;       <span class="hljs-keyword">return</span> rc;
+
+}
+<span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">inline</span> <span class="hljs-keyword">bool</span> <span class="hljs-title">netif_xmit_stopped</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">struct</span> netdev_queue *dev_queue)</span>
+</span>{
+&#x25B8;       <span class="hljs-keyword">return</span> dev_queue-&gt;state &amp; QUEUE_STATE_ANY_XOFF;
+}
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> QUEUE_STATE_ANY_XOFF&#x25B8;   (QUEUE_STATE_DRV_XOFF | QUEUE_STATE_STACK_XOFF)</span>
+</code></pre>
+<p>Since txq state here is manipluated by PF driver NIC_start_xmit function, BQL(Byte Queue Limits) is used here to balance throughput and latency which will set QUEUE_STATE_STACK_XOFF when there is not enough space for enqueue. In addition, NIC_start_xmit will periodically check if there is available desc and set QUEUE_STATE_DRV_XOFF when there is no available desc. So whenever BQL limit works or no available desc, xmit will fail and -ENETDOWN will be returned so that all the socket connection will be shutdown since the network is down now.</p>
+<p>Compared to non-macvlan offload case, all the traffic will be enqueued into Qdisc, and then being dequeued from Qdisc at softirq stage. Before enqueue, no QUEUE_STATE_XXX will be checked. If enqueue fail, packets will be dropped instead of returning -ENETDOWN.</p>
+<pre><code class="lang-c"><span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> __dev_queue_xmit(<span class="hljs-keyword">struct</span> sk_buff *skb, <span class="hljs-keyword">struct</span> net_device *sb_dev)
+{
+...
+&#x25B8;       txq = netdev_pick_tx(dev, skb, sb_dev);
+&#x25B8;       q = rcu_dereference_bh(txq-&gt;qdisc);
+
+&#x25B8;       trace_net_dev_queue(skb);
+&#x25B8;       <span class="hljs-keyword">if</span> (q-&gt;enqueue) {
+&#x25B8;       &#x25B8;       <span class="hljs-keyword">if</span> (sb_dev &amp;&amp; sb_dev-&gt;name[<span class="hljs-number">0</span>] == <span class="hljs-string">&apos;t&apos;</span>)
+&#x25B8;       &#x25B8;       &#x25B8;       dump_stack();
+&#x25B8;       &#x25B8;       rc = __dev_xmit_skb(skb, q, dev, txq);
+&#x25B8;       &#x25B8;       <span class="hljs-keyword">goto</span> out;
+&#x25B8;       }
+...
+}
+
+<span class="hljs-keyword">static</span> <span class="hljs-keyword">inline</span> <span class="hljs-keyword">int</span> __dev_xmit_skb(<span class="hljs-keyword">struct</span> sk_buff *skb, <span class="hljs-keyword">struct</span> Qdisc *q,
+&#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;        <span class="hljs-keyword">struct</span> net_device *dev,
+&#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;        <span class="hljs-keyword">struct</span> netdev_queue *txq)
+{
+&#x25B8;       <span class="hljs-keyword">if</span> (q-&gt;flags &amp; TCQ_F_NOLOCK) {
+&#x25B8;       &#x25B8;       <span class="hljs-keyword">if</span> (unlikely(test_bit(__QDISC_STATE_DEACTIVATED, &amp;q-&gt;state))) {
+...
+&#x25B8;       &#x25B8;       } <span class="hljs-keyword">else</span> {
+&#x25B8;       &#x25B8;       &#x25B8;       rc = q-&gt;enqueue(skb, q, &amp;to_free) &amp; NET_XMIT_MASK;
+&#x25B8;       &#x25B8;       &#x25B8;       qdisc_run(q);
+&#x25B8;       &#x25B8;       }
+
+&#x25B8;       &#x25B8;       <span class="hljs-keyword">if</span> (unlikely(to_free))
+&#x25B8;       &#x25B8;       &#x25B8;       kfree_skb_list(to_free);
+&#x25B8;       &#x25B8;       <span class="hljs-keyword">return</span> rc;
+&#x25B8;       }
+
+<span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> <span class="hljs-title">pfifo_fast_enqueue</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> sk_buff *skb, <span class="hljs-keyword">struct</span> Qdisc *qdisc,
+&#x25B8;       &#x25B8;       &#x25B8;             <span class="hljs-keyword">struct</span> sk_buff **to_free)</span>
+</span>{
+&#x25B8;       <span class="hljs-keyword">int</span> band = prio2band[skb-&gt;priority &amp; TC_PRIO_MAX];
+&#x25B8;       <span class="hljs-keyword">struct</span> pfifo_fast_priv *priv = qdisc_priv(qdisc);
+&#x25B8;       <span class="hljs-keyword">struct</span> skb_array *q = band2list(priv, band);
+&#x25B8;       <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> pkt_len = qdisc_pkt_len(skb);
+&#x25B8;       <span class="hljs-keyword">int</span> err;
+
+&#x25B8;       err = skb_array_produce(q, skb);
+
+&#x25B8;       <span class="hljs-keyword">if</span> (unlikely(err))
+&#x25B8;       &#x25B8;       <span class="hljs-keyword">return</span> qdisc_drop_cpu(skb, qdisc, to_free);
+
+<span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">inline</span> <span class="hljs-keyword">int</span> <span class="hljs-title">qdisc_drop_cpu</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> sk_buff *skb, <span class="hljs-keyword">struct</span> Qdisc *sch,
+&#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;        <span class="hljs-keyword">struct</span> sk_buff **to_free)</span>
+</span>{
+&#x25B8;       __qdisc_drop(skb, to_free);
+&#x25B8;       qdisc_qstats_cpu_drop(sch);
+
+&#x25B8;       <span class="hljs-keyword">return</span> NET_XMIT_DROP;
+}
+
+}
+</code></pre>
+<p>The workaround for macvlan offload is that instead of returning -ENETDOWN, NET_XMIT_DROP will be returned like:</p>
+<pre><code class="lang-diff">diff --git a/net/core/dev.c b/net/core/dev.c
+index 93243479085f..382b74dc3079 100644
+<span class="hljs-comment">--- a/net/core/dev.c</span>
+<span class="hljs-comment">+++ b/net/core/dev.c</span>
+@@ -3827,8 +3829,17 @@ static int __dev_queue_xmit(struct sk_buff *skb, struct net_device *sb_dev)
+                                        HARD_TX_UNLOCK(dev, txq);
+                                        goto out;
+                                }
+<span class="hljs-addition">+                       } else {</span>
+<span class="hljs-addition">+                               rc = NET_XMIT_DROP;</span>
+<span class="hljs-addition">+                               if (dev_xmit_complete(rc)) {</span>
+<span class="hljs-addition">+                                       HARD_TX_UNLOCK(dev, txq);</span>
+<span class="hljs-addition">+                                       kfree_skb_list(skb);</span>
+<span class="hljs-addition">+                                       //netdev_err(dev, &quot;%s:%d, state:%lx\n&quot;, __func__, __LINE__, txq-&gt;state);</span>
+<span class="hljs-addition">+                                       goto out;</span>
+<span class="hljs-addition">+                               }</span>
+                        }
+</code></pre>
+<p><img src="../images/macvlan_nic_01.PNG" alt="macvlan_nic_01"></p>
 
                                 
                                 </section>
@@ -333,7 +817,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Linux Macvlan and NIC offload","level":"1.3.1","depth":2,"next":{"title":"Stateless offload: USO and UFO","level":"1.3.2","depth":2,"path":"Cloud/Stateless_offload_uso_ufo.md","ref":"Cloud/Stateless_offload_uso_ufo.md","articles":[]},"previous":{"title":"Cloud","level":"1.3","depth":1,"path":"Cloud/README.md","ref":"Cloud/README.md","articles":[{"title":"Linux Macvlan and NIC offload","level":"1.3.1","depth":2,"path":"Cloud/linux_macvlan_and_nic_offload.md","ref":"Cloud/linux_macvlan_and_nic_offload.md","articles":[]},{"title":"Stateless offload: USO and UFO","level":"1.3.2","depth":2,"path":"Cloud/Stateless_offload_uso_ufo.md","ref":"Cloud/Stateless_offload_uso_ufo.md","articles":[]},{"title":"Linux switchdev and DPDK port representor","level":"1.3.3","depth":2,"path":"Cloud/switchdev_and_port_representor.md","ref":"Cloud/switchdev_and_port_representor.md","articles":[]},{"title":"Dump function call trace in linux kernel/user","level":"1.3.4","depth":2,"path":"Cloud/dump_function_call.md","ref":"Cloud/dump_function_call.md","articles":[]},{"title":"Lock Free Programming","level":"1.3.5","depth":2,"path":"Cloud/lock_free_programming.md","ref":"Cloud/lock_free_programming.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"Cloud/linux_macvlan_and_nic_offload.md","mtime":"2021-08-30T01:29:14.759Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-09-09T03:57:21.744Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"typora-root-url":"..","title":"Linux Macvlan and NIC offload","level":"1.3.1","depth":2,"next":{"title":"Stateless offload: USO and UFO","level":"1.3.2","depth":2,"path":"Cloud/Stateless_offload_uso_ufo.md","ref":"Cloud/Stateless_offload_uso_ufo.md","articles":[]},"previous":{"title":"Cloud","level":"1.3","depth":1,"path":"Cloud/README.md","ref":"Cloud/README.md","articles":[{"title":"Linux Macvlan and NIC offload","level":"1.3.1","depth":2,"path":"Cloud/linux_macvlan_and_nic_offload.md","ref":"Cloud/linux_macvlan_and_nic_offload.md","articles":[]},{"title":"Stateless offload: USO and UFO","level":"1.3.2","depth":2,"path":"Cloud/Stateless_offload_uso_ufo.md","ref":"Cloud/Stateless_offload_uso_ufo.md","articles":[]},{"title":"Linux switchdev and DPDK port representor","level":"1.3.3","depth":2,"path":"Cloud/switchdev_and_port_representor.md","ref":"Cloud/switchdev_and_port_representor.md","articles":[]},{"title":"Dump function call trace in linux kernel/user","level":"1.3.4","depth":2,"path":"Cloud/dump_function_call.md","ref":"Cloud/dump_function_call.md","articles":[]},{"title":"Lock Free Programming","level":"1.3.5","depth":2,"path":"Cloud/lock_free_programming.md","ref":"Cloud/lock_free_programming.md","articles":[]},{"title":"Meson build guide for local installed library","level":"1.3.6","depth":2,"path":"Cloud/meson_build_for_local_lib.md","ref":"Cloud/meson_build_for_local_lib.md","articles":[]},{"title":"CPU memory order summary","level":"1.3.7","depth":2,"path":"Cloud/cpu_memory_order_summary.md","ref":"Cloud/cpu_memory_order_summary.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"Cloud/linux_macvlan_and_nic_offload.md","mtime":"2021-12-28T09:46:38.858Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-12-28T10:49:07.053Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

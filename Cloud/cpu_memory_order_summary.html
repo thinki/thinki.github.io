@@ -1,0 +1,579 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>CPU memory order summary · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    
+    <link rel="prev" href="meson_build_for_local_lib.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    About Me
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../Archive/">
+            
+                <a href="../Archive/">
+            
+                    
+                    网易博客存档
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../Archive/fsl_imx6_ethernet_01.html">
+            
+                <a href="../Archive/fsl_imx6_ethernet_01.html">
+            
+                    
+                    Freescale i.MX6 Linux Ethernet Driver驱动源码分析01
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../Archive/fsl_imx6_ethernet_02.html">
+            
+                <a href="../Archive/fsl_imx6_ethernet_02.html">
+            
+                    
+                    Freescale i.MX6 Linux Ethernet Driver驱动源码分析02
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="../Archive/linux_books.html">
+            
+                <a href="../Archive/linux_books.html">
+            
+                    
+                    Linux Programming 经典书单
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Cloud
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="linux_macvlan_and_nic_offload.html">
+            
+                <a href="linux_macvlan_and_nic_offload.html">
+            
+                    
+                    Linux Macvlan and NIC offload
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="Stateless_offload_uso_ufo.html">
+            
+                <a href="Stateless_offload_uso_ufo.html">
+            
+                    
+                    Stateless offload: USO and UFO
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="switchdev_and_port_representor.html">
+            
+                <a href="switchdev_and_port_representor.html">
+            
+                    
+                    Linux switchdev and DPDK port representor
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4" data-path="dump_function_call.html">
+            
+                <a href="dump_function_call.html">
+            
+                    
+                    Dump function call trace in linux kernel/user
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.5" data-path="lock_free_programming.html">
+            
+                <a href="lock_free_programming.html">
+            
+                    
+                    Lock Free Programming
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.6" data-path="meson_build_for_local_lib.html">
+            
+                <a href="meson_build_for_local_lib.html">
+            
+                    
+                    Meson build guide for local installed library
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.3.7" data-path="cpu_memory_order_summary.html">
+            
+                <a href="cpu_memory_order_summary.html">
+            
+                    
+                    CPU memory order summary
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >CPU memory order summary</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="cpu-memory-order-summary">CPU memory order summary</h1>
+<h1 id="1-introduction">1. Introduction</h1>
+<p>This article summarizes all the memory order related resouce since it is a hard to understand concept</p>
+<h1 id="2-target-audience">2. Target Audience</h1>
+<p>Developer with basic cpu background</p>
+<h1 id="3-reference">3. Reference</h1>
+<p>Weak vs. Strong Memory Models  <a href="https://preshing.com/20120930/weak-vs-strong-memory-models/" target="_blank">https://preshing.com/20120930/weak-vs-strong-memory-models/</a></p>
+<p>Memory Barriers Are Like Source Control Operations <a href="https://preshing.com/20120710/memory-barriers-are-like-source-control-operations/" target="_blank">https://preshing.com/20120710/memory-barriers-are-like-source-control-operations/</a></p>
+<p>This Is Why They Call It a Weakly-Ordered CPU <a href="https://preshing.com/20121019/this-is-why-they-call-it-a-weakly-ordered-cpu/" target="_blank">https://preshing.com/20121019/this-is-why-they-call-it-a-weakly-ordered-cpu/</a></p>
+<p>Memory Reordering Caught in the Act <a href="https://preshing.com/20120515/memory-reordering-caught-in-the-act/" target="_blank">https://preshing.com/20120515/memory-reordering-caught-in-the-act/</a></p>
+<p>Acquire and Release Semantics <a href="https://preshing.com/20120913/acquire-and-release-semantics/" target="_blank">https://preshing.com/20120913/acquire-and-release-semantics/</a></p>
+<p>Memory Ordering at Compile Time <a href="https://preshing.com/20120625/memory-ordering-at-compile-time/" target="_blank">https://preshing.com/20120625/memory-ordering-at-compile-time/</a></p>
+<p>The Significance of the x86 SFENCE Instruction <a href="https://hadibrais.wordpress.com/2019/02/26/the-significance-of-the-x86-sfence-instruction/" target="_blank">https://hadibrais.wordpress.com/2019/02/26/the-significance-of-the-x86-sfence-instruction/</a></p>
+<p>what is the effects of _mm_lfence and _mm_sfence <a href="https://community.intel.com/t5/Intel-C-Compiler/what-is-the-effects-of-mm-lfence-and-mm-sfence/td-p/871883" target="_blank">https://community.intel.com/t5/Intel-C-Compiler/what-is-the-effects-of-mm-lfence-and-mm-sfence/td-p/871883</a></p>
+<p>Intel&#xAE; 64 and IA-32 Architectures Software Developer Manuals <a href="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html" target="_blank">https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html</a> Volum 3 Chapter 11 Memory Cache Control, Volume 3 Chapter 8.2 Memory Ordering</p>
+<h1 id="4-example">4. Example</h1>
+<p>In virtio pmd, barrier(rte_smp_wmb) is needed before the negotiation flag is commited to prevent the flag store is visible ahead of the vhost descriptor store operation.</p>
+<pre><code class="lang-c"> <span class="hljs-number">228</span> <span class="hljs-keyword">static</span> __rte_always_inline <span class="hljs-keyword">void</span>
+ <span class="hljs-number">229</span> vhost_shadow_dequeue_batch_packed(<span class="hljs-keyword">struct</span> virtio_net *dev,
+ <span class="hljs-number">230</span> &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;         <span class="hljs-keyword">struct</span> vhost_virtqueue *vq,
+ <span class="hljs-number">231</span> &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;         <span class="hljs-keyword">uint16_t</span> *ids)
+ <span class="hljs-number">232</span> {
+ <span class="hljs-number">233</span> &#x25B8;       <span class="hljs-keyword">uint16_t</span> flags;
+ <span class="hljs-number">234</span> &#x25B8;       <span class="hljs-keyword">uint16_t</span> i;
+ <span class="hljs-number">235</span> &#x25B8;       <span class="hljs-keyword">uint16_t</span> begin;
+ <span class="hljs-number">236</span>
+ <span class="hljs-number">237</span> &#x25B8;       flags = PACKED_DESC_DEQUEUE_USED_FLAG(vq-&gt;used_wrap_counter);
+ <span class="hljs-number">238</span>
+ <span class="hljs-number">239</span> &#x25B8;       <span class="hljs-keyword">if</span> (!vq-&gt;shadow_used_idx) {
+ <span class="hljs-number">240</span> &#x25B8;       &#x25B8;       vq-&gt;shadow_last_used_idx = vq-&gt;last_used_idx;
+ <span class="hljs-number">241</span> &#x25B8;       &#x25B8;       vq-&gt;shadow_used_packed[<span class="hljs-number">0</span>].id  = ids[<span class="hljs-number">0</span>];
+ <span class="hljs-number">242</span> &#x25B8;       &#x25B8;       vq-&gt;shadow_used_packed[<span class="hljs-number">0</span>].len = <span class="hljs-number">0</span>;
+ <span class="hljs-number">243</span> &#x25B8;       &#x25B8;       vq-&gt;shadow_used_packed[<span class="hljs-number">0</span>].count = <span class="hljs-number">1</span>;
+ <span class="hljs-number">244</span> &#x25B8;       &#x25B8;       vq-&gt;shadow_used_packed[<span class="hljs-number">0</span>].flags = flags;
+ <span class="hljs-number">245</span> &#x25B8;       &#x25B8;       vq-&gt;shadow_used_idx++;
+ <span class="hljs-number">246</span> &#x25B8;       &#x25B8;       begin = <span class="hljs-number">1</span>;
+ <span class="hljs-number">247</span> &#x25B8;       } <span class="hljs-keyword">else</span>
+ <span class="hljs-number">248</span> &#x25B8;       &#x25B8;       begin = <span class="hljs-number">0</span>;
+ <span class="hljs-number">249</span>
+ <span class="hljs-number">250</span> &#x25B8;       vhost_for_each_try_unroll(i, begin, PACKED_BATCH_SIZE) {
+ <span class="hljs-number">251</span> &#x25B8;       &#x25B8;       vq-&gt;desc_packed[vq-&gt;last_used_idx + i].id = ids[i];
+ <span class="hljs-number">252</span> &#x25B8;       &#x25B8;       vq-&gt;desc_packed[vq-&gt;last_used_idx + i].len = <span class="hljs-number">0</span>;
+ <span class="hljs-number">253</span> &#x25B8;       }
+ <span class="hljs-number">254</span>
+ <span class="hljs-number">255</span> &#x25B8;       rte_smp_wmb();
+ <span class="hljs-number">256</span> &#x25B8;       vhost_for_each_try_unroll(i, begin, PACKED_BATCH_SIZE)
+ <span class="hljs-number">257</span> &#x25B8;       &#x25B8;       vq-&gt;desc_packed[vq-&gt;last_used_idx + i].flags = flags;
+ <span class="hljs-number">258</span>
+ <span class="hljs-number">259</span> &#x25B8;       vhost_log_cache_used_vring(dev, vq, vq-&gt;last_used_idx *
+ <span class="hljs-number">260</span> &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;          <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">struct</span> vring_packed_desc),
+ <span class="hljs-number">261</span> &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;          <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">struct</span> vring_packed_desc) *
+ <span class="hljs-number">262</span> &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;          PACKED_BATCH_SIZE);
+ <span class="hljs-number">263</span> &#x25B8;       vhost_log_cache_sync(dev, vq);
+ <span class="hljs-number">264</span>
+ <span class="hljs-number">265</span> &#x25B8;       vq_inc_last_used_packed(vq, PACKED_BATCH_SIZE);
+ <span class="hljs-number">266</span> }
+lib/librte_vhost/virtio_net.c(DPDK <span class="hljs-number">19.11</span> release)
+</code></pre>
+<p>Normally, we write data and then write flag to tell consumer that it can consumes the data, accordingly, consumer need to firstly check flag and then check data, so barrier is also needed.</p>
+<pre><code class="lang-c"><span class="hljs-number">1802</span> <span class="hljs-keyword">static</span> __rte_always_inline <span class="hljs-keyword">int</span>
+<span class="hljs-number">1803</span> vhost_reserve_avail_batch_packed(<span class="hljs-keyword">struct</span> virtio_net *dev,
+<span class="hljs-number">1804</span> &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;        <span class="hljs-keyword">struct</span> vhost_virtqueue *vq,
+<span class="hljs-number">1805</span> &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;        <span class="hljs-keyword">struct</span> rte_mempool *mbuf_pool,
+<span class="hljs-number">1806</span> &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;        <span class="hljs-keyword">struct</span> rte_mbuf **pkts,
+<span class="hljs-number">1807</span> &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;        <span class="hljs-keyword">uint16_t</span> avail_idx,
+<span class="hljs-number">1808</span> &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;        <span class="hljs-keyword">uintptr_t</span> *desc_addrs,
+<span class="hljs-number">1809</span> &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;        <span class="hljs-keyword">uint16_t</span> *ids)
+<span class="hljs-number">1810</span> {
+<span class="hljs-number">1811</span> &#x25B8;       <span class="hljs-keyword">bool</span> wrap = vq-&gt;avail_wrap_counter;
+...
+<span class="hljs-number">1823</span>
+<span class="hljs-number">1824</span> &#x25B8;       vhost_for_each_try_unroll(i, <span class="hljs-number">0</span>, PACKED_BATCH_SIZE) {
+<span class="hljs-number">1825</span> &#x25B8;       &#x25B8;       flags = descs[avail_idx + i].flags;
+<span class="hljs-number">1826</span> &#x25B8;       &#x25B8;       <span class="hljs-keyword">if</span> (unlikely((wrap != !!(flags &amp; VRING_DESC_F_AVAIL)) ||
+<span class="hljs-number">1827</span> &#x25B8;       &#x25B8;       &#x25B8;            (wrap == !!(flags &amp; VRING_DESC_F_USED))  ||
+<span class="hljs-number">1828</span> &#x25B8;       &#x25B8;       &#x25B8;            (flags &amp; PACKED_DESC_SINGLE_DEQUEUE_FLAG)))
+<span class="hljs-number">1829</span> &#x25B8;       &#x25B8;       &#x25B8;       <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+<span class="hljs-number">1830</span> &#x25B8;       }
+<span class="hljs-number">1831</span>
+<span class="hljs-number">1832</span> &#x25B8;       rte_smp_rmb();
+<span class="hljs-number">1833</span>
+<span class="hljs-number">1834</span> &#x25B8;       vhost_for_each_try_unroll(i, <span class="hljs-number">0</span>, PACKED_BATCH_SIZE)
+<span class="hljs-number">1835</span> &#x25B8;       &#x25B8;       lens[i] = descs[avail_idx + i].len;
+<span class="hljs-number">1836</span>
+<span class="hljs-number">1837</span> &#x25B8;       vhost_for_each_try_unroll(i, <span class="hljs-number">0</span>, PACKED_BATCH_SIZE) {
+<span class="hljs-number">1838</span> &#x25B8;       &#x25B8;       desc_addrs[i] = vhost_iova_to_vva(dev, vq,
+<span class="hljs-number">1839</span> &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;         descs[avail_idx + i].addr,
+<span class="hljs-number">1840</span> &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;         &amp;lens[i], VHOST_ACCESS_RW);
+<span class="hljs-number">1841</span> &#x25B8;       }
+<span class="hljs-number">1842</span>
+lib/librte_vhost/virtio_net.c(dpdk <span class="hljs-number">19.11</span> release)
+</code></pre>
+<p>in x86 rte_smp_wmb is implemented as compile barrier(compile barrier is to prevent compiler reordering) because x86 implies strong memory order, which will gurantee StoreStore ordering. In architecture which is weakly-ordered(like arm), rte_smp_wmb is implemented as a store fence like instruction.</p>
+<p>In iavf pmd/kernel driver, store fence (rtw_wmb() in dpdk, wmb() in kernel) is needed to force memory writes to complete before letting h/w know there are new descriptors to fetch.</p>
+<p>iavf dpdk pmd</p>
+<pre><code class="lang-c"><span class="hljs-number">1477</span> <span class="hljs-comment">/* TX function */</span>
+<span class="hljs-number">1478</span> <span class="hljs-keyword">uint16_t</span>
+<span class="hljs-number">1479</span> iavf_xmit_pkts(<span class="hljs-keyword">void</span> *tx_queue, <span class="hljs-keyword">struct</span> rte_mbuf **tx_pkts, <span class="hljs-keyword">uint16_t</span> nb_pkts)
+<span class="hljs-number">1480</span> {
+<span class="hljs-number">1481</span> &#x25B8;       <span class="hljs-keyword">volatile</span> <span class="hljs-keyword">struct</span> iavf_tx_desc *txd;
+<span class="hljs-number">1482</span> &#x25B8;       <span class="hljs-keyword">volatile</span> <span class="hljs-keyword">struct</span> iavf_tx_desc *txr;
+<span class="hljs-number">1483</span> &#x25B8;       <span class="hljs-keyword">struct</span> iavf_tx_queue *txq;
+...
+<span class="hljs-number">1511</span> &#x25B8;       <span class="hljs-keyword">for</span> (nb_tx = <span class="hljs-number">0</span>; nb_tx &lt; nb_pkts; nb_tx++) {
+<span class="hljs-number">1512</span> &#x25B8;       &#x25B8;       td_cmd = <span class="hljs-number">0</span>;
+<span class="hljs-number">1513</span> &#x25B8;       &#x25B8;       td_tag = <span class="hljs-number">0</span>;
+<span class="hljs-number">1514</span> &#x25B8;       &#x25B8;       td_offset = <span class="hljs-number">0</span>;
+<span class="hljs-number">1515</span>
+<span class="hljs-number">1516</span> &#x25B8;       &#x25B8;       tx_pkt = *tx_pkts++;
+<span class="hljs-number">1517</span> &#x25B8;       &#x25B8;       RTE_MBUF_PREFETCH_TO_FREE(txe-&gt;mbuf);
+...
+<span class="hljs-number">1645</span>
+<span class="hljs-number">1646</span> &#x25B8;       &#x25B8;       txd-&gt;cmd_type_offset_bsz |=
+<span class="hljs-number">1647</span> &#x25B8;       &#x25B8;       &#x25B8;       rte_cpu_to_le_64(((<span class="hljs-keyword">uint64_t</span>)td_cmd) &lt;&lt;
+<span class="hljs-number">1648</span> &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;        IAVF_TXD_QW1_CMD_SHIFT);
+<span class="hljs-number">1649</span> &#x25B8;       &#x25B8;       IAVF_DUMP_TX_DESC(txq, txd, tx_id);
+<span class="hljs-number">1650</span> &#x25B8;       }
+<span class="hljs-number">1651</span>
+<span class="hljs-number">1652</span> end_of_tx:
+<span class="hljs-number">1653</span> &#x25B8;       rte_wmb();
+<span class="hljs-number">1654</span>
+<span class="hljs-number">1655</span> &#x25B8;       PMD_TX_LOG(DEBUG, <span class="hljs-string">&quot;port_id=%u queue_id=%u tx_tail=%u nb_tx=%u&quot;</span>,
+<span class="hljs-number">1656</span> &#x25B8;       &#x25B8;          txq-&gt;port_id, txq-&gt;queue_id, tx_id, nb_tx);
+<span class="hljs-number">1657</span>
+<span class="hljs-number">1658</span> &#x25B8;       IAVF_PCI_REG_WRITE_RELAXED(txq-&gt;qtx_tail, tx_id);
+<span class="hljs-number">1659</span> &#x25B8;       txq-&gt;tx_tail = tx_id;
+<span class="hljs-number">1660</span>
+<span class="hljs-number">1661</span> &#x25B8;       <span class="hljs-keyword">return</span> nb_tx;
+<span class="hljs-number">1662</span> }
+dpdk-master/drivers/net/iavf/iavf_rxtx.c
+</code></pre>
+<p>iavf kernel driver</p>
+<pre><code class="lang-c"><span class="hljs-number">1728</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span>
+<span class="hljs-number">1729</span> ice_tx_map(<span class="hljs-keyword">struct</span> ice_ring *tx_ring, <span class="hljs-keyword">struct</span> ice_tx_buf *first,
+<span class="hljs-number">1730</span> &#x25B8;          <span class="hljs-keyword">struct</span> ice_tx_offload_params *off)
+<span class="hljs-number">1731</span> {
+<span class="hljs-number">1732</span> &#x25B8;       u64 td_offset, td_tag, td_cmd;
+<span class="hljs-number">1733</span> &#x25B8;       u16 i = tx_ring-&gt;next_to_use;
+<span class="hljs-number">1734</span> &#x25B8;       <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> data_len, size;
+<span class="hljs-number">1735</span> &#x25B8;       <span class="hljs-keyword">struct</span> ice_tx_desc *tx_desc;
+<span class="hljs-number">1736</span> &#x25B8;       <span class="hljs-keyword">struct</span> ice_tx_buf *tx_buf;
+<span class="hljs-number">1737</span> &#x25B8;       <span class="hljs-keyword">struct</span> sk_buff *skb;
+<span class="hljs-number">1738</span> &#x25B8;       <span class="hljs-keyword">skb_frag_t</span> *frag;
+...
+<span class="hljs-number">1761</span> &#x25B8;       <span class="hljs-keyword">for</span> (frag = &amp;skb_shinfo(skb)-&gt;frags[<span class="hljs-number">0</span>];; frag++) {
+<span class="hljs-number">1762</span> &#x25B8;       &#x25B8;       <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> max_data = ICE_MAX_DATA_PER_TXD_ALIGNED;
+<span class="hljs-number">1763</span>
+<span class="hljs-number">1764</span> &#x25B8;       &#x25B8;       <span class="hljs-keyword">if</span> (dma_mapping_error(tx_ring-&gt;dev, dma))
+<span class="hljs-number">1765</span> &#x25B8;       &#x25B8;       &#x25B8;       <span class="hljs-keyword">goto</span> dma_error;
+<span class="hljs-number">1766</span>
+...
+<span class="hljs-number">1836</span> &#x25B8;       <span class="hljs-comment">/* Force memory writes to complete before letting h/w know there
+1837 &#x25B8;        * are new descriptors to fetch.
+1838 &#x25B8;        *
+1839 &#x25B8;        * We also use this memory barrier to make certain all of the
+1840 &#x25B8;        * status bits have been updated before next_to_watch is written.
+1841 &#x25B8;        */</span>
+<span class="hljs-number">1842</span> &#x25B8;       wmb();
+<span class="hljs-number">1843</span>
+<span class="hljs-number">1844</span> &#x25B8;       <span class="hljs-comment">/* set next_to_watch value indicating a packet is present */</span>
+<span class="hljs-number">1845</span> &#x25B8;       first-&gt;next_to_watch = tx_desc;
+<span class="hljs-number">1846</span>
+<span class="hljs-number">1847</span> &#x25B8;       tx_ring-&gt;next_to_use = i;
+<span class="hljs-number">1848</span>
+<span class="hljs-number">1849</span> &#x25B8;       ice_maybe_stop_tx(tx_ring, DESC_NEEDED);
+<span class="hljs-number">1850</span>
+<span class="hljs-number">1851</span> &#x25B8;       <span class="hljs-comment">/* notify HW of packet */</span>
+<span class="hljs-number">1852</span> &#x25B8;       <span class="hljs-keyword">if</span> (netif_xmit_stopped(txring_txq(tx_ring)) || !netdev_xmit_more())
+<span class="hljs-number">1853</span> &#x25B8;       &#x25B8;       writel(i, tx_ring-&gt;tail);
+<span class="hljs-number">1854</span>
+<span class="hljs-number">1855</span> &#x25B8;       <span class="hljs-keyword">return</span>;
+<span class="hljs-number">1856</span>
+<span class="hljs-number">1857</span> dma_error:
+<span class="hljs-number">1858</span> &#x25B8;       <span class="hljs-comment">/* clear DMA mappings for failed tx_buf map */</span>
+<span class="hljs-number">1859</span> &#x25B8;       <span class="hljs-keyword">for</span> (;;) {
+<span class="hljs-number">1860</span> &#x25B8;       &#x25B8;       tx_buf = &amp;tx_ring-&gt;tx_buf[i];
+<span class="hljs-number">1861</span> &#x25B8;       &#x25B8;       ice_unmap_and_free_tx_buf(tx_ring, tx_buf);
+<span class="hljs-number">1862</span> &#x25B8;       &#x25B8;       <span class="hljs-keyword">if</span> (tx_buf == first)
+<span class="hljs-number">1863</span> &#x25B8;       &#x25B8;       &#x25B8;       <span class="hljs-keyword">break</span>;
+<span class="hljs-number">1864</span> &#x25B8;       &#x25B8;       <span class="hljs-keyword">if</span> (i == <span class="hljs-number">0</span>)
+<span class="hljs-number">1865</span> &#x25B8;       &#x25B8;       &#x25B8;       i = tx_ring-&gt;count;
+<span class="hljs-number">1866</span> &#x25B8;       &#x25B8;       i--;
+<span class="hljs-number">1867</span> &#x25B8;       }
+<span class="hljs-number">1868</span>
+<span class="hljs-number">1869</span> &#x25B8;       tx_ring-&gt;next_to_use = i;
+<span class="hljs-number">1870</span> }
+drivers/net/ethernet/intel/ice/ice_txrx.c
+</code></pre>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="meson_build_for_local_lib.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page: Meson build guide for local installed library">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"CPU memory order summary","level":"1.3.7","depth":2,"previous":{"title":"Meson build guide for local installed library","level":"1.3.6","depth":2,"path":"Cloud/meson_build_for_local_lib.md","ref":"Cloud/meson_build_for_local_lib.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"Cloud/cpu_memory_order_summary.md","mtime":"2021-12-28T10:48:00.690Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-12-28T10:49:07.053Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

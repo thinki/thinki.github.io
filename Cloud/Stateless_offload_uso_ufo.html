@@ -239,6 +239,32 @@
             
         </li>
     
+        <li class="chapter " data-level="1.3.6" data-path="meson_build_for_local_lib.html">
+            
+                <a href="meson_build_for_local_lib.html">
+            
+                    
+                    Meson build guide for local installed library
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.7" data-path="cpu_memory_order_summary.html">
+            
+                <a href="cpu_memory_order_summary.html">
+            
+                    
+                    CPU memory order summary
+            
+                </a>
+            
+
+            
+        </li>
+    
 
             </ul>
             
@@ -290,6 +316,33 @@
                                 <section class="normal markdown-section">
                                 
                                 <h1 id="stateless-offload-uso-and-ufo">Stateless offload: USO and UFO</h1>
+<h1 id="1-introduction">1. Introduction</h1>
+<p>This summarize USO, UFO and related segmentation offload technology.</p>
+<h1 id="2-target-audience">2. Target Audience</h1>
+<p>Developer with basic background about networking</p>
+<h1 id="3-uso">3. USO</h1>
+<h2 id="31-intro">3.1 Intro</h2>
+<p>&#x200B;    The USO is &#x201C;UDP GSO&#x201D; and it is to divide large UDP packet into several segments where each of these smaller packets has UDP header.</p>
+<h2 id="32-compared-with-ufo">3.2 Compared with UFO</h2>
+<p>&#x200B;    The major difference between UFO and USO is that:</p>
+<p>&#x200B;    UFO divide large UDP packet at IP layer but USO divide large UDP packet at UDP layer.(check below picture)</p>
+<p><img src="../images/ufo_vs_uso_01.PNG" alt="ufo_vs_uso_01"></p>
+<p>&#x200B;    UFO was deprecated in kernel support. In reality, fragmentation doesn&apos;t work due to some reason:</p>
+<ol>
+<li>RX side will take extra effort to reassemble the fragmented IP packets</li>
+<li>RSS issue. The first fragment and subsequent fragments are likely to be hashed to different queue/core(typical hash input is 5-tuple), which is troublesome.</li>
+<li>Many firewalls simply discard the IP fragments</li>
+</ol>
+<p>&#x200B;    Compared to UFO, USO is transparent to RX side</p>
+<h2 id="33-why-uso">3.3 Why USO</h2>
+<p>&#x200B;    One of the motivation to improve UDP stack performance is the QUIC which is running on UDP. Refer to <a href="https://blog.cloudflare.com/accelerating-udp-packet-transmission-for-quic/" target="_blank">https://blog.cloudflare.com/accelerating-udp-packet-transmission-for-quic/</a> for more benchmark details.</p>
+<h2 id="34-design-philosophy">3.4 Design Philosophy</h2>
+<p>&#x200B;    The key idea behind USO and UFO, which is similar to <a href="https://lwn.net/Articles/188489/" target="_blank">TCP GSO</a>, is to postpone the segmentation/fragmentation as late as possible. This can reduce the syscall frequency and stack traversal which makes performance improved. Refer to <a href="https://www.youtube.com/watch?v=ccUeG1dAhbw" target="_blank">https://www.youtube.com/watch?v=ccUeG1dAhbw</a> for more ideas behind.</p>
+<h2 id="35-nic-offload-support">3.5 NIC offload support</h2>
+<p>   Intel NIC support USO hardware offload. Take ixgbe hardware spec for example:</p>
+<p><img src="../images/ufo_vs_uso_02.PNG" alt="ufo_vs_uso_02"></p>
+<p>   UDP GSO has been widely supported in intel NIC drivers(igb/ixgbe/i40e/ice) and other vendor drivers in Linux kernel.</p>
+<p>  <img src="../images/ufo_vs_uso_03.PNG" alt="ufo_vs_uso_03"></p>
 
                                 
                                 </section>
@@ -333,7 +386,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Stateless offload: USO and UFO","level":"1.3.2","depth":2,"next":{"title":"Linux switchdev and DPDK port representor","level":"1.3.3","depth":2,"path":"Cloud/switchdev_and_port_representor.md","ref":"Cloud/switchdev_and_port_representor.md","articles":[]},"previous":{"title":"Linux Macvlan and NIC offload","level":"1.3.1","depth":2,"path":"Cloud/linux_macvlan_and_nic_offload.md","ref":"Cloud/linux_macvlan_and_nic_offload.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"Cloud/Stateless_offload_uso_ufo.md","mtime":"2021-08-30T01:31:34.850Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-09-09T03:57:21.744Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"typora-root-url":"..","title":"Stateless offload: USO and UFO","level":"1.3.2","depth":2,"next":{"title":"Linux switchdev and DPDK port representor","level":"1.3.3","depth":2,"path":"Cloud/switchdev_and_port_representor.md","ref":"Cloud/switchdev_and_port_representor.md","articles":[]},"previous":{"title":"Linux Macvlan and NIC offload","level":"1.3.1","depth":2,"path":"Cloud/linux_macvlan_and_nic_offload.md","ref":"Cloud/linux_macvlan_and_nic_offload.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"Cloud/Stateless_offload_uso_ufo.md","mtime":"2021-12-28T09:47:04.934Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-12-28T10:49:07.053Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
