@@ -1,0 +1,521 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>CPU memory order: Part2 total store ordering  · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="cpu_memory_order_part3.html" />
+    
+    
+    <link rel="prev" href="cpu_memory_order_part1.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    About Me
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Cloud
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="How_qemu_kvm_manage_mem_part1.html">
+            
+                <a href="How_qemu_kvm_manage_mem_part1.html">
+            
+                    
+                    How Qemu/KVM manage VM memory: Part1 system ram
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="How_qemu_kvm_manage_mem_part2.html">
+            
+                <a href="How_qemu_kvm_manage_mem_part2.html">
+            
+                    
+                    How Qemu/KVM manage VM memory: Part2 mmio
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="linux_macvlan_and_nic_offload.html">
+            
+                <a href="linux_macvlan_and_nic_offload.html">
+            
+                    
+                    Linux Macvlan and NIC offload
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="switchdev_and_port_representor.html">
+            
+                <a href="switchdev_and_port_representor.html">
+            
+                    
+                    Linux switchdev and DPDK port representor
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" data-path="cpu_memory_order_part1.html">
+            
+                <a href="cpu_memory_order_part1.html">
+            
+                    
+                    CPU memory order: Part1 summary
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2.6" data-path="cpu_memory_order_part2.html">
+            
+                <a href="cpu_memory_order_part2.html">
+            
+                    
+                    CPU memory order: Part2 total store ordering 
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7" data-path="cpu_memory_order_part3.html">
+            
+                <a href="cpu_memory_order_part3.html">
+            
+                    
+                    CPU memory order: Part3 weak memory ordering
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8" data-path="cpu_memory_order_part4.html">
+            
+                <a href="cpu_memory_order_part4.html">
+            
+                    
+                    CPU memory order: Part4 memory barrier
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9" data-path="Stateless_offload_uso_ufo.html">
+            
+                <a href="Stateless_offload_uso_ufo.html">
+            
+                    
+                    Stateless offload: USO and UFO
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.10" data-path="dump_function_call.html">
+            
+                <a href="dump_function_call.html">
+            
+                    
+                    Dump function call trace in linux kernel/user
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.11" data-path="lock_free_programming.html">
+            
+                <a href="lock_free_programming.html">
+            
+                    
+                    Lock Free Programming
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.12" data-path="meson_build_for_local_lib.html">
+            
+                <a href="meson_build_for_local_lib.html">
+            
+                    
+                    Meson build guide for local installed library
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../Archive/">
+            
+                <a href="../Archive/">
+            
+                    
+                    网易博客存档
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../Archive/fsl_imx6_ethernet_01.html">
+            
+                <a href="../Archive/fsl_imx6_ethernet_01.html">
+            
+                    
+                    Freescale i.MX6 Linux Ethernet Driver驱动源码分析01
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../Archive/fsl_imx6_ethernet_02.html">
+            
+                <a href="../Archive/fsl_imx6_ethernet_02.html">
+            
+                    
+                    Freescale i.MX6 Linux Ethernet Driver驱动源码分析02
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../Archive/linux_books.html">
+            
+                <a href="../Archive/linux_books.html">
+            
+                    
+                    Linux Programming 经典书单
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >CPU memory order: Part2 total store ordering </a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="cpu-memory-order-part2-total-store-ordering">CPU memory order: Part2 total store ordering</h1>
+<p>As modern x86 follows TSO memory model, Store-Load reordering is allowed. However, sequential execution for Store-Store, Load-Load, Load-Store may be too slow, so modern x86 does <a href="https://www.zhihu.com/question/23572082" target="_blank">optimized implementation</a> for TSO: in windows speculation(&#x67D0;&#x4E2A;&#x7A97;&#x53E3;&#x65F6;&#x95F4;&#x5185;&#x7684;&#x9884;&#x6D4B;&#x6267;&#x884C;). Namely out-of-order execution but still in-order commit.</p>
+<p>Below is a runtime detection for Store-Load re-ordering on modern x86 refering to <a href="https://preshing.com/20120515/memory-reordering-caught-in-the-act/" target="_blank">Memory Reordering Caught in the Act</a> </p>
+<p>make sure optimization level is <em>-O2</em> so that <strong>Store just precedes Load</strong> as below:</p>
+<pre><code class="lang-shell">gcc -O2 -c -S ordering.cpp
+</code></pre>
+<p>ordering.s:</p>
+<pre><code>.L13:
+&#x25B8;       movq&#x25B8;   %rbx, %rdi
+&#x25B8;       call&#x25B8;   _ZN15MersenneTwister7integerEv
+&#x25B8;       testb&#x25B8;  $7, %al
+&#x25B8;       jne&#x25B8;    .L13
+&#x25B8;       movl&#x25B8;   $1, X(%rip)          # Store 1 into X
+&#x25B8;       movl&#x25B8;   Y(%rip), %eax        # Load Y into tmp
+&#x25B8;       leaq&#x25B8;   endSema(%rip), %rdi
+&#x25B8;       movl&#x25B8;   %eax, r1(%rip)       # Store tmp into r1
+&#x25B8;       call&#x25B8;   sem_post@PLT
+&#x25B8;       jmp&#x25B8;    .L14
+&#x25B8;       .cfi_endproc
+</code></pre><p>As a result,  # Store 1 into X and # Load Y into tmp may be re-ordered. The result on Intel Xeon 8180:</p>
+<pre><code class="lang-shell">&#x279C;  gcc ./ordering
+1 reorders detected after 1209 iterations
+2 reorders detected after 7438 iterations
+3 reorders detected after 131322 iterations
+4 reorders detected after 302651 iterations
+5 reorders detected after 741857 iterations
+6 reorders detected after 750351 iterations
+7 reorders detected after 775165 iterations
+8 reorders detected after 778083 iterations
+9 reorders detected after 1095603 iterations
+</code></pre>
+<p>To force ordering, SFENCE is needed to insert between Store and Load:</p>
+<pre><code>.L13:
+&#x25B8;       movq&#x25B8;   %rbx, %rdi
+&#x25B8;       call&#x25B8;   _ZN15MersenneTwister7integerEv
+&#x25B8;       testb&#x25B8;  $7, %al
+&#x25B8;       jne&#x25B8;    .L13
+&#x25B8;       movl&#x25B8;   $1, X(%rip)
+#APP
+# 88 &quot;ordering.cpp&quot; 1
+&#x25B8;       mfence
+# 0 &quot;&quot; 2
+#NO_APP
+&#x25B8;       movl&#x25B8;   Y(%rip), %eax
+&#x25B8;       leaq&#x25B8;   endSema(%rip), %rdi
+&#x25B8;       movl&#x25B8;   %eax, r1(%rip)
+&#x25B8;       call&#x25B8;   sem_post@PLT
+&#x25B8;       jmp&#x25B8;    .L14
+&#x25B8;       .cfi_endproc
+</code></pre><p>So no re-ordering can be detected.</p>
+<p>Reference:</p>
+<ol>
+<li><p>The Significance of the x86 SFENCE Instruction <a href="https://hadibrais.wordpress.com/2019/02/26/the-significance-of-the-x86-sfence-instruction/" target="_blank">https://hadibrais.wordpress.com/2019/02/26/the-significance-of-the-x86-sfence-instruction/</a></p>
+</li>
+<li><p>what is the effects of _mm_lfence and _mm_sfence <a href="https://community.intel.com/t5/Intel-C-Compiler/what-is-the-effects-of-mm-lfence-and-mm-sfence/td-p/871883" target="_blank">https://community.intel.com/t5/Intel-C-Compiler/what-is-the-effects-of-mm-lfence-and-mm-sfence/td-p/871883</a></p>
+</li>
+<li><p>Intel&#xAE; 64 and IA-32 Architectures Software Developer Manuals <a href="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html" target="_blank">Intel&#xAE; 64 and IA-32 Architectures Software Developer Manuals</a> Volum 3 Chapter 11 Memory Cache Control, Volume 3 Chapter 8.2 Memory Ordering</p>
+</li>
+</ol>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="cpu_memory_order_part1.html" class="navigation navigation-prev " aria-label="Previous page: CPU memory order: Part1 summary">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="cpu_memory_order_part3.html" class="navigation navigation-next " aria-label="Next page: CPU memory order: Part3 weak memory ordering">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"CPU memory order: Part2 total store ordering ","level":"1.2.6","depth":2,"next":{"title":"CPU memory order: Part3 weak memory ordering","level":"1.2.7","depth":2,"path":"Cloud/cpu_memory_order_part3.md","ref":"Cloud/cpu_memory_order_part3.md","articles":[]},"previous":{"title":"CPU memory order: Part1 summary","level":"1.2.5","depth":2,"path":"Cloud/cpu_memory_order_part1.md","ref":"Cloud/cpu_memory_order_part1.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"Cloud/cpu_memory_order_part2.md","mtime":"2022-05-16T08:06:56.161Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-05-16T08:43:12.999Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

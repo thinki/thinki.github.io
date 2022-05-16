@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>CPU memory order summary · GitBook</title>
+        <title>CPU memory order: Part4 memory barrier · GitBook</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -60,7 +60,7 @@
     <link rel="next" href="Stateless_offload_uso_ufo.html" />
     
     
-    <link rel="prev" href="switchdev_and_port_representor.html" />
+    <link rel="prev" href="cpu_memory_order_part3.html" />
     
 
     </head>
@@ -168,12 +168,12 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.2.5" data-path="cpu_memory_order_summary.html">
+        <li class="chapter " data-level="1.2.5" data-path="cpu_memory_order_part1.html">
             
-                <a href="cpu_memory_order_summary.html">
+                <a href="cpu_memory_order_part1.html">
             
                     
-                    CPU memory order summary
+                    CPU memory order: Part1 summary
             
                 </a>
             
@@ -181,7 +181,46 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.6" data-path="Stateless_offload_uso_ufo.html">
+        <li class="chapter " data-level="1.2.6" data-path="cpu_memory_order_part2.html">
+            
+                <a href="cpu_memory_order_part2.html">
+            
+                    
+                    CPU memory order: Part2 total store ordering 
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7" data-path="cpu_memory_order_part3.html">
+            
+                <a href="cpu_memory_order_part3.html">
+            
+                    
+                    CPU memory order: Part3 weak memory ordering
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2.8" data-path="cpu_memory_order_part4.html">
+            
+                <a href="cpu_memory_order_part4.html">
+            
+                    
+                    CPU memory order: Part4 memory barrier
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9" data-path="Stateless_offload_uso_ufo.html">
             
                 <a href="Stateless_offload_uso_ufo.html">
             
@@ -194,7 +233,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.7" data-path="dump_function_call.html">
+        <li class="chapter " data-level="1.2.10" data-path="dump_function_call.html">
             
                 <a href="dump_function_call.html">
             
@@ -207,7 +246,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.8" data-path="lock_free_programming.html">
+        <li class="chapter " data-level="1.2.11" data-path="lock_free_programming.html">
             
                 <a href="lock_free_programming.html">
             
@@ -220,7 +259,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.9" data-path="meson_build_for_local_lib.html">
+        <li class="chapter " data-level="1.2.12" data-path="meson_build_for_local_lib.html">
             
                 <a href="meson_build_for_local_lib.html">
             
@@ -326,7 +365,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >CPU memory order summary</a>
+        <a href=".." >CPU memory order: Part4 memory barrier</a>
     </h1>
 </div>
 
@@ -341,22 +380,9 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="cpu-memory-order-summary">CPU memory order summary</h1>
-<h1 id="1-introduction">1. Introduction</h1>
-<p>This article summarizes all the memory order related resouce since it is a hard to understand concept</p>
-<h1 id="2-target-audience">2. Target Audience</h1>
-<p>Developer with basic cpu background</p>
-<h1 id="3-reference">3. Reference</h1>
-<p>Weak vs. Strong Memory Models  <a href="https://preshing.com/20120930/weak-vs-strong-memory-models/" target="_blank">https://preshing.com/20120930/weak-vs-strong-memory-models/</a></p>
-<p>Memory Barriers Are Like Source Control Operations <a href="https://preshing.com/20120710/memory-barriers-are-like-source-control-operations/" target="_blank">https://preshing.com/20120710/memory-barriers-are-like-source-control-operations/</a></p>
-<p>This Is Why They Call It a Weakly-Ordered CPU <a href="https://preshing.com/20121019/this-is-why-they-call-it-a-weakly-ordered-cpu/" target="_blank">https://preshing.com/20121019/this-is-why-they-call-it-a-weakly-ordered-cpu/</a></p>
-<p>Memory Reordering Caught in the Act <a href="https://preshing.com/20120515/memory-reordering-caught-in-the-act/" target="_blank">https://preshing.com/20120515/memory-reordering-caught-in-the-act/</a></p>
-<p>Acquire and Release Semantics <a href="https://preshing.com/20120913/acquire-and-release-semantics/" target="_blank">https://preshing.com/20120913/acquire-and-release-semantics/</a></p>
-<p>Memory Ordering at Compile Time <a href="https://preshing.com/20120625/memory-ordering-at-compile-time/" target="_blank">https://preshing.com/20120625/memory-ordering-at-compile-time/</a></p>
-<p>The Significance of the x86 SFENCE Instruction <a href="https://hadibrais.wordpress.com/2019/02/26/the-significance-of-the-x86-sfence-instruction/" target="_blank">https://hadibrais.wordpress.com/2019/02/26/the-significance-of-the-x86-sfence-instruction/</a></p>
-<p>what is the effects of _mm_lfence and _mm_sfence <a href="https://community.intel.com/t5/Intel-C-Compiler/what-is-the-effects-of-mm-lfence-and-mm-sfence/td-p/871883" target="_blank">https://community.intel.com/t5/Intel-C-Compiler/what-is-the-effects-of-mm-lfence-and-mm-sfence/td-p/871883</a></p>
-<p>Intel&#xAE; 64 and IA-32 Architectures Software Developer Manuals <a href="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html" target="_blank">https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html</a> Volum 3 Chapter 11 Memory Cache Control, Volume 3 Chapter 8.2 Memory Ordering</p>
-<h1 id="4-example">4. Example</h1>
+                                <h1 id="cpu-memory-order-part4-memory-barrier">CPU memory order: Part4 memory barrier</h1>
+<p>In the previous parts, theory and implementation is described with underly hardware details on different architecture. Though it is important to understand the underly machanism, but we normally use adavanced language such as C/C++ to write portable application which doesn&apos;t care underly architecture difference.</p>
+<p>Below is some example that how to use appropriate memory barrier in appropriate place to prevent program logic malfunction.</p>
 <p>In virtio pmd, barrier(rte_smp_wmb) is needed before the negotiation flag is commited to prevent the flag store is visible ahead of the vhost descriptor store operation.</p>
 <pre><code class="lang-c"> <span class="hljs-number">228</span> <span class="hljs-keyword">static</span> __rte_always_inline <span class="hljs-keyword">void</span>
  <span class="hljs-number">229</span> vhost_shadow_dequeue_batch_packed(<span class="hljs-keyword">struct</span> virtio_net *dev,
@@ -556,7 +582,7 @@ drivers/net/ethernet/intel/ice/ice_txrx.c
 
             
                 
-                <a href="switchdev_and_port_representor.html" class="navigation navigation-prev " aria-label="Previous page: Linux switchdev and DPDK port representor">
+                <a href="cpu_memory_order_part3.html" class="navigation navigation-prev " aria-label="Previous page: CPU memory order: Part3 weak memory ordering">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
@@ -572,7 +598,7 @@ drivers/net/ethernet/intel/ice/ice_txrx.c
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"CPU memory order summary","level":"1.2.5","depth":2,"next":{"title":"Stateless offload: USO and UFO","level":"1.2.6","depth":2,"path":"Cloud/Stateless_offload_uso_ufo.md","ref":"Cloud/Stateless_offload_uso_ufo.md","articles":[]},"previous":{"title":"Linux switchdev and DPDK port representor","level":"1.2.4","depth":2,"path":"Cloud/switchdev_and_port_representor.md","ref":"Cloud/switchdev_and_port_representor.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"Cloud/cpu_memory_order_summary.md","mtime":"2021-12-28T10:48:00.690Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-12-31T02:37:49.195Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"CPU memory order: Part4 memory barrier","level":"1.2.8","depth":2,"next":{"title":"Stateless offload: USO and UFO","level":"1.2.9","depth":2,"path":"Cloud/Stateless_offload_uso_ufo.md","ref":"Cloud/Stateless_offload_uso_ufo.md","articles":[]},"previous":{"title":"CPU memory order: Part3 weak memory ordering","level":"1.2.7","depth":2,"path":"Cloud/cpu_memory_order_part3.md","ref":"Cloud/cpu_memory_order_part3.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"Cloud/cpu_memory_order_part4.md","mtime":"2022-05-16T07:58:33.633Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-05-16T08:43:12.999Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

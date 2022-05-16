@@ -1,34 +1,8 @@
-# CPU memory order summary
+# CPU memory order: Part4 memory barrier
 
-# 1. Introduction
+In the previous parts, theory and implementation is described with underly hardware details on different architecture. Though it is important to understand the underly machanism, but we normally use adavanced language such as C/C++ to write portable application which doesn't care underly architecture difference.
 
-This article summarizes all the memory order related resouce since it is a hard to understand concept
-
-# 2. Target Audience
-
-Developer with basic cpu background
-
-# 3. Reference
-
-Weak vs. Strong Memory Models  <https://preshing.com/20120930/weak-vs-strong-memory-models/>
-
-Memory Barriers Are Like Source Control Operations <https://preshing.com/20120710/memory-barriers-are-like-source-control-operations/>
-
-This Is Why They Call It a Weakly-Ordered CPU <https://preshing.com/20121019/this-is-why-they-call-it-a-weakly-ordered-cpu/>
-
-Memory Reordering Caught in the Act <https://preshing.com/20120515/memory-reordering-caught-in-the-act/>
-
-Acquire and Release Semantics <https://preshing.com/20120913/acquire-and-release-semantics/>
-
-Memory Ordering at Compile Time <https://preshing.com/20120625/memory-ordering-at-compile-time/>
-
-The Significance of the x86 SFENCE Instruction <https://hadibrais.wordpress.com/2019/02/26/the-significance-of-the-x86-sfence-instruction/>
-
-what is the effects of _mm_lfence and _mm_sfence <https://community.intel.com/t5/Intel-C-Compiler/what-is-the-effects-of-mm-lfence-and-mm-sfence/td-p/871883>
-
-Intel® 64 and IA-32 Architectures Software Developer Manuals <https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html> Volum 3 Chapter 11 Memory Cache Control, Volume 3 Chapter 8.2 Memory Ordering
-
-# 4. Example
+Below is some example that how to use appropriate memory barrier in appropriate place to prevent program logic malfunction.
 
 In virtio pmd, barrier(rte_smp_wmb) is needed before the negotiation flag is commited to prevent the flag store is visible ahead of the vhost descriptor store operation.
 
@@ -215,4 +189,3 @@ iavf kernel driver
 1870 }
 drivers/net/ethernet/intel/ice/ice_txrx.c
 ```
-

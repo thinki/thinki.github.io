@@ -1,0 +1,674 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Lock Free Programming · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="meson_build_for_local_lib.html" />
+    
+    
+    <link rel="prev" href="dump_function_call.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    About Me
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Cloud
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="How_qemu_kvm_manage_mem_part1.html">
+            
+                <a href="How_qemu_kvm_manage_mem_part1.html">
+            
+                    
+                    How Qemu/KVM manage VM memory: Part1 system ram
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="How_qemu_kvm_manage_mem_part2.html">
+            
+                <a href="How_qemu_kvm_manage_mem_part2.html">
+            
+                    
+                    How Qemu/KVM manage VM memory: Part2 mmio
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="linux_macvlan_and_nic_offload.html">
+            
+                <a href="linux_macvlan_and_nic_offload.html">
+            
+                    
+                    Linux Macvlan and NIC offload
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="switchdev_and_port_representor.html">
+            
+                <a href="switchdev_and_port_representor.html">
+            
+                    
+                    Linux switchdev and DPDK port representor
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" data-path="cpu_memory_order_part1.html">
+            
+                <a href="cpu_memory_order_part1.html">
+            
+                    
+                    CPU memory order: Part1 summary
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6" data-path="cpu_memory_order_part2.html">
+            
+                <a href="cpu_memory_order_part2.html">
+            
+                    
+                    CPU memory order: Part2 total store ordering 
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7" data-path="cpu_memory_order_part3.html">
+            
+                <a href="cpu_memory_order_part3.html">
+            
+                    
+                    CPU memory order: Part3 weak memory ordering
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8" data-path="cpu_memory_order_part4.html">
+            
+                <a href="cpu_memory_order_part4.html">
+            
+                    
+                    CPU memory order: Part4 memory barrier
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9" data-path="Stateless_offload_uso_ufo.html">
+            
+                <a href="Stateless_offload_uso_ufo.html">
+            
+                    
+                    Stateless offload: USO and UFO
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.10" data-path="dump_function_call.html">
+            
+                <a href="dump_function_call.html">
+            
+                    
+                    Dump function call trace in linux kernel/user
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2.11" data-path="lock_free_programming.html">
+            
+                <a href="lock_free_programming.html">
+            
+                    
+                    Lock Free Programming
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.12" data-path="meson_build_for_local_lib.html">
+            
+                <a href="meson_build_for_local_lib.html">
+            
+                    
+                    Meson build guide for local installed library
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../Archive/">
+            
+                <a href="../Archive/">
+            
+                    
+                    网易博客存档
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../Archive/fsl_imx6_ethernet_01.html">
+            
+                <a href="../Archive/fsl_imx6_ethernet_01.html">
+            
+                    
+                    Freescale i.MX6 Linux Ethernet Driver驱动源码分析01
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../Archive/fsl_imx6_ethernet_02.html">
+            
+                <a href="../Archive/fsl_imx6_ethernet_02.html">
+            
+                    
+                    Freescale i.MX6 Linux Ethernet Driver驱动源码分析02
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../Archive/linux_books.html">
+            
+                <a href="../Archive/linux_books.html">
+            
+                    
+                    Linux Programming 经典书单
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >Lock Free Programming</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="lock-free-programming">Lock Free Programming</h1>
+<h2 id="1-what-is-lock-free-programming">1 What is lock free programming</h2>
+<h3 id="11-what-is-lock-">1.1 What is lock ?</h3>
+<p>primitive that exclude other threads from a critical section until the current thread unlocks</p>
+<h3 id="12-what-is-lock-free-">1.2 What is lock free ?</h3>
+<h4 id="121-definition">1.2.1 definition</h4>
+<p>From <a href="https://en.wikipedia.org/wiki/Non-blocking_algorithm#:~:text=Lock-freedom,-Lock-freedom allows&amp;text=All wait-free algorithms are,algorithm is not lock-free." target="_blank">wiki</a>:</p>
+<p>In particular, <strong>if one thread is suspended, then a lock-free algorithm guarantees that the remaining threads can still make progress</strong>. Hence, if two threads can contend for the same mutex lock or spinlock, then the algorithm is not lock-free. (If we suspend one thread that holds the lock, then the second thread will block.)</p>
+<h4 id="122-lock-free-vs-wo-locking">1.2.2 lock free vs w/o locking</h4>
+<p>lock free is not strictly equal to without locking, some program without using lock may not be lock free. But the program using lock can&apos;t be locked free(since it introduce critical section, refer below for more details)</p>
+<p>One typical way to implement lock free program is that : Thread-safe access to shared data without the use of synchronization primitives such as mutexes</p>
+<h2 id="2-why-lock-free">2 Why lock free</h2>
+<h3 id="21-lock-free-benefits">2.1 lock free benefits:</h3>
+<p>Lock has many problems :</p>
+<ul>
+<li>Deadlock</li>
+<li>Priority Inversion</li>
+<li>Convoying</li>
+<li>&#x201C;Async-signal-safety&#x201D;</li>
+<li>Kill-tolerant availability</li>
+<li>Pre-emption tolerance</li>
+<li>Overall performance</li>
+</ul>
+<p>(refer to <a href="https://www.cnblogs.com/tuowang/p/9399052.html" target="_blank">https://www.cnblogs.com/tuowang/p/9399052.html</a> for more details)</p>
+<p>Most of the above problems are caused by potential scheduling while thread is in the <a href="https://en.wikipedia.org/wiki/Critical_section" target="_blank">critical section</a>. </p>
+<p>When great efforts is needed to solve these problems, lock free is another alternative</p>
+<h3 id="22-lock-free-problems">2.2 lock free problems:</h3>
+<p>ABA problem</p>
+<h2 id="3-how-to-do-lock-free">3 How to do lock free</h2>
+<p>Designing generalized lock-free algorithms is hard.</p>
+<p>Design lock-free data structures instead: Buffer, list, stack, queue, map, deque, snapshot</p>
+<p>Often implemented in terms of simpler primitives: e.g. Compare and Swap</p>
+<h2 id="4-lock-free-example">4 lock free example:</h2>
+<ul>
+<li><a href="https://lwn.net/Articles/262464/" target="_blank">Linux RCU</a></li>
+<li>Linux kfifo</li>
+<li><a href="https://dpdk.readthedocs.io/en/v16.04/prog_guide/ring_lib.html" target="_blank">DPDK RTE_RING</a></li>
+</ul>
+<h2 id="5-lock-based-vs-lock-free">5 lock-based vs lock free</h2>
+<p>lock free:</p>
+<ul>
+<li>may be higher performed compared to the condition when lock-based sleep is heavy and critical section is very small.
+lock free vs spinlock: <a href="https://lumian2015.github.io/lockFreeProgramming/lock-free-vs-spin-lock.html" target="_blank">https://lumian2015.github.io/lockFreeProgramming/lock-free-vs-spin-lock.html</a> </li>
+<li>Is not a cure for contention:<ol>
+<li>It&#x2019;s still possible to have too many threads competing for a lock free data structure</li>
+<li>Starvation is still a possibility</li>
+</ol>
+</li>
+<li>Requires the same hardware support as mutexes do</li>
+<li>Is not a magic bullet</li>
+<li>may have more difficult</li>
+</ul>
+<h2 id="6-reference">6 Reference</h2>
+<p><a href="https://www.cs.cmu.edu/~410-s05/lectures/L31_LockFree.pdf" target="_blank">https://www.cs.cmu.edu/~410-s05/lectures/L31_LockFree.pdf</a></p>
+<p><a href="http://www.rossbencina.com/code/lockfree?q=~rossb/code/lockfree/" target="_blank">http://www.rossbencina.com/code/lockfree?q=~rossb/code/lockfree/</a></p>
+<p><a href="https://stackoverflow.com/questions/41146527/is-a-spinlock-lock-free" target="_blank">https://stackoverflow.com/questions/41146527/is-a-spinlock-lock-free</a></p>
+<p><a href="https://www.zhihu.com/question/53303879" target="_blank">https://www.zhihu.com/question/53303879</a></p>
+<h2 id="7-appendix">7 Appendix</h2>
+<p>RTE RING dpdk test benchmark:</p>
+<pre><code class="lang-shell">&#x279C;  dpdk-master git:(dpdk_21.02) &#x2717; sudo ./release/app/test/dpdk-test -l 1,2-15 --
+[sudo] jim &#x7684;&#x5BC6;&#x7801;&#xFF1A;
+EAL: Detected 56 lcore(s)
+EAL: Detected 2 NUMA nodes
+EAL: Detected static linkage of DPDK
+EAL: Multi-process socket /var/run/dpdk/rte/mp_socket
+EAL: Selected IOVA mode &apos;VA&apos;
+EAL: No available 1048576 kB hugepages reported
+EAL: Probing VFIO support...
+EAL: VFIO support initialized
+EAL: No legacy callbacks, legacy socket not created
+APP: HPET is not enabled, using TSC as default timer
+RTE&gt;&gt;ring_
+ ring_autotest [Mul-choice STRING]: launch autotest
+ ring_perf_autotest [Mul-choice STRING]: launch autotest
+ ring_stress_autotest [Mul-choice STRING]: launch autotest
+ ring_pmd_perf_autotest [Mul-choice STRING]: launch autotest
+ ring_pmd_autotest [Mul-choice STRING]: launch autotest
+RTE&gt;&gt;ring_p
+ ring_perf_autotest [Mul-choice STRING]: launch autotest
+ ring_pmd_perf_autotest [Mul-choice STRING]: launch autotest
+ ring_pmd_autotest [Mul-choice STRING]: launch autotest
+RTE&gt;&gt;ring_perf_autotest
+
+### Testing single element enq/deq ###
+legacy APIs: SP/SC: single: 9.24
+legacy APIs: MP/MC: single: 37.83
+
+### Testing burst enq/deq ###
+legacy APIs: SP/SC: burst (size: 8): 25.53
+legacy APIs: SP/SC: burst (size: 32): 63.49
+legacy APIs: MP/MC: burst (size: 8): 52.43
+legacy APIs: MP/MC: burst (size: 32): 89.03
+
+### Testing bulk enq/deq ###
+legacy APIs: SP/SC: bulk (size: 8): 24.68
+legacy APIs: SP/SC: bulk (size: 32): 62.18
+legacy APIs: MP/MC: bulk (size: 8): 53.07
+legacy APIs: MP/MC: bulk (size: 32): 89.35
+
+### Testing empty bulk deq ###
+legacy APIs: SP/SC: bulk (size: 8): 3.31
+legacy APIs: MP/MC: bulk (size: 8): 3.32
+
+### Testing using two physical cores ###
+legacy APIs: SP/SC: bulk (size: 8): 38.09
+legacy APIs: MP/MC: bulk (size: 8): 102.69
+legacy APIs: SP/SC: bulk (size: 32): 22.72
+legacy APIs: MP/MC: bulk (size: 32): 30.57
+
+### Testing using all worker nodes ###
+
+Bulk enq/dequeue count on size 8
+Core [1] count = 13900
+Core [2] count = 13886
+Core [3] count = 13862
+Core [4] count = 13847
+Core [5] count = 13858
+Core [6] count = 13838
+Core [7] count = 13847
+Core [8] count = 13839
+Core [9] count = 13879
+Core [10] count = 13878
+Core [11] count = 13847
+Core [12] count = 13839
+Core [13] count = 13842
+Core [14] count = 13856
+Core [15] count = 13864
+Total count (size: 8): 207882
+
+Bulk enq/dequeue count on size 32
+Core [1] count = 12876
+Core [2] count = 12884
+Core [3] count = 12902
+Core [4] count = 12902
+Core [5] count = 12895
+Core [6] count = 12881
+Core [7] count = 12883
+Core [8] count = 12888
+Core [9] count = 12890
+Core [10] count = 12928
+Core [11] count = 12912
+Core [12] count = 12894
+Core [13] count = 12887
+Core [14] count = 12871
+Core [15] count = 12900
+Total count (size: 32): 193393
+
+### Testing single element enq/deq ###
+elem APIs: element size 16B: SP/SC: single: 8.07
+elem APIs: element size 16B: MP/MC: single: 38.39
+
+### Testing burst enq/deq ###
+elem APIs: element size 16B: SP/SC: burst (size: 8): 27.90
+elem APIs: element size 16B: SP/SC: burst (size: 32): 67.64
+elem APIs: element size 16B: MP/MC: burst (size: 8): 56.52
+elem APIs: element size 16B: MP/MC: burst (size: 32): 97.26
+
+### Testing bulk enq/deq ###
+elem APIs: element size 16B: SP/SC: bulk (size: 8): 29.23
+elem APIs: element size 16B: SP/SC: bulk (size: 32): 67.49
+elem APIs: element size 16B: MP/MC: bulk (size: 8): 56.46
+elem APIs: element size 16B: MP/MC: bulk (size: 32): 96.35
+
+### Testing empty bulk deq ###
+elem APIs: element size 16B: SP/SC: bulk (size: 8): 2.65
+elem APIs: element size 16B: MP/MC: bulk (size: 8): 1.99
+
+### Testing using two physical cores ###
+elem APIs: element size 16B: SP/SC: bulk (size: 8): 36.40
+elem APIs: element size 16B: MP/MC: bulk (size: 8): 109.03
+elem APIs: element size 16B: SP/SC: bulk (size: 32): 20.36
+elem APIs: element size 16B: MP/MC: bulk (size: 32): 27.51
+
+### Testing using all worker nodes ###
+
+Bulk enq/dequeue count on size 8
+Core [1] count = 13715
+Core [2] count = 13684
+Core [3] count = 13657
+Core [4] count = 13679
+Core [5] count = 13667
+Core [6] count = 13650
+Core [7] count = 13680
+Core [8] count = 13678
+Core [9] count = 13682
+Core [10] count = 13652
+Core [11] count = 13673
+Core [12] count = 13656
+Core [13] count = 13657
+Core [14] count = 13693
+Core [15] count = 13683
+Total count (size: 8): 205106
+
+Bulk enq/dequeue count on size 32
+Core [1] count = 13408
+Core [2] count = 13390
+Core [3] count = 13395
+Core [4] count = 13411
+Core [5] count = 13399
+Core [6] count = 13396
+Core [7] count = 13390
+Core [8] count = 13409
+Core [9] count = 13395
+Core [10] count = 13384
+Core [11] count = 13407
+Core [12] count = 13400
+Core [13] count = 13398
+Core [14] count = 13361
+Core [15] count = 13402
+Total count (size: 32): 200945
+Test OK
+</code></pre>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="dump_function_call.html" class="navigation navigation-prev " aria-label="Previous page: Dump function call trace in linux kernel/user">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="meson_build_for_local_lib.html" class="navigation navigation-next " aria-label="Next page: Meson build guide for local installed library">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Lock Free Programming","level":"1.2.11","depth":2,"next":{"title":"Meson build guide for local installed library","level":"1.2.12","depth":2,"path":"Cloud/meson_build_for_local_lib.md","ref":"Cloud/meson_build_for_local_lib.md","articles":[]},"previous":{"title":"Dump function call trace in linux kernel/user","level":"1.2.10","depth":2,"path":"Cloud/dump_function_call.md","ref":"Cloud/dump_function_call.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"Cloud/lock_free_programming.md","mtime":"2021-09-09T03:54:21.765Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-05-16T08:19:50.512Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

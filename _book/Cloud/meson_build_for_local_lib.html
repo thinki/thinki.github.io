@@ -1,0 +1,568 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Meson build guide for local installed library · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="../Archive/" />
+    
+    
+    <link rel="prev" href="lock_free_programming.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    About Me
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Cloud
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="How_qemu_kvm_manage_mem_part1.html">
+            
+                <a href="How_qemu_kvm_manage_mem_part1.html">
+            
+                    
+                    How Qemu/KVM manage VM memory: Part1 system ram
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="How_qemu_kvm_manage_mem_part2.html">
+            
+                <a href="How_qemu_kvm_manage_mem_part2.html">
+            
+                    
+                    How Qemu/KVM manage VM memory: Part2 mmio
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="linux_macvlan_and_nic_offload.html">
+            
+                <a href="linux_macvlan_and_nic_offload.html">
+            
+                    
+                    Linux Macvlan and NIC offload
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="switchdev_and_port_representor.html">
+            
+                <a href="switchdev_and_port_representor.html">
+            
+                    
+                    Linux switchdev and DPDK port representor
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" data-path="cpu_memory_order_part1.html">
+            
+                <a href="cpu_memory_order_part1.html">
+            
+                    
+                    CPU memory order: Part1 summary
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6" data-path="cpu_memory_order_part2.html">
+            
+                <a href="cpu_memory_order_part2.html">
+            
+                    
+                    CPU memory order: Part2 total store ordering 
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7" data-path="cpu_memory_order_part3.html">
+            
+                <a href="cpu_memory_order_part3.html">
+            
+                    
+                    CPU memory order: Part3 weak memory ordering
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8" data-path="cpu_memory_order_part4.html">
+            
+                <a href="cpu_memory_order_part4.html">
+            
+                    
+                    CPU memory order: Part4 memory barrier
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9" data-path="Stateless_offload_uso_ufo.html">
+            
+                <a href="Stateless_offload_uso_ufo.html">
+            
+                    
+                    Stateless offload: USO and UFO
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.10" data-path="dump_function_call.html">
+            
+                <a href="dump_function_call.html">
+            
+                    
+                    Dump function call trace in linux kernel/user
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.11" data-path="lock_free_programming.html">
+            
+                <a href="lock_free_programming.html">
+            
+                    
+                    Lock Free Programming
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2.12" data-path="meson_build_for_local_lib.html">
+            
+                <a href="meson_build_for_local_lib.html">
+            
+                    
+                    Meson build guide for local installed library
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../Archive/">
+            
+                <a href="../Archive/">
+            
+                    
+                    网易博客存档
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../Archive/fsl_imx6_ethernet_01.html">
+            
+                <a href="../Archive/fsl_imx6_ethernet_01.html">
+            
+                    
+                    Freescale i.MX6 Linux Ethernet Driver驱动源码分析01
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../Archive/fsl_imx6_ethernet_02.html">
+            
+                <a href="../Archive/fsl_imx6_ethernet_02.html">
+            
+                    
+                    Freescale i.MX6 Linux Ethernet Driver驱动源码分析02
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../Archive/linux_books.html">
+            
+                <a href="../Archive/linux_books.html">
+            
+                    
+                    Linux Programming 经典书单
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >Meson build guide for local installed library</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="meson-build-guide-for-local-installed-library">Meson build guide for local installed library</h1>
+<h1 id="1-build-pkt-gen-dependency">1 build Pkt-gen dependency</h1>
+<h2 id="11-build-dpdk">1.1 build dpdk</h2>
+<p>in meson use prefix env variable to specify install directory, but you should config it before build</p>
+<pre><code class="lang-sh">$ meson -Dprefix=<span class="hljs-variable">${LOCAL_DPDK_PATH}</span> release &amp;&amp; ninja -C release
+</code></pre>
+<h1 id="12-install-library-into-a-local-directory">1.2 install library into a local directory</h1>
+<pre><code class="lang-shell">$ meson install
+</code></pre>
+<h1 id="2-build-pkt-gen">2 build Pkt-gen</h1>
+<h2 id="21-pkg-config-path">2.1 pkg-config path</h2>
+<p>meson use pkg-config to detect dpdk library installed or not</p>
+<p>Since we install pkg-config in local directory, we need to tell pkg-config where to find the local pgk-config &quot;.pc&quot; file</p>
+<p>let&apos;s support we installed dpdk into the /home/jim/bin/ folder</p>
+<pre><code class="lang-shell">$ export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/home/jim/bin/lib/x86_64-linux-gnu/pkgconfig
+</code></pre>
+<p>You can check if dpdk can be detected by pkg-config by:</p>
+<pre><code class="lang-sh">$ pkg-config --libs libdpdk
+-L/home/jim/bin/lib/x86_64-linux-gnu -Wl,--as-needed -lrte_node -lrte_graph -lrte_bpf -lrte_flow_classify -lrte_pipeline -lrte_table -lrte_port -lrte_fib -lrte_ipsec -lrte_vhost -lrte_stack -lrte_security -lrte_<span class="hljs-built_in">sched</span> -lrte_reorder -lrte_rib -lrte_regexdev -lrte_rawdev -lrte_pdump -lrte_power -lrte_member -lrte_lpm -lrte_latencystats -lrte_kni -lrte_jobstats -lrte_ip_frag -lrte_gso -lrte_gro -lrte_eventdev -lrte_efd -lrte_distributor -lrte_cryptodev -lrte_compressdev -lrte_cfgfile -lrte_bitratestats -lrte_bbdev -lrte_acl -lrte_timer -lrte_<span class="hljs-built_in">hash</span> -lrte_metrics -lrte_cmdline -lrte_pci -lrte_ethdev -lrte_meter -lrte_net -lrte_mbuf -lrte_mempool -lrte_rcu -lrte_ring -lrte_eal -lrte_telemetry -lrte_kvargs -lbsd
+</code></pre>
+<h2 id="22-add-include-path-for-c-compiler">2.2 add include path for c compiler</h2>
+<p>since all the dpdk header is installed into local directory, the compile can&apos;t find there headers by default search path, so we need to tell meson to add extra header search path by c_args</p>
+<pre><code class="lang-sh">$ meson -D c_args=-I/home/jim/bin/include  build
+</code></pre>
+<p>But this is not enough since you&apos;ll still get symbol error at compile link stage</p>
+<pre><code class="lang-sh">
+pktgen-cmds.c:(.text+0x7254): undefined reference to `rte_eth_bond_8023ad_conf_get<span class="hljs-string">&apos;
+/usr/bin/ld: pktgen-cmds.c:(.text+0x7272): undefined reference to `rte_eth_bond_slaves_get&apos;</span>
+/usr/bin/ld: pktgen-cmds.c:(.text+0x7290): undefined reference to `rte_eth_bond_active_slaves_get<span class="hljs-string">&apos;
+/usr/bin/ld: pktgen-cmds.c:(.text+0x7307): undefined reference to `rte_eth_bond_8023ad_ext_distrib&apos;</span>
+/usr/bin/ld: pktgen-cmds.c:(.text+0x732f): undefined reference to `rte_eth_bond_8023ad_ext_collect<span class="hljs-string">&apos;
+/usr/bin/ld: pktgen-cmds.c:(.text+0x73a2): undefined reference to `rte_eth_bond_8023ad_ext_distrib&apos;</span>
+/usr/bin/ld: app/a172ced@@pktgen@exe/pktgen-cmds.c.o: <span class="hljs-keyword">in</span> <span class="hljs-keyword">function</span> `show_bonding_mode<span class="hljs-string">&apos;:
+pktgen-cmds.c:(.text+0x7453): undefined reference to `rte_eth_bond_mode_get&apos;</span>
+/usr/bin/ld: pktgen-cmds.c:(.text+0x7499): undefined reference to `rte_eth_bond_slaves_get<span class="hljs-string">&apos;
+/usr/bin/ld: pktgen-cmds.c:(.text+0x74c5): undefined reference to `rte_eth_bond_active_slaves_get&apos;</span>
+/usr/bin/ld: pktgen-cmds.c:(.text+0x7659): undefined reference to `rte_eth_bond_8023ad_slave_info<span class="hljs-string">&apos;
+/usr/bin/ld: pktgen-cmds.c:(.text+0x7960): undefined reference to `rte_eth_bond_primary_get&apos;</span>
+/usr/bin/ld: pktgen-cmds.c:(.text+0x79d4): undefined reference to `rte_eth_bond_8023ad_agg_selection_get<span class="hljs-string">&apos;
+/usr/bin/ld: pktgen-cmds.c:(.text+0x7a24): undefined reference to `rte_eth_bond_xmit_policy_get&apos;</span>
+/usr/bin/ld: app/a172ced@@pktgen@exe/cli-functions.c.o: <span class="hljs-keyword">in</span> <span class="hljs-keyword">function</span> `bonding_cmd<span class="hljs-string">&apos;:
+cli-functions.c:(.text+0x2101): undefined reference to `rte_eth_bond_8023ad_conf_get&apos;</span>
+/usr/bin/ld: cli-functions.c:(.text+0x224d): undefined reference to `rte_eth_bond_8023ad_conf_ge
+</code></pre>
+<h2 id="23-add-link-library-path-for-c-linker">2.3 add link library path for c linker</h2>
+<h3 id="231-add-system-library-search-path-for-c-compiler">2.3.1 add system library search path for c compiler</h3>
+<pre><code>$ sudo vim /etc/ld.so.conf.d/user.conf
+</code></pre><p>add your local path into the file:</p>
+<p>/home/jim/bin/lib/x86_64-linux-gnu</p>
+<p>Then reload the file by</p>
+<pre><code class="lang-sh">$ sudo ldconfig
+</code></pre>
+<p>Note: using LD_LIBRARY_PATH is another alternative, it is only useful at link time library search path but not applicable for runtime library search path.</p>
+<h3 id="232-add-meson-linker-args-for-compiler">2.3.2 add meson linker args for compiler</h3>
+<pre><code class="lang-sh">$  meson -D c_args=-I/home/jim/bin/include -D c_link_args=<span class="hljs-string">&quot;-L/home/jim/bin/lib/x86_64-linux-gnu/ -lrte_net_bond&quot;</span> build
+</code></pre>
+<p>see more options on <a href="https://mesonbuild.com/Builtin-options.html#compiler-options" target="_blank">https://mesonbuild.com/Builtin-options.html#compiler-options</a></p>
+<h2 id="24-build">2.4 build</h2>
+<pre><code>$ ninja -C build
+</code></pre><h2 id="25-launch">2.5 launch</h2>
+<p>there is run time library search path dependency, but since we have specify it in /etc/<a href="http://ld.so/" target="_blank">ld.so</a>.conf.d/user.conf, it is enough for us to run Pkt-gen. I</p>
+<p>You can check if the library search path has been cached successfully by</p>
+<pre><code class="lang-sh">$  ldconfig -v
+...
+/home/jim/bin/lib/x86_64-linux-gnu:
+        librte_net_thunderx.so.21 -&gt; librte_net_thunderx.so.21.2
+        librte_raw_ifpga.so.21 -&gt; librte_raw_ifpga.so.21.2
+        librte_ring.so.21 -&gt; librte_ring.so.21.2
+        librte_net_dpaa.so.21 -&gt; librte_net_dpaa.so.21.2
+        librte_net_vhost.so.21 -&gt; librte_net_vhost.so.21.2
+        librte_raw_dpaa2_qdma.so.21 -&gt; librte_raw_dpaa2_qdma.so.21.2
+        librte_lpm.so.21 -&gt; librte_lpm.so.21.2
+        librte_kni.so.21 -&gt; librte_kni.so.21.2
+        librte_net_mlx5.so.21 -&gt; librte_net_mlx5.so.21.2
+        librte_crypto_nitrox.so.21 -&gt; librte_crypto_nitrox.so.21.2
+        librte_gro.so.21 -&gt; librte_gro.so.21.2
+        librte_acl.so.21 -&gt; librte_acl.so.21.2
+        librte_bus_fslmc.so.21 -&gt; librte_bus_fslmc.so.21.2
+        librte_event_cnxk.so.21 -&gt; librte_event_cnxk.so.21.2
+        librte_net_ionic.so.21 -&gt; librte_net_ionic.so.21.2
+        librte_power.so.21 -&gt; librte_power.so.21.2
+        librte_net_igc.so.21 -&gt; librte_net_igc.so.21.2
+        librte_rawdev.so.21 -&gt; librte_rawdev.so.21.2
+        librte_mempool_cnxk.so.21 -&gt; librte_mempool_cnxk.so.21.2
+        librte_compress_zlib.so.21 -&gt; librte_compress_zlib.so.21.2
+        librte_bpf.so.21 -&gt; librte_bpf.so.21.2
+        librte_net_pcap.so.21 -&gt; librte_net_pcap.so.21.2
+        librte_net_bond.so.21 -&gt; librte_net_bond.so.21.2
+        librte_net_bnxt.so.21 -&gt; librte_net_bnxt.so.21.2
+        librte_ipsec.so.21 -&gt; librte_ipsec.so.21.2
+        librte_bus_ifpga.so.21 -&gt; librte_bus_ifpga.so.21.2
+        librte_common_mlx5.so.21 -&gt; librte_common_mlx5.so.21.2
+        librte_baseband_acc100.so.21 -&gt; librte_baseband_acc100.so.21.2
+        librte_mempool_octeontx2.so.21 -&gt; librte_mempool_octeontx2.so.21.2
+        librte_pci.so.21 -&gt; librte_pci.so.21.2
+        librte_crypto_ccp.so.21 -&gt; librte_crypto_ccp.so.21.2
+        librte_net_i40e.so.21 -&gt; librte_net_i40e.so.21.2
+        librte_compressdev.so.21 -&gt; librte_compressdev.so.21.2
+        librte_net_virtio.so.21 -&gt; librte_net_virtio.so.21.2
+</code></pre>
+<p>Launch pktgen</p>
+<pre><code class="lang-sh">$  sudo ./build/app/pktgen <span class="hljs-_">-l</span> 28-32 -m 512 <span class="hljs-_">-a</span> 16:00.0 <span class="hljs-_">-a</span> 49:00.0 --file-prefix=avf -- -P -m <span class="hljs-string">&quot;[29:30].0, [31:32].1&quot;</span>
+</code></pre>
+<h1 id="3-reference">3 Reference</h1>
+<p><a href="http://code.dpdk.org/pktgen-dpdk/pktgen-21.05.0/source/INSTALL.md" target="_blank">http://code.dpdk.org/pktgen-dpdk/pktgen-21.05.0/source/INSTALL.md</a></p>
+<p><a href="http://mesonbuild.com/Builtin-options.html" target="_blank">http://mesonbuild.com/Builtin-options.html</a></p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="lock_free_programming.html" class="navigation navigation-prev " aria-label="Previous page: Lock Free Programming">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="../Archive/" class="navigation navigation-next " aria-label="Next page: 网易博客存档">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Meson build guide for local installed library","level":"1.2.12","depth":2,"next":{"title":"网易博客存档","level":"1.3","depth":1,"path":"Archive/README.md","ref":"Archive/README.md","articles":[{"title":"Freescale i.MX6 Linux Ethernet Driver驱动源码分析01","level":"1.3.1","depth":2,"path":"Archive/fsl_imx6_ethernet_01.md","ref":"Archive/fsl_imx6_ethernet_01.md","articles":[]},{"title":"Freescale i.MX6 Linux Ethernet Driver驱动源码分析02","level":"1.3.2","depth":2,"path":"Archive/fsl_imx6_ethernet_02.md","ref":"Archive/fsl_imx6_ethernet_02.md","articles":[]},{"title":"Linux Programming 经典书单","level":"1.3.3","depth":2,"path":"Archive/linux_books.md","ref":"Archive/linux_books.md","articles":[]}]},"previous":{"title":"Lock Free Programming","level":"1.2.11","depth":2,"path":"Cloud/lock_free_programming.md","ref":"Cloud/lock_free_programming.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"Cloud/meson_build_for_local_lib.md","mtime":"2021-12-28T10:00:15.564Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-05-16T08:19:50.512Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

@@ -1,0 +1,559 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Dump function call trace in linux kernel/user · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="lock_free_programming.html" />
+    
+    
+    <link rel="prev" href="Stateless_offload_uso_ufo.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    About Me
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Cloud
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="How_qemu_kvm_manage_mem_part1.html">
+            
+                <a href="How_qemu_kvm_manage_mem_part1.html">
+            
+                    
+                    How Qemu/KVM manage VM memory: Part1 system ram
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="How_qemu_kvm_manage_mem_part2.html">
+            
+                <a href="How_qemu_kvm_manage_mem_part2.html">
+            
+                    
+                    How Qemu/KVM manage VM memory: Part2 mmio
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="linux_macvlan_and_nic_offload.html">
+            
+                <a href="linux_macvlan_and_nic_offload.html">
+            
+                    
+                    Linux Macvlan and NIC offload
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="switchdev_and_port_representor.html">
+            
+                <a href="switchdev_and_port_representor.html">
+            
+                    
+                    Linux switchdev and DPDK port representor
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" data-path="cpu_memory_order_part1.html">
+            
+                <a href="cpu_memory_order_part1.html">
+            
+                    
+                    CPU memory order: Part1 summary
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6" data-path="cpu_memory_order_part2.html">
+            
+                <a href="cpu_memory_order_part2.html">
+            
+                    
+                    CPU memory order: Part2 total store ordering 
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7" data-path="cpu_memory_order_part3.html">
+            
+                <a href="cpu_memory_order_part3.html">
+            
+                    
+                    CPU memory order: Part3 weak memory ordering
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8" data-path="cpu_memory_order_part4.html">
+            
+                <a href="cpu_memory_order_part4.html">
+            
+                    
+                    CPU memory order: Part4 memory barrier
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9" data-path="Stateless_offload_uso_ufo.html">
+            
+                <a href="Stateless_offload_uso_ufo.html">
+            
+                    
+                    Stateless offload: USO and UFO
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2.10" data-path="dump_function_call.html">
+            
+                <a href="dump_function_call.html">
+            
+                    
+                    Dump function call trace in linux kernel/user
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.11" data-path="lock_free_programming.html">
+            
+                <a href="lock_free_programming.html">
+            
+                    
+                    Lock Free Programming
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.12" data-path="meson_build_for_local_lib.html">
+            
+                <a href="meson_build_for_local_lib.html">
+            
+                    
+                    Meson build guide for local installed library
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../Archive/">
+            
+                <a href="../Archive/">
+            
+                    
+                    网易博客存档
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../Archive/fsl_imx6_ethernet_01.html">
+            
+                <a href="../Archive/fsl_imx6_ethernet_01.html">
+            
+                    
+                    Freescale i.MX6 Linux Ethernet Driver驱动源码分析01
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../Archive/fsl_imx6_ethernet_02.html">
+            
+                <a href="../Archive/fsl_imx6_ethernet_02.html">
+            
+                    
+                    Freescale i.MX6 Linux Ethernet Driver驱动源码分析02
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../Archive/linux_books.html">
+            
+                <a href="../Archive/linux_books.html">
+            
+                    
+                    Linux Programming 经典书单
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >Dump function call trace in linux kernel/user</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="dump-function-call-trace-in-linux-kerneluser">Dump function call trace in linux kernel/user</h1>
+<h1 id="1-introduction">1. Introduction</h1>
+<p>This article gives description how to dump function call stack trace info in Linux. Which is very useful to debug and understand the running context.</p>
+<p>Several ways are summarized to dump the trace info:</p>
+<ul>
+<li>For kernel space, It takes ice driver as an example to show how to dump function call trace in kernel space.</li>
+<li>For user space, it takes dpdk and QEMU as an example.</li>
+</ul>
+<h1 id="2-target-audience">2. Target Audience</h1>
+<p>Developer/Validator with basic some development background</p>
+<h1 id="3-function-call-tracing-for-linux-kernel">3. Function call tracing for Linux kernel</h1>
+<p>Kernel provides an function <em>dump_stack()</em> in lib/stack.c that can dump the current function call stack tracing info.</p>
+<p>For example, if we want to dump the FXP FDIR/RSS function in shared code in Columbiaville, just add somewhere:</p>
+<pre><code class="lang-diff">static struct ice_flow_prof *
+ice_flow_find_prof_id(struct ice_hw *hw, enum ice_block blk, u64 prof_id)
+ {
+        struct ice_flow_prof *p;
+
+<span class="hljs-addition">+       dump_stack();</span>
+        LIST_FOR_EACH_ENTRY(p, &amp;hw-&gt;fl_profs[blk], ice_flow_prof, l_entry)
+                if (p-&gt;id == prof_id)
+                        return p;
+</code></pre>
+<p>Then you can see the below kernel log which shows who is calling this function and who is calling this function&apos;s caller, and so on.</p>
+<p><img src="../images/dump_func_01.png" alt="dump_func_01"></p>
+<h1 id="4-function-call-tracing-for-linux-application">4. Function call tracing for Linux application</h1>
+<p>For function call tracing in linux user space application, there are quite some ways to do. I&apos;ll just share some quickest way.</p>
+<h2 id="41-gdb">4.1 GDB</h2>
+<p>use gdb command &quot;bt&quot; at breakpoint, you can see the call stack trace info.</p>
+<h3 id="411-function-call-tracing-for-dpdk">4.1.1 Function call tracing for DPDK</h3>
+<p>&#x200B;    Let&apos;s take dpdk testpmd for example, breakpoint is set at virtchnl message handler somewhere and then &quot;bt&quot; command is used to show call stack info as below:</p>
+<p><img src="../images/dump_func_02.png" alt="dump_func_02"></p>
+<h2 id="42-backtrace">4.2 backtrace</h2>
+<p>   For some application that is not easy for gdb to debug or you don&apos;t want to set breakpoint, you may refer to the some library that provide the dumping method.</p>
+<p>   Backtrace is simple and easy except that it can&apos;t work with static function. So for code with static function, you will miss the call trace info which will only show the symbol address.</p>
+<p>   I&apos;ll skip the details since this is not a preferred method by me, but let&apos;s take qemu for example:</p>
+<p><img src="../images/dump_func_03.png" alt="dump_func_03"></p>
+<p>   This is totally a disaster for debugger since qemu use lots of static function.</p>
+<h2 id="43-libunwind">4.3 libunwind</h2>
+<p>   To overcome backtrace&apos;s limitation which can&apos;t identify static function&apos;s symbol address, libunwind is the way and we are gonna talk more about this.</p>
+<p>   Add below <strong><em>my_backtrace()\</em></strong> function to somewhere you want to trace, and <strong>you must add &quot;-lunwind&quot; to your linker option</strong>.</p>
+<pre><code class="lang-diff"><span class="hljs-addition">+#define UNW_LOCAL_ONLY  // We only need local unwinder.</span>
+<span class="hljs-addition">+#include &lt;libunwind.h&gt;</span>
+<span class="hljs-addition">+static void my_backtrace(void)</span>
+<span class="hljs-addition">+{</span>
+<span class="hljs-addition">+    unw_cursor_t cursor;</span>
+<span class="hljs-addition">+    unw_context_t uc;</span>
+<span class="hljs-addition">+    // char buf[4096];</span>
+<span class="hljs-addition">+</span>
+<span class="hljs-addition">+    unw_getcontext(&amp;uc);            // store registers</span>
+<span class="hljs-addition">+    unw_init_local(&amp;cursor, &amp;uc);   // initialze with context</span>
+<span class="hljs-addition">+</span>
+<span class="hljs-addition">+    while (unw_step(&amp;cursor) &gt; 0) { // unwind to older stack frame</span>
+<span class="hljs-addition">+        char buf[4096];</span>
+<span class="hljs-addition">+        unw_word_t offset;</span>
+<span class="hljs-addition">+        unw_word_t ip, sp;</span>
+<span class="hljs-addition">+</span>
+<span class="hljs-addition">+        // read register, rip</span>
+<span class="hljs-addition">+        unw_get_reg(&amp;cursor, UNW_REG_IP, &amp;ip);</span>
+<span class="hljs-addition">+</span>
+<span class="hljs-addition">+        // read register, rbp</span>
+<span class="hljs-addition">+        unw_get_reg(&amp;cursor, UNW_REG_SP, &amp;sp);</span>
+<span class="hljs-addition">+</span>
+<span class="hljs-addition">+        // get name and offset</span>
+<span class="hljs-addition">+        unw_get_proc_name(&amp;cursor, buf, sizeof(buf), &amp;offset);</span>
+<span class="hljs-addition">+</span>
+<span class="hljs-addition">+        // x86_64, unw_word_t == uint64_t</span>
+<span class="hljs-addition">+        printf(&quot;0x%016lx &lt;%s+0x%lx&gt;\n&quot;, ip, buf, offset);</span>
+<span class="hljs-addition">+    }</span>
+<span class="hljs-addition">+    printf(&quot;----------done----------\n&quot;);</span>
+<span class="hljs-addition">+}</span>
+</code></pre>
+<p>Add -lunwind link option in QEMU in configure is like below:</p>
+<pre><code class="lang-diff">diff --git a/configure b/configure
+index 23b5e93752..ce8c321f58 100755
+<span class="hljs-comment">--- a/configure</span>
+<span class="hljs-comment">+++ b/configure</span>
+@@ -1643,7 +1643,7 @@ case &quot;$cpu&quot; in
+            # If we truly care, we should simply detect this case at
+            # runtime and generate the fallback to serial emulation.
+            CPU_CFLAGS=&quot;-m64 -mcx16&quot;
+<span class="hljs-deletion">-           QEMU_LDFLAGS=&quot;-m64 $QEMU_LDFLAGS&quot;</span>
+<span class="hljs-addition">+           QEMU_LDFLAGS=&quot;-m64 -lunwind $QEMU_LDFLAGS&quot;</span>
+            ;;
+     x32)
+            CPU_CFLAGS=&quot;-mx32&quot;
+diff --git a/hw/vfio/pci.c b/hw/vfio/pci.c
+index 5e75a95129..3c84f98db2 100644
+<span class="hljs-comment">--- a/hw/vfio/pci.c</span>
+<span class="hljs-comment">+++ b/hw/vfio/pci.c</span>
+</code></pre>
+<p>&#x200B;    Let&apos;s take qemu for example:</p>
+<p><img src="../images/dump_func_04.png" alt="dump_func_04"></p>
+<p>&#x200B;    From this call stack trace info, you know all the context it is running which I think is really helpful in some cases that functions has too many caller and helpful for you to understand the overall running context.</p>
+<h1 id="5-reference">5. Reference</h1>
+<p><a href="https://blog.csdn.net/iEearth/article/details/49763481" target="_blank">https://blog.csdn.net/iEearth/article/details/49763481</a></p>
+<p><a href="https://segmentfault.com/a/1190000023181830" target="_blank">https://segmentfault.com/a/1190000023181830</a></p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="Stateless_offload_uso_ufo.html" class="navigation navigation-prev " aria-label="Previous page: Stateless offload: USO and UFO">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="lock_free_programming.html" class="navigation navigation-next " aria-label="Next page: Lock Free Programming">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"typora-root-url":"..","title":"Dump function call trace in linux kernel/user","level":"1.2.10","depth":2,"next":{"title":"Lock Free Programming","level":"1.2.11","depth":2,"path":"Cloud/lock_free_programming.md","ref":"Cloud/lock_free_programming.md","articles":[]},"previous":{"title":"Stateless offload: USO and UFO","level":"1.2.9","depth":2,"path":"Cloud/Stateless_offload_uso_ufo.md","ref":"Cloud/Stateless_offload_uso_ufo.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"Cloud/dump_function_call.md","mtime":"2022-05-07T10:10:35.440Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-05-16T08:19:50.512Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

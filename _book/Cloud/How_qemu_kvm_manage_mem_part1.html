@@ -1,0 +1,1234 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>How Qemu/KVM manage VM memory: Part1 system ram · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="How_qemu_kvm_manage_mem_part2.html" />
+    
+    
+    <link rel="prev" href="./" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    About Me
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Cloud
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter active" data-level="1.2.1" data-path="How_qemu_kvm_manage_mem_part1.html">
+            
+                <a href="How_qemu_kvm_manage_mem_part1.html">
+            
+                    
+                    How Qemu/KVM manage VM memory: Part1 system ram
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="How_qemu_kvm_manage_mem_part2.html">
+            
+                <a href="How_qemu_kvm_manage_mem_part2.html">
+            
+                    
+                    How Qemu/KVM manage VM memory: Part2 mmio
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="linux_macvlan_and_nic_offload.html">
+            
+                <a href="linux_macvlan_and_nic_offload.html">
+            
+                    
+                    Linux Macvlan and NIC offload
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="switchdev_and_port_representor.html">
+            
+                <a href="switchdev_and_port_representor.html">
+            
+                    
+                    Linux switchdev and DPDK port representor
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" data-path="cpu_memory_order_part1.html">
+            
+                <a href="cpu_memory_order_part1.html">
+            
+                    
+                    CPU memory order: Part1 summary
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6" data-path="cpu_memory_order_part2.html">
+            
+                <a href="cpu_memory_order_part2.html">
+            
+                    
+                    CPU memory order: Part2 total store ordering 
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7" data-path="cpu_memory_order_part3.html">
+            
+                <a href="cpu_memory_order_part3.html">
+            
+                    
+                    CPU memory order: Part3 weak memory ordering
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8" data-path="cpu_memory_order_part4.html">
+            
+                <a href="cpu_memory_order_part4.html">
+            
+                    
+                    CPU memory order: Part4 memory barrier
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9" data-path="Stateless_offload_uso_ufo.html">
+            
+                <a href="Stateless_offload_uso_ufo.html">
+            
+                    
+                    Stateless offload: USO and UFO
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.10" data-path="dump_function_call.html">
+            
+                <a href="dump_function_call.html">
+            
+                    
+                    Dump function call trace in linux kernel/user
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.11" data-path="lock_free_programming.html">
+            
+                <a href="lock_free_programming.html">
+            
+                    
+                    Lock Free Programming
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.12" data-path="meson_build_for_local_lib.html">
+            
+                <a href="meson_build_for_local_lib.html">
+            
+                    
+                    Meson build guide for local installed library
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../Archive/">
+            
+                <a href="../Archive/">
+            
+                    
+                    网易博客存档
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../Archive/fsl_imx6_ethernet_01.html">
+            
+                <a href="../Archive/fsl_imx6_ethernet_01.html">
+            
+                    
+                    Freescale i.MX6 Linux Ethernet Driver驱动源码分析01
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../Archive/fsl_imx6_ethernet_02.html">
+            
+                <a href="../Archive/fsl_imx6_ethernet_02.html">
+            
+                    
+                    Freescale i.MX6 Linux Ethernet Driver驱动源码分析02
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../Archive/linux_books.html">
+            
+                <a href="../Archive/linux_books.html">
+            
+                    
+                    Linux Programming 经典书单
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >How Qemu/KVM manage VM memory: Part1 system ram</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="how-qemukvm-manage-vm-memory-part1-system-ram">How Qemu/KVM manage VM memory: Part1 system ram</h1>
+<h1 id="1-introduction">1. Introduction</h1>
+<p>This article summarizes init and runtime for system ram</p>
+<h1 id="2-prerequesities">2. Prerequesities</h1>
+<p>QEMU 4.1.1</p>
+<p>Kernel 5.11</p>
+<h1 id="3-system-ram-alloc">3. system ram alloc</h1>
+<h2 id="31-qemu-alloc-ram-by-mmap-syscall">3.1 qemu alloc ram by mmap() syscall</h2>
+<p>memory is allocated when machine init:</p>
+<pre><code class="lang-c"><span class="hljs-number">71</span> <span class="hljs-comment">/* PC hardware initialisation */</span>
+<span class="hljs-number">72</span> <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">pc_init1</span><span class="hljs-params">(MachineState *machine,
+<span class="hljs-number">73</span>                      <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *host_type, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *pci_type)</span>
+74 </span>{
+...
+<span class="hljs-number">181</span>
+<span class="hljs-number">182</span>     <span class="hljs-comment">/* allocate ram and load rom/bios */</span>
+<span class="hljs-number">183</span>     <span class="hljs-keyword">if</span> (!xen_enabled()) {
+<span class="hljs-number">184</span>         pc_memory_init(pcms, system_memory,
+<span class="hljs-number">185</span>                        rom_memory, &amp;ram_memory);
+<span class="hljs-number">186</span>     } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (machine-&gt;kernel_filename != <span class="hljs-literal">NULL</span>) {
+...
+hw/i386/pc_piix.c
+</code></pre>
+<pre><code class="lang-c"><span class="hljs-number">1806</span> <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">pc_memory_init</span><span class="hljs-params">(PCMachineState *pcms,
+<span class="hljs-number">1807</span>                     MemoryRegion *system_memory,
+<span class="hljs-number">1808</span>                     MemoryRegion *rom_memory,
+<span class="hljs-number">1809</span>                     MemoryRegion **ram_memory)</span>
+1810 </span>{
+<span class="hljs-number">1811</span>     <span class="hljs-keyword">int</span> linux_boot, i;
+<span class="hljs-number">1812</span>     MemoryRegion *ram, *option_rom_mr;
+<span class="hljs-number">1813</span>     MemoryRegion *ram_below_4g, *ram_above_4g;
+...
+<span class="hljs-number">1823</span>     <span class="hljs-comment">/* Allocate RAM.  We allocate it as a single memory region and use
+1824      * aliases to address portions of it, mostly for backwards compatibility
+1825      * with older qemus that used qemu_ram_alloc().
+1826      */</span>
+<span class="hljs-number">1827</span>     ram = g_malloc(<span class="hljs-keyword">sizeof</span>(*ram));
+<span class="hljs-number">1828</span>     memory_region_allocate_system_memory(ram, <span class="hljs-literal">NULL</span>, <span class="hljs-string">&quot;pc.ram&quot;</span>,
+<span class="hljs-number">1829</span>                                          machine-&gt;ram_size);
+<span class="hljs-number">1830</span>     *ram_memory = ram;
+hw/i386/pc.c
+</code></pre>
+<pre><code class="lang-c"><span class="hljs-number">502</span> <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">memory_region_allocate_system_memory</span><span class="hljs-params">(MemoryRegion *mr, Object *owner,
+<span class="hljs-number">503</span>                                           <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *name,
+<span class="hljs-number">504</span>                                           uint64_t ram_size)</span>
+505 </span>{
+<span class="hljs-number">506</span>     <span class="hljs-keyword">uint64_t</span> addr = <span class="hljs-number">0</span>;
+<span class="hljs-number">507</span>     <span class="hljs-keyword">int</span> i;
+<span class="hljs-number">508</span>
+<span class="hljs-number">509</span>     <span class="hljs-keyword">if</span> (nb_numa_nodes == <span class="hljs-number">0</span> || !have_memdevs) {
+<span class="hljs-number">510</span>         allocate_system_memory_nonnuma(mr, owner, name, ram_size);
+<span class="hljs-number">511</span>         <span class="hljs-keyword">return</span>;
+<span class="hljs-number">512</span>     }
+hw/core/numa.c
+</code></pre>
+<pre><code class="lang-c"><span class="hljs-number">468</span> <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">allocate_system_memory_nonnuma</span><span class="hljs-params">(MemoryRegion *mr, Object *owner,
+<span class="hljs-number">469</span>                                            <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *name,
+<span class="hljs-number">470</span>                                            uint64_t ram_size)</span>
+471 </span>{
+<span class="hljs-number">472</span>     <span class="hljs-keyword">if</span> (mem_path) {
+<span class="hljs-number">473</span> <span class="hljs-meta">#<span class="hljs-meta-keyword">ifdef</span> __linux__</span>
+<span class="hljs-number">474</span>         Error *err = <span class="hljs-literal">NULL</span>;
+<span class="hljs-number">475</span>         memory_region_init_ram_from_file(mr, owner, name, ram_size, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>,
+<span class="hljs-number">476</span>                                          mem_path, &amp;err);
+<span class="hljs-number">477</span>         <span class="hljs-keyword">if</span> (err) {
+hw/core/numa.c
+</code></pre>
+<pre><code class="lang-c"><span class="hljs-number">1585</span> <span class="hljs-meta">#<span class="hljs-meta-keyword">ifdef</span> CONFIG_POSIX</span>
+<span class="hljs-number">1586</span> <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">memory_region_init_ram_from_file</span><span class="hljs-params">(MemoryRegion *mr,
+<span class="hljs-number">1587</span>                                       <span class="hljs-keyword">struct</span> Object *owner,
+<span class="hljs-number">1588</span>                                       <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *name,
+<span class="hljs-number">1589</span>                                       uint64_t size,
+<span class="hljs-number">1590</span>                                       uint64_t align,
+<span class="hljs-number">1591</span>                                       uint32_t ram_flags,
+<span class="hljs-number">1592</span>                                       <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *path,
+<span class="hljs-number">1593</span>                                       Error **errp)</span>
+1594 </span>{
+<span class="hljs-number">1595</span>     Error *err = <span class="hljs-literal">NULL</span>;
+<span class="hljs-number">1596</span>     memory_region_init(mr, owner, name, size);
+<span class="hljs-number">1597</span>     mr-&gt;ram = <span class="hljs-literal">true</span>;
+<span class="hljs-number">1598</span>     mr-&gt;terminates = <span class="hljs-literal">true</span>;
+<span class="hljs-number">1599</span>     mr-&gt;destructor = memory_region_destructor_ram;
+<span class="hljs-number">1600</span>     mr-&gt;align = align;
+<span class="hljs-number">1601</span>     mr-&gt;ram_block = qemu_ram_alloc_from_file(size, mr, ram_flags, path, &amp;err);
+memory.c
+</code></pre>
+<pre><code class="lang-c"><span class="hljs-number">2390</span> <span class="hljs-function">RAMBlock *<span class="hljs-title">qemu_ram_alloc_from_file</span><span class="hljs-params">(ram_addr_t size, MemoryRegion *mr,
+<span class="hljs-number">2391</span>                                    uint32_t ram_flags, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *mem_path,
+<span class="hljs-number">2392</span>                                    Error **errp)</span>
+2393 </span>{
+<span class="hljs-number">2394</span>     <span class="hljs-keyword">int</span> fd;
+<span class="hljs-number">2395</span>     <span class="hljs-keyword">bool</span> created;
+<span class="hljs-number">2396</span>     RAMBlock *block;
+<span class="hljs-number">2397</span>
+<span class="hljs-number">2398</span>     fd = file_ram_open(mem_path, memory_region_name(mr), &amp;created, errp);
+<span class="hljs-number">2399</span>     <span class="hljs-keyword">if</span> (fd &lt; <span class="hljs-number">0</span>) {
+<span class="hljs-number">2400</span>         <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+<span class="hljs-number">2401</span>     }
+<span class="hljs-number">2402</span>
+<span class="hljs-number">2403</span>     block = qemu_ram_alloc_from_fd(size, mr, ram_flags, fd, errp);
+exec.c
+</code></pre>
+<pre><code class="lang-c"><span class="hljs-number">2326</span> <span class="hljs-function">RAMBlock *<span class="hljs-title">qemu_ram_alloc_from_fd</span><span class="hljs-params">(ram_addr_t size, MemoryRegion *mr,
+<span class="hljs-number">2327</span>                                  uint32_t ram_flags, <span class="hljs-keyword">int</span> fd,
+<span class="hljs-number">2328</span>                                  Error **errp)</span>
+2329 </span>{
+...
+<span class="hljs-number">2368</span>     new_block = g_malloc0(<span class="hljs-keyword">sizeof</span>(*new_block));
+<span class="hljs-number">2369</span>     new_block-&gt;mr = mr;
+<span class="hljs-number">2370</span>     new_block-&gt;used_length = size;
+<span class="hljs-number">2371</span>     new_block-&gt;max_length = size;
+<span class="hljs-number">2372</span>     new_block-&gt;flags = ram_flags;
+<span class="hljs-number">2373</span>     new_block-&gt;host = file_ram_alloc(new_block, size, fd, !file_size, errp);
+...
+exec.c
+</code></pre>
+<pre><code class="lang-c"><span class="hljs-number">1884</span> <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> *<span class="hljs-title">file_ram_alloc</span><span class="hljs-params">(RAMBlock *block,
+<span class="hljs-number">1885</span>                             ram_addr_t memory,
+<span class="hljs-number">1886</span>                             <span class="hljs-keyword">int</span> fd,
+<span class="hljs-number">1887</span>                             <span class="hljs-keyword">bool</span> truncate,
+<span class="hljs-number">1888</span>                             Error **errp)</span>
+1889 </span>{
+...
+<span class="hljs-number">1938</span>     area = qemu_ram_mmap(fd, memory, block-&gt;mr-&gt;align,
+<span class="hljs-number">1939</span>                          block-&gt;flags &amp; RAM_SHARED, block-&gt;flags &amp; RAM_PMEM);
+<span class="hljs-number">1940</span>     <span class="hljs-keyword">if</span> (area == MAP_FAILED) {
+exec.c
+</code></pre>
+<pre><code class="lang-c"><span class="hljs-number">85</span> <span class="hljs-function"><span class="hljs-keyword">void</span> *<span class="hljs-title">qemu_ram_mmap</span><span class="hljs-params">(<span class="hljs-keyword">int</span> fd,
+<span class="hljs-number">86</span>                     size_t size,
+<span class="hljs-number">87</span>                     size_t align,
+<span class="hljs-number">88</span>                     <span class="hljs-keyword">bool</span> shared,
+<span class="hljs-number">89</span>                     <span class="hljs-keyword">bool</span> is_pmem)</span>
+90 </span>{
+...
+<span class="hljs-number">149</span>     ptr = mmap(guardptr + offset, size, PROT_READ | PROT_WRITE,
+<span class="hljs-number">150</span>                flags | map_sync_flags, fd, <span class="hljs-number">0</span>);
+util/mmap-alloc.c
+</code></pre>
+<h2 id="32-qemu-give-the-host-va-and-guest-pa-to-kvm-by-kvm-ioctl">3.2 qemu give the host VA and Guest PA to KVM by KVM ioctl</h2>
+<p>After allocating host memory by memory_region_allocate_system_memory() successfully, qemu will add it into system_memory as subregion, which is actually telling KVM the Host userspace address and Guest physical address.</p>
+<pre><code class="lang-c"><span class="hljs-number">1806</span> <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">pc_memory_init</span><span class="hljs-params">(PCMachineState *pcms,
+<span class="hljs-number">1807</span>                     MemoryRegion *system_memory,
+<span class="hljs-number">1808</span>                     MemoryRegion *rom_memory,
+<span class="hljs-number">1809</span>                     MemoryRegion **ram_memory)</span>
+1810 </span>{
+...
+<span class="hljs-number">1827</span>     ram = g_malloc(<span class="hljs-keyword">sizeof</span>(*ram));
+<span class="hljs-number">1828</span>     memory_region_allocate_system_memory(ram, <span class="hljs-literal">NULL</span>, <span class="hljs-string">&quot;pc.ram&quot;</span>,
+<span class="hljs-number">1829</span>                                          machine-&gt;ram_size);
+<span class="hljs-number">1830</span>     *ram_memory = ram;
+<span class="hljs-number">1831</span>     ram_below_4g = g_malloc(<span class="hljs-keyword">sizeof</span>(*ram_below_4g));
+<span class="hljs-number">1832</span>     memory_region_init_alias(ram_below_4g, <span class="hljs-literal">NULL</span>, <span class="hljs-string">&quot;ram-below-4g&quot;</span>, ram,
+<span class="hljs-number">1833</span>                              <span class="hljs-number">0</span>, pcms-&gt;below_4g_mem_size);
+Add the aliase as the subregion
+<span class="hljs-number">1834</span>     memory_region_add_subregion(system_memory, <span class="hljs-number">0</span>, ram_below_4g);
+<span class="hljs-number">1835</span>     e820_add_entry(<span class="hljs-number">0</span>, pcms-&gt;below_4g_mem_size, E820_RAM);
+hw/i386/pc.c
+</code></pre>
+<pre><code class="lang-c"><span class="hljs-number">2423</span> <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">memory_region_add_subregion</span><span class="hljs-params">(MemoryRegion *mr,
+<span class="hljs-number">2424</span>                                  hwaddr offset,
+<span class="hljs-number">2425</span>                                  MemoryRegion *subregion)</span>
+2426 </span>{
+<span class="hljs-number">2427</span>     subregion-&gt;priority = <span class="hljs-number">0</span>;
+<span class="hljs-number">2428</span>     memory_region_add_subregion_common(mr, offset, subregion);
+<span class="hljs-number">2429</span> }
+
+...
+<span class="hljs-number">2413</span> <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">memory_region_add_subregion_common</span><span class="hljs-params">(MemoryRegion *mr,
+<span class="hljs-number">2414</span>                                                hwaddr offset,
+<span class="hljs-number">2415</span>                                                MemoryRegion *subregion)</span>
+2416 </span>{
+<span class="hljs-number">2417</span>     assert(!subregion-&gt;container);
+<span class="hljs-number">2418</span>     subregion-&gt;container = mr;
+<span class="hljs-number">2419</span>     subregion-&gt;addr = offset;
+<span class="hljs-number">2420</span>     memory_region_update_container_subregions(subregion);
+<span class="hljs-number">2421</span> }
+<span class="hljs-number">2422</span>
+...
+<span class="hljs-number">2393</span> <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">memory_region_update_container_subregions</span><span class="hljs-params">(MemoryRegion *subregion)</span>
+2394 </span>{
+<span class="hljs-number">2395</span>     MemoryRegion *mr = subregion-&gt;container;
+<span class="hljs-number">2396</span>     MemoryRegion *other;
+<span class="hljs-number">2397</span>
+<span class="hljs-number">2398</span>     memory_region_transaction_begin();
+<span class="hljs-number">2399</span>
+<span class="hljs-number">2400</span>     memory_region_ref(subregion);
+<span class="hljs-number">2401</span>     QTAILQ_FOREACH(other, &amp;mr-&gt;subregions, subregions_link) {
+<span class="hljs-number">2402</span>         <span class="hljs-keyword">if</span> (subregion-&gt;priority &gt;= other-&gt;priority) {
+<span class="hljs-number">2403</span>             QTAILQ_INSERT_BEFORE(other, subregion, subregions_link);
+<span class="hljs-number">2404</span>             <span class="hljs-keyword">goto</span> done;
+<span class="hljs-number">2405</span>         }
+<span class="hljs-number">2406</span>     }
+<span class="hljs-number">2407</span>     QTAILQ_INSERT_TAIL(&amp;mr-&gt;subregions, subregion, subregions_link);
+<span class="hljs-number">2408</span> done:
+<span class="hljs-number">2409</span>     memory_region_update_pending |= mr-&gt;enabled &amp;&amp; subregion-&gt;enabled;
+<span class="hljs-number">2410</span>     memory_region_transaction_commit();
+<span class="hljs-number">2411</span> }
+
+memory.c
+</code></pre>
+<pre><code class="lang-c"><span class="hljs-number">1074</span> <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">memory_region_transaction_commit</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span>
+1075 </span>{
+<span class="hljs-number">1076</span>     AddressSpace *as;
+<span class="hljs-number">1077</span>
+<span class="hljs-number">1078</span>     assert(memory_region_transaction_depth);
+<span class="hljs-number">1079</span>     assert(qemu_mutex_iothread_locked());
+<span class="hljs-number">1080</span>
+<span class="hljs-number">1081</span>     --memory_region_transaction_depth;
+<span class="hljs-number">1082</span>     <span class="hljs-keyword">if</span> (!memory_region_transaction_depth) {
+<span class="hljs-number">1083</span>         <span class="hljs-keyword">if</span> (memory_region_update_pending) {
+<span class="hljs-number">1084</span>             flatviews_reset();
+<span class="hljs-number">1085</span>
+<span class="hljs-number">1086</span>             MEMORY_LISTENER_CALL_GLOBAL(begin, Forward);
+<span class="hljs-number">1087</span>
+<span class="hljs-number">1088</span>             QTAILQ_FOREACH(as, &amp;address_spaces, address_spaces_link) {
+<span class="hljs-number">1089</span>                 address_space_set_flatview(as);
+...
+<span class="hljs-number">1012</span> <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">address_space_set_flatview</span><span class="hljs-params">(AddressSpace *as)</span>
+1013 </span>{
+<span class="hljs-number">1014</span>     FlatView *old_view = address_space_to_flatview(as);
+...
+<span class="hljs-number">1036</span>         address_space_update_topology_pass(as, old_view2, new_view, <span class="hljs-literal">false</span>);
+...
+memory.c
+</code></pre>
+<p>Below is the key function to add/del memory region:</p>
+<pre><code class="lang-c">901 static void address_space_update_topology_pass(AddressSpace *as,
+902                                                const FlatView *old_view,
+903                                                const FlatView *new_view,
+904                                                bool adding)
+905 {
+906     unsigned iold, inew;
+...
+
+925         if (frold
+926             &amp;&amp; (!frnew
+927                 || int128_lt(frold-&gt;addr.start, frnew-&gt;addr.start)
+928                 || (int128_eq(frold-&gt;addr.start, frnew-&gt;addr.start)
+929                     &amp;&amp; !flatrange_equal(frold, frnew)))) {
+930             /* In old but not in new, or in both but attributes changed. */
+931
+932             if (!adding) {
+933                 flat_range_coalesced_io_del(frold, as);
+934                 MEMORY_LISTENER_UPDATE_REGION(frold, as, Reverse, region_del);
+935             }
+936
+937             ++iold;
+938         } else if (frold &amp;&amp; frnew &amp;&amp; flatrange_equal(frold, frnew)) {
+939             /* In both and unchanged (except logging may have changed) */
+940
+941             if (adding) {
+942                 MEMORY_LISTENER_UPDATE_REGION(frnew, as, Forward, region_nop);
+943                 if (frnew-&gt;dirty_log_mask &amp; ~frold-&gt;dirty_log_mask) {
+944                     MEMORY_LISTENER_UPDATE_REGION(frnew, as, Forward, log_start,
+945                                                   frold-&gt;dirty_log_mask,
+946                                                   frnew-&gt;dirty_log_mask);
+947                 }
+948                 if (frold-&gt;dirty_log_mask &amp; ~frnew-&gt;dirty_log_mask) {
+949                     MEMORY_LISTENER_UPDATE_REGION(frnew, as, Reverse, log_stop,
+950                                                   frold-&gt;dirty_log_mask,
+951                                                   frnew-&gt;dirty_log_mask);
+952                 }
+953             }
+954
+955             ++iold;
+956             ++inew;
+957         } else {
+958             /* In new */
+959
+960             if (adding) {
+961                 MEMORY_LISTENER_UPDATE_REGION(frnew, as, Forward, region_add);
+962                 flat_range_coalesced_io_add(frnew, as);
+memory.c
+</code></pre>
+<p>Qemu will iterate all the memory listener to do add/del</p>
+<pre><code class="lang-c"><span class="hljs-number">130</span> <span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MEMORY_LISTENER_CALL(_as, _callback, _direction, _section, _args...) \
+131     do {                                                                \
+132         MemoryListener *_listener;                                      \
+133                                                                         \
+134         switch (_direction) {                                           \
+135         case Forward:                                                   \
+136             QTAILQ_FOREACH(_listener, &amp;(_as)-&gt;listeners, link_as) {     \
+137                 <span class="hljs-meta-keyword">if</span> (_listener-&gt;_callback) {                             \
+138                     _listener-&gt;_callback(_listener, _section, ##_args); \
+139                 }                                                       \
+140             }                                                           \
+141             break;                                                      \
+142         case Reverse:                                                   \
+143             QTAILQ_FOREACH_REVERSE(_listener, &amp;(_as)-&gt;listeners, link_as) { \
+144                 <span class="hljs-meta-keyword">if</span> (_listener-&gt;_callback) {                             \
+145                     _listener-&gt;_callback(_listener, _section, ##_args); \
+146                 }                                                       \
+147             }                                                           \
+148             break;                                                      \
+149         default:                                                        \
+150             abort();                                                    \
+151         }                                                               \
+152     } while (0)</span>
+<span class="hljs-number">153</span>
+<span class="hljs-number">154</span> <span class="hljs-comment">/* No need to ref/unref .mr, the FlatRange keeps it alive.  */</span>
+<span class="hljs-number">155</span> <span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MEMORY_LISTENER_UPDATE_REGION(fr, as, dir, callback, _args...)  \
+156     do {                                                                \
+157         MemoryRegionSection mrs = section_from_flat_range(fr,           \
+158                 address_space_to_flatview(as));                         \
+159         MEMORY_LISTENER_CALL(as, callback, dir, &amp;mrs, ##_args);         \
+160     } while(0)</span>
+<span class="hljs-number">161</span>
+memory.c
+</code></pre>
+<p>Since KVM memory listener has been registered before, so the kvm callback is executed:</p>
+<pre><code class="lang-c">1152 void kvm_memory_listener_register(KVMState *s, KVMMemoryListener *kml,
+1153                                   AddressSpace *as, int as_id)
+1154 {
+1155     int i;
+1156
+1157     qemu_mutex_init(&amp;kml-&gt;slots_lock);
+1158     kml-&gt;slots = g_malloc0(s-&gt;nr_slots * sizeof(KVMSlot));
+1159     kml-&gt;as_id = as_id;
+1160
+1161     for (i = 0; i &lt; s-&gt;nr_slots; i++) {
+1162         kml-&gt;slots[i].slot = i;
+1163     }
+1164
+1165     kml-&gt;listener.region_add = kvm_region_add;
+1166     kml-&gt;listener.region_del = kvm_region_del;
+1167     kml-&gt;listener.log_start = kvm_log_start;
+1168     kml-&gt;listener.log_stop = kvm_log_stop;
+1169     kml-&gt;listener.log_sync = kvm_log_sync;
+1170     kml-&gt;listener.log_clear = kvm_log_clear;
+1171     kml-&gt;listener.priority = 10;
+1172
+1173     memory_listener_register(&amp;kml-&gt;listener, as);
+1174
+1175     for (i = 0; i &lt; s-&gt;nr_as; ++i) {
+1176         if (!s-&gt;as[i].as) {
+1177             s-&gt;as[i].as = as;
+1178             s-&gt;as[i].ml = kml;
+1179             break;
+1180         }
+1181     }
+1182 }
+...
+1031 static void kvm_region_add(MemoryListener *listener,
+1032                            MemoryRegionSection *section)
+1033 {
+1034     KVMMemoryListener *kml = container_of(listener, KVMMemoryListener, listener);
+1035
+1036     memory_region_ref(section-&gt;mr);
+1037     kvm_set_phys_mem(kml, section, true);
+1038 }
+...
+
+accel/kvm/kvm-all.c
+</code></pre>
+<pre><code class="lang-c"><span class="hljs-number">959</span> <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">kvm_set_phys_mem</span><span class="hljs-params">(KVMMemoryListener *kml,
+<span class="hljs-number">960</span>                              MemoryRegionSection *section, <span class="hljs-keyword">bool</span> add)</span>
+961 </span>{
+<span class="hljs-number">962</span>     KVMSlot *mem;
+<span class="hljs-number">963</span>     <span class="hljs-keyword">int</span> err;
+<span class="hljs-number">964</span>     MemoryRegion *mr = section-&gt;mr;
+<span class="hljs-number">965</span>     <span class="hljs-keyword">bool</span> writeable = !mr-&gt;readonly &amp;&amp; !mr-&gt;rom_device;
+<span class="hljs-number">966</span>     hwaddr start_addr, size;
+...
+<span class="hljs-number">990</span>     <span class="hljs-keyword">if</span> (!add) {
+<span class="hljs-number">991</span>         mem = kvm_lookup_matching_slot(kml, start_addr, size);
+<span class="hljs-number">992</span>         <span class="hljs-keyword">if</span> (!mem) {
+<span class="hljs-number">993</span>             <span class="hljs-keyword">goto</span> out;
+<span class="hljs-number">994</span>         }
+<span class="hljs-number">995</span>         <span class="hljs-keyword">if</span> (mem-&gt;flags &amp; KVM_MEM_LOG_DIRTY_PAGES) {
+<span class="hljs-number">996</span>             kvm_physical_sync_dirty_bitmap(kml, section);
+<span class="hljs-number">997</span>         }
+<span class="hljs-number">998</span>
+<span class="hljs-number">999</span>         <span class="hljs-comment">/* unregister the slot */</span>
+<span class="hljs-number">1000</span>         g_free(mem-&gt;dirty_bmap);
+<span class="hljs-number">1001</span>         mem-&gt;dirty_bmap = <span class="hljs-literal">NULL</span>;
+<span class="hljs-number">1002</span>         mem-&gt;memory_size = <span class="hljs-number">0</span>;
+<span class="hljs-number">1003</span>         mem-&gt;flags = <span class="hljs-number">0</span>;
+<span class="hljs-number">1004</span>         err = kvm_set_user_memory_region(kml, mem, <span class="hljs-literal">false</span>);
+<span class="hljs-number">1005</span>         <span class="hljs-keyword">if</span> (err) {
+<span class="hljs-number">1006</span>             <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;%s: error unregistering slot: %s\n&quot;</span>,
+<span class="hljs-number">1007</span>                     __func__, strerror(-err));
+<span class="hljs-number">1008</span>             <span class="hljs-built_in">abort</span>();
+<span class="hljs-number">1009</span>         }
+<span class="hljs-number">1010</span>         <span class="hljs-keyword">goto</span> out;
+<span class="hljs-number">1011</span>     }
+<span class="hljs-number">1012</span>
+<span class="hljs-number">1013</span>     <span class="hljs-comment">/* register the new slot */</span>
+<span class="hljs-number">1014</span>     mem = kvm_alloc_slot(kml);
+<span class="hljs-number">1015</span>     mem-&gt;memory_size = size;
+<span class="hljs-number">1016</span>     mem-&gt;start_addr = start_addr;
+<span class="hljs-number">1017</span>     mem-&gt;ram = ram;
+<span class="hljs-number">1018</span>     mem-&gt;flags = kvm_mem_flags(mr);
+<span class="hljs-number">1019</span>
+<span class="hljs-number">1020</span>     err = kvm_set_user_memory_region(kml, mem, <span class="hljs-literal">true</span>);
+<span class="hljs-number">1021</span>     <span class="hljs-keyword">if</span> (err) {
+<span class="hljs-number">1022</span>         <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;%s: error registering slot: %s\n&quot;</span>, __func__,
+<span class="hljs-number">1023</span>                 strerror(-err));
+<span class="hljs-number">1024</span>         <span class="hljs-built_in">abort</span>();
+<span class="hljs-number">1025</span>     }
+accel/kvm/kvm-all.c
+</code></pre>
+<p>Below is the real KVM ioctl</p>
+<pre><code class="lang-c"><span class="hljs-number">283</span> <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> <span class="hljs-title">kvm_set_user_memory_region</span><span class="hljs-params">(KVMMemoryListener *kml, KVMSlot *slot, <span class="hljs-keyword">bool</span> new)</span>
+284 </span>{
+<span class="hljs-number">285</span>     KVMState *s = kvm_state;
+<span class="hljs-number">286</span>     <span class="hljs-keyword">struct</span> kvm_userspace_memory_region mem;
+<span class="hljs-number">287</span>     <span class="hljs-keyword">int</span> ret;
+<span class="hljs-number">288</span>
+<span class="hljs-number">289</span>     mem.slot = slot-&gt;slot | (kml-&gt;as_id &lt;&lt; <span class="hljs-number">16</span>);
+<span class="hljs-number">290</span>     mem.guest_phys_addr = slot-&gt;start_addr;
+<span class="hljs-number">291</span>     mem.userspace_addr = (<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>)slot-&gt;ram;
+<span class="hljs-number">292</span>     mem.flags = slot-&gt;flags;
+<span class="hljs-number">293</span>
+<span class="hljs-number">294</span>     <span class="hljs-keyword">if</span> (slot-&gt;memory_size &amp;&amp; !<span class="hljs-keyword">new</span> &amp;&amp; (mem.flags ^ slot-&gt;old_flags) &amp; KVM_MEM_READONLY) {
+<span class="hljs-number">295</span>         <span class="hljs-comment">/* Set the slot size to 0 before setting the slot to the desired
+296          * value. This is needed based on KVM commit 75d61fbc. */</span>
+<span class="hljs-number">297</span>         mem.memory_size = <span class="hljs-number">0</span>;
+<span class="hljs-number">298</span>         kvm_vm_ioctl(s, KVM_SET_USER_MEMORY_REGION, &amp;mem);
+<span class="hljs-number">299</span>     }
+<span class="hljs-number">300</span>     mem.memory_size = slot-&gt;memory_size;
+<span class="hljs-number">301</span>     ret = kvm_vm_ioctl(s, KVM_SET_USER_MEMORY_REGION, &amp;mem);
+<span class="hljs-number">302</span>     slot-&gt;old_flags = mem.flags;
+<span class="hljs-number">303</span>     trace_kvm_set_user_memory(mem.slot, mem.flags, mem.guest_phys_addr,
+<span class="hljs-number">304</span>                               mem.memory_size, mem.userspace_addr, ret);
+<span class="hljs-number">305</span>     <span class="hljs-keyword">return</span> ret;
+<span class="hljs-number">306</span> }
+accel/kvm/kvm-all.c
+</code></pre>
+<p><img src="../images/How_qemu_kvm_manage_mem_part1_01.png" alt="How_qemu_kvm_manage_mem_part1_01"></p>
+<h1 id="4-system-ram-runtime-page-table-setup">4. system ram runtime page table setup</h1>
+<p>When the ram is commited to KVM, the page table is not setup and the real page frame is not allocated. Page table will only be setup when needed, this is called on-demand paging. So when Guest OS is trying to access some page table which is not setup yet. EPT violation/misconfiguration will be triggered and kernel will try to fix it if possible.</p>
+<p>Note that, this EPT violation/misconfiguration is only valid for the CPU enable paging. because VT-x requires the VMX non-root code to run with paging enabled, which precludes hardware virtualization of real-mode code and non-paged protected-mode software. For virtualizaion udner real-mode, virtual 8086 mode is used for Intel platform.</p>
+<pre><code class="lang-c"><span class="hljs-number">5284</span> <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> <span class="hljs-title">handle_ept_violation</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> kvm_vcpu *vcpu)</span>
+5285 </span>{
+<span class="hljs-number">5286</span> &#x25B8;       <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> exit_qualification;
+<span class="hljs-number">5287</span> &#x25B8;       <span class="hljs-keyword">gpa_t</span> gpa;
+...
+<span class="hljs-number">5337</span> &#x25B8;       <span class="hljs-keyword">return</span> kvm_mmu_page_fault(vcpu, gpa, error_code, <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>);
+<span class="hljs-number">5338</span> }
+arch/x86/kvm/vmx/vmx.c
+</code></pre>
+<pre><code class="lang-c"><span class="hljs-number">5057</span> <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">kvm_mmu_page_fault</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 error_code,
+<span class="hljs-number">5058</span> &#x25B8;       &#x25B8;              <span class="hljs-keyword">void</span> *insn, <span class="hljs-keyword">int</span> insn_len)</span>
+5059 </span>{
+<span class="hljs-number">5060</span> &#x25B8;       <span class="hljs-keyword">int</span> r, emulation_type = EMULTYPE_PF;
+<span class="hljs-number">5061</span> &#x25B8;       <span class="hljs-keyword">bool</span> direct = vcpu-&gt;arch.mmu-&gt;direct_map;
+<span class="hljs-number">5062</span>
+<span class="hljs-number">5063</span> &#x25B8;       <span class="hljs-keyword">if</span> (WARN_ON(!VALID_PAGE(vcpu-&gt;arch.mmu-&gt;root_hpa)))
+<span class="hljs-number">5064</span> &#x25B8;       &#x25B8;       <span class="hljs-keyword">return</span> RET_PF_RETRY;
+<span class="hljs-number">5065</span>
+<span class="hljs-number">5066</span> &#x25B8;       r = RET_PF_INVALID;
+<span class="hljs-number">5067</span> &#x25B8;       <span class="hljs-keyword">if</span> (unlikely(error_code &amp; PFERR_RSVD_MASK)) {
+<span class="hljs-number">5068</span> &#x25B8;       &#x25B8;       r = handle_mmio_page_fault(vcpu, cr2_or_gpa, direct);
+<span class="hljs-number">5069</span> &#x25B8;       &#x25B8;       <span class="hljs-keyword">if</span> (r == RET_PF_EMULATE)
+<span class="hljs-number">5070</span> &#x25B8;       &#x25B8;       &#x25B8;       <span class="hljs-keyword">goto</span> emulate;
+<span class="hljs-number">5071</span> &#x25B8;       }
+<span class="hljs-number">5072</span>
+<span class="hljs-number">5073</span> &#x25B8;       <span class="hljs-keyword">if</span> (r == RET_PF_INVALID) {
+<span class="hljs-number">5074</span> &#x25B8;       &#x25B8;       r = kvm_mmu_do_page_fault(vcpu, cr2_or_gpa,
+<span class="hljs-number">5075</span> &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;         lower_32_bits(error_code), <span class="hljs-literal">false</span>);
+<span class="hljs-number">5076</span> &#x25B8;       &#x25B8;       <span class="hljs-keyword">if</span> (WARN_ON_ONCE(r == RET_PF_INVALID))
+<span class="hljs-number">5077</span> &#x25B8;       &#x25B8;       &#x25B8;       <span class="hljs-keyword">return</span> -EIO;
+<span class="hljs-number">5078</span> &#x25B8;       }
+arch/x86/kvm/mmu/mmu.c
+</code></pre>
+<pre><code class="lang-c"><span class="hljs-number">112</span> <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">inline</span> <span class="hljs-keyword">int</span> <span class="hljs-title">kvm_mmu_do_page_fault</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+<span class="hljs-number">113</span> &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;       u32 err, <span class="hljs-keyword">bool</span> prefault)</span>
+114 </span>{
+<span class="hljs-number">115</span> <span class="hljs-meta">#<span class="hljs-meta-keyword">ifdef</span> CONFIG_RETPOLINE</span>
+<span class="hljs-number">116</span> &#x25B8;       <span class="hljs-keyword">if</span> (likely(vcpu-&gt;arch.mmu-&gt;page_fault == kvm_tdp_page_fault))
+<span class="hljs-number">117</span> &#x25B8;       &#x25B8;       <span class="hljs-keyword">return</span> kvm_tdp_page_fault(vcpu, cr2_or_gpa, err, prefault);
+<span class="hljs-number">118</span> <span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span></span>
+<span class="hljs-number">119</span> &#x25B8;       <span class="hljs-keyword">return</span> vcpu-&gt;arch.mmu-&gt;page_fault(vcpu, cr2_or_gpa, err, prefault);
+<span class="hljs-number">120</span> }
+arch/x86/kvm/mmu.h
+</code></pre>
+<pre><code class="lang-c"><span class="hljs-number">4496</span> <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">init_kvm_tdp_mmu</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> kvm_vcpu *vcpu)</span>
+4497 </span>{
+<span class="hljs-number">4498</span> &#x25B8;       <span class="hljs-keyword">struct</span> kvm_mmu *context = &amp;vcpu-&gt;arch.root_mmu;
+<span class="hljs-number">4499</span> &#x25B8;       <span class="hljs-keyword">union</span> kvm_mmu_role new_role =
+<span class="hljs-number">4500</span> &#x25B8;       &#x25B8;       kvm_calc_tdp_mmu_root_page_role(vcpu, <span class="hljs-literal">false</span>);
+<span class="hljs-number">4501</span>
+<span class="hljs-number">4502</span> &#x25B8;       <span class="hljs-keyword">if</span> (new_role.as_u64 == context-&gt;mmu_role.as_u64)
+<span class="hljs-number">4503</span> &#x25B8;       &#x25B8;       <span class="hljs-keyword">return</span>;
+<span class="hljs-number">4504</span>
+<span class="hljs-number">4505</span> &#x25B8;       context-&gt;mmu_role.as_u64 = new_role.as_u64;
+<span class="hljs-number">4506</span> &#x25B8;       context-&gt;page_fault = kvm_tdp_page_fault;
+<span class="hljs-number">4507</span> &#x25B8;       context-&gt;sync_page = nonpaging_sync_page;
+...
+<span class="hljs-number">3790</span> <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">kvm_tdp_page_fault</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> kvm_vcpu *vcpu, gpa_t gpa, u32 error_code,
+<span class="hljs-number">3791</span> &#x25B8;       &#x25B8;              <span class="hljs-keyword">bool</span> prefault)</span>
+3792 </span>{
+<span class="hljs-number">3793</span> &#x25B8;       <span class="hljs-keyword">int</span> max_level;
+...
+<span class="hljs-number">3804</span>
+<span class="hljs-number">3805</span> &#x25B8;       <span class="hljs-keyword">return</span> direct_page_fault(vcpu, gpa, error_code, prefault,
+<span class="hljs-number">3806</span> &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;        max_level, <span class="hljs-literal">true</span>);
+<span class="hljs-number">3807</span> }
+
+arch/x86/kvm/mmu/mmu.c
+</code></pre>
+<pre><code class="lang-c"><span class="hljs-number">3693</span> <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> <span class="hljs-title">direct_page_fault</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> kvm_vcpu *vcpu, gpa_t gpa, u32 error_code,
+<span class="hljs-number">3694</span> &#x25B8;       &#x25B8;       &#x25B8;            <span class="hljs-keyword">bool</span> prefault, <span class="hljs-keyword">int</span> max_level, <span class="hljs-keyword">bool</span> is_tdp)</span>
+3695 </span>{
+<span class="hljs-number">3696</span> &#x25B8;       <span class="hljs-keyword">bool</span> write = error_code &amp; PFERR_WRITE_MASK;
+<span class="hljs-number">3697</span> &#x25B8;       <span class="hljs-keyword">bool</span> map_writable;
+...
+<span class="hljs-number">3720</span> &#x25B8;       <span class="hljs-keyword">if</span> (try_async_pf(vcpu, prefault, gfn, gpa, &amp;pfn, write, &amp;map_writable))
+<span class="hljs-number">3721</span> &#x25B8;       &#x25B8;       <span class="hljs-keyword">return</span> RET_PF_RETRY;
+...
+<span class="hljs-comment">/* comments: once we get the pfn, just call mapping function to build the EPT page table*/</span>
+<span class="hljs-number">3734</span> &#x25B8;       <span class="hljs-keyword">if</span> (is_tdp_mmu_root(vcpu-&gt;kvm, vcpu-&gt;arch.mmu-&gt;root_hpa))
+<span class="hljs-number">3735</span> &#x25B8;       &#x25B8;       r = kvm_tdp_mmu_map(vcpu, gpa, error_code, map_writable, max_level,
+<span class="hljs-number">3736</span> &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;           pfn, prefault);
+<span class="hljs-number">3737</span> &#x25B8;       <span class="hljs-keyword">else</span>
+<span class="hljs-number">3738</span> &#x25B8;       &#x25B8;       r = __direct_map(vcpu, gpa, error_code, map_writable, max_level, pfn,
+<span class="hljs-number">3739</span> &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;        prefault, is_tdp);
+arch/x86/kvm/mmu/mmu.c
+</code></pre>
+<p>try_async_pf() is trying to get the gpa mapped HPA(pfn):</p>
+<p>if it is already mapped, then just fetch it. If it is not mapped, then build this mapping.</p>
+<pre><code class="lang-c"><span class="hljs-number">3660</span> <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">bool</span> <span class="hljs-title">try_async_pf</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> kvm_vcpu *vcpu, <span class="hljs-keyword">bool</span> prefault, gfn_t gfn,
+<span class="hljs-number">3661</span> &#x25B8;       &#x25B8;       &#x25B8;        gpa_t cr2_or_gpa, kvm_pfn_t *pfn, <span class="hljs-keyword">bool</span> write,
+<span class="hljs-number">3662</span> &#x25B8;       &#x25B8;       &#x25B8;        <span class="hljs-keyword">bool</span> *writable)</span>
+3663 </span>{
+...
+<span class="hljs-number">3673</span>
+<span class="hljs-number">3674</span> &#x25B8;       async = <span class="hljs-literal">false</span>;
+<span class="hljs-number">3675</span> &#x25B8;       *pfn = __gfn_to_pfn_memslot(slot, gfn, <span class="hljs-literal">false</span>, &amp;async, write, writable);
+<span class="hljs-number">3676</span> &#x25B8;       <span class="hljs-keyword">if</span> (!async)
+<span class="hljs-number">3677</span> &#x25B8;       &#x25B8;       <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>; <span class="hljs-comment">/* *pfn has correct page already */</span>
+<span class="hljs-number">3678</span>
+...
+<span class="hljs-number">3689</span> &#x25B8;       *pfn = __gfn_to_pfn_memslot(slot, gfn, <span class="hljs-literal">false</span>, <span class="hljs-literal">NULL</span>, write, writable);
+<span class="hljs-number">3690</span> &#x25B8;       <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+<span class="hljs-number">3691</span> }
+arch/x86/kvm/mmu/mmu.c
+</code></pre>
+<p>give gfn and return pfn</p>
+<pre><code class="lang-c"><span class="hljs-number">2012</span> <span class="hljs-keyword">kvm_pfn_t</span> __gfn_to_pfn_memslot(<span class="hljs-keyword">struct</span> kvm_memory_slot *slot, <span class="hljs-keyword">gfn_t</span> gfn,
+<span class="hljs-number">2013</span> &#x25B8;       &#x25B8;       &#x25B8;              <span class="hljs-keyword">bool</span> atomic, <span class="hljs-keyword">bool</span> *async, <span class="hljs-keyword">bool</span> write_fault,
+<span class="hljs-number">2014</span> &#x25B8;       &#x25B8;       &#x25B8;              <span class="hljs-keyword">bool</span> *writable)
+<span class="hljs-number">2015</span> {
+<span class="hljs-number">2016</span> &#x25B8;       <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> addr = __gfn_to_hva_many(slot, gfn, <span class="hljs-literal">NULL</span>, write_fault);
+...
+
+<span class="hljs-number">2036</span> &#x25B8;       <span class="hljs-keyword">return</span> hva_to_pfn(addr, atomic, async, write_fault,
+<span class="hljs-number">2037</span> &#x25B8;       &#x25B8;       &#x25B8;         writable);
+<span class="hljs-number">2038</span> }
+...
+<span class="hljs-number">1741</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> __gfn_to_hva_many(<span class="hljs-keyword">struct</span> kvm_memory_slot *slot, <span class="hljs-keyword">gfn_t</span> gfn,
+<span class="hljs-number">1742</span> &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;              <span class="hljs-keyword">gfn_t</span> *nr_pages, <span class="hljs-keyword">bool</span> write)
+<span class="hljs-number">1743</span> {
+...
+<span class="hljs-number">1753</span> &#x25B8;       <span class="hljs-keyword">return</span> __gfn_to_hva_memslot(slot, gfn);
+<span class="hljs-number">1754</span> }
+
+virt/kvm/kvm_main.c
+</code></pre>
+<pre><code class="lang-c"><span class="hljs-number">1111</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">inline</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>
+<span class="hljs-number">1112</span> __gfn_to_hva_memslot(<span class="hljs-keyword">struct</span> kvm_memory_slot *slot, <span class="hljs-keyword">gfn_t</span> gfn)
+<span class="hljs-number">1113</span> {
+<span class="hljs-number">1114</span> &#x25B8;       <span class="hljs-keyword">return</span> slot-&gt;userspace_addr + (gfn - slot-&gt;base_gfn) * PAGE_SIZE;
+<span class="hljs-number">1115</span> }
+<span class="hljs-number">1116</span>
+include/linux/kvm_host.h
+</code></pre>
+<p>below hva_to_pfn is the key function to deal with the page table setup:</p>
+<pre><code class="lang-c"><span class="hljs-number">1964</span> <span class="hljs-function"><span class="hljs-keyword">static</span> kvm_pfn_t <span class="hljs-title">hva_to_pfn</span><span class="hljs-params">(<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> addr, <span class="hljs-keyword">bool</span> atomic, <span class="hljs-keyword">bool</span> *async,
+<span class="hljs-number">1965</span> &#x25B8;       &#x25B8;       &#x25B8;       <span class="hljs-keyword">bool</span> write_fault, <span class="hljs-keyword">bool</span> *writable)</span>
+1966 </span>{
+<span class="hljs-number">1967</span> &#x25B8;       <span class="hljs-keyword">struct</span> vm_area_struct *vma;
+<span class="hljs-number">1968</span> &#x25B8;       <span class="hljs-keyword">kvm_pfn_t</span> pfn = <span class="hljs-number">0</span>;
+<span class="hljs-number">1969</span> &#x25B8;       <span class="hljs-keyword">int</span> npages, r;
+<span class="hljs-number">1970</span>
+<span class="hljs-number">1971</span> &#x25B8;       <span class="hljs-comment">/* we can do it either atomically or asynchronously, not both */</span>
+<span class="hljs-number">1972</span> &#x25B8;       BUG_ON(atomic &amp;&amp; async);
+<span class="hljs-number">1973</span>
+<span class="hljs-number">1974</span> &#x25B8;       <span class="hljs-keyword">if</span> (hva_to_pfn_fast(addr, write_fault, writable, &amp;pfn))
+<span class="hljs-number">1975</span> &#x25B8;       &#x25B8;       <span class="hljs-keyword">return</span> pfn;
+<span class="hljs-number">1976</span>
+<span class="hljs-number">1977</span> &#x25B8;       <span class="hljs-keyword">if</span> (atomic)
+<span class="hljs-number">1978</span> &#x25B8;       &#x25B8;       <span class="hljs-keyword">return</span> KVM_PFN_ERR_FAULT;
+<span class="hljs-number">1979</span>
+<span class="hljs-number">1980</span> &#x25B8;       npages = hva_to_pfn_slow(addr, async, write_fault, writable, &amp;pfn);
+<span class="hljs-number">1981</span> &#x25B8;       <span class="hljs-keyword">if</span> (npages == <span class="hljs-number">1</span>)
+<span class="hljs-number">1982</span> &#x25B8;       &#x25B8;       <span class="hljs-keyword">return</span> pfn;
+...
+<span class="hljs-number">1991</span> retry:
+<span class="hljs-number">1992</span> &#x25B8;       vma = find_vma_intersection(current-&gt;mm, addr, addr + <span class="hljs-number">1</span>);
+<span class="hljs-number">1993</span>
+<span class="hljs-number">1994</span> &#x25B8;       <span class="hljs-keyword">if</span> (vma == <span class="hljs-literal">NULL</span>)
+<span class="hljs-number">1995</span> &#x25B8;       &#x25B8;       pfn = KVM_PFN_ERR_FAULT;
+<span class="hljs-number">1996</span> &#x25B8;       <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (vma-&gt;vm_flags &amp; (VM_IO | VM_PFNMAP)) {
+<span class="hljs-number">1997</span> &#x25B8;       &#x25B8;       r = hva_to_pfn_remapped(vma, addr, async, write_fault, writable, &amp;pfn);
+...
+<span class="hljs-number">2010</span> }
+</code></pre>
+<p>if hva_to_pfn_slow return successfully, the page table in host process context is already setup before.</p>
+<pre><code class="lang-c"><span class="hljs-number">1855</span> <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> <span class="hljs-title">hva_to_pfn_slow</span><span class="hljs-params">(<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> addr, <span class="hljs-keyword">bool</span> *async, <span class="hljs-keyword">bool</span> write_fault,
+<span class="hljs-number">1856</span> &#x25B8;       &#x25B8;       &#x25B8;          <span class="hljs-keyword">bool</span> *writable, kvm_pfn_t *pfn)</span>
+1857 </span>{
+...
+<span class="hljs-number">1872</span> &#x25B8;       npages = get_user_pages_unlocked(addr, <span class="hljs-number">1</span>, &amp;page, flags);
+virt/kvm/kvm_main.c
+</code></pre>
+<pre><code class="lang-c"><span class="hljs-number">1921</span> <span class="hljs-function"><span class="hljs-keyword">long</span> <span class="hljs-title">get_user_pages_unlocked</span><span class="hljs-params">(<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> start, <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> nr_pages,
+<span class="hljs-number">1922</span> &#x25B8;       &#x25B8;       &#x25B8;            <span class="hljs-keyword">struct</span> page **pages, <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> gup_flags)</span>
+1923 </span>{
+...
+<span class="hljs-number">1938</span> &#x25B8;       ret = __get_user_pages_locked(mm, start, nr_pages, pages, <span class="hljs-literal">NULL</span>,
+<span class="hljs-number">1939</span> &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;             &amp;locked, gup_flags | FOLL_TOUCH);
+...
+
+<span class="hljs-number">1216</span> <span class="hljs-comment">/*
+1217  * Please note that this function, unlike __get_user_pages will not
+1218  * return 0 for nr_pages &gt; 0 without FOLL_NOWAIT
+1219  */</span>
+<span class="hljs-number">1220</span> <span class="hljs-keyword">static</span> __always_inline <span class="hljs-keyword">long</span> __get_user_pages_locked(<span class="hljs-keyword">struct</span> mm_struct *mm,
+<span class="hljs-number">1221</span> &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;       <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> start,
+<span class="hljs-number">1222</span> &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;       <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> nr_pages,
+<span class="hljs-number">1223</span> &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;       <span class="hljs-keyword">struct</span> page **pages,
+<span class="hljs-number">1224</span> &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;       <span class="hljs-keyword">struct</span> vm_area_struct **vmas,
+<span class="hljs-number">1225</span> &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;       <span class="hljs-keyword">int</span> *locked,
+<span class="hljs-number">1226</span> &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;       <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> flags)
+<span class="hljs-number">1227</span> {
+...
+<span class="hljs-number">1255</span> &#x25B8;       <span class="hljs-keyword">for</span> (;;) {
+<span class="hljs-number">1256</span> &#x25B8;       &#x25B8;       ret = __get_user_pages(mm, start, nr_pages, flags, pages,
+<span class="hljs-number">1257</span> &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;              vmas, locked);
+...
+<span class="hljs-number">930</span> <span class="hljs-comment">/**
+931  * __get_user_pages() - pin user pages in memory
+932  * @mm:&#x25B8;&#x25B8;       mm_struct of target mm
+933  * @start:&#x25B8;     starting user address
+934  * @nr_pages:&#x25B8;  number of pages from start to pin
+935  * @gup_flags:&#x25B8; flags modifying pin behaviour
+936  * @pages:&#x25B8;     array that receives pointers to the pages pinned.
+937  *&#x25B8;     &#x25B8;       Should be at least nr_pages long. Or NULL, if caller
+938  *&#x25B8;     &#x25B8;       only intends to ensure the pages are faulted in.
+939  * @vmas:&#x25B8;      array of pointers to vmas corresponding to each page.
+940  *&#x25B8;     &#x25B8;       Or NULL if the caller does not require them.
+941  * @locked:     whether we&apos;re still with the mmap_lock held
+*/</span>
+...
+<span class="hljs-number">990</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">long</span> __get_user_pages(<span class="hljs-keyword">struct</span> mm_struct *mm,
+<span class="hljs-number">991</span> &#x25B8;       &#x25B8;       <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> start, <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> nr_pages,
+<span class="hljs-number">992</span> &#x25B8;       &#x25B8;       <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> gup_flags, <span class="hljs-keyword">struct</span> page **pages,
+<span class="hljs-number">993</span> &#x25B8;       &#x25B8;       <span class="hljs-keyword">struct</span> vm_area_struct **vmas, <span class="hljs-keyword">int</span> *locked)
+
+mm/gup.c
+</code></pre>
+<p>__get_user_pages may get the hva page structure but also pin the user pages.</p>
+<p>If we failed to find the HVA page table, then we need to map them in hva_to_pfn() by hva_to_pfn_remapped()</p>
+<pre><code class="lang-c"><span class="hljs-number">1901</span> <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> <span class="hljs-title">hva_to_pfn_remapped</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> vm_area_struct *vma,
+<span class="hljs-number">1902</span> &#x25B8;       &#x25B8;       &#x25B8;              <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> addr, <span class="hljs-keyword">bool</span> *async,
+<span class="hljs-number">1903</span> &#x25B8;       &#x25B8;       &#x25B8;              <span class="hljs-keyword">bool</span> write_fault, <span class="hljs-keyword">bool</span> *writable,
+<span class="hljs-number">1904</span> &#x25B8;       &#x25B8;       &#x25B8;              kvm_pfn_t *p_pfn)</span>
+1905 </span>{
+<span class="hljs-number">1906</span> &#x25B8;       <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> pfn;
+<span class="hljs-number">1907</span> &#x25B8;       <span class="hljs-keyword">int</span> r;
+<span class="hljs-number">1908</span>
+<span class="hljs-number">1909</span> &#x25B8;       r = follow_pfn(vma, addr, &amp;pfn);
+<span class="hljs-number">1910</span> &#x25B8;       <span class="hljs-keyword">if</span> (r) {
+<span class="hljs-number">1911</span> &#x25B8;       &#x25B8;       <span class="hljs-comment">/*
+1912 &#x25B8;       &#x25B8;        * get_user_pages fails for VM_IO and VM_PFNMAP vmas and does
+1913 &#x25B8;       &#x25B8;        * not call the fault handler, so do it here.
+1914 &#x25B8;       &#x25B8;        */</span>
+<span class="hljs-number">1915</span> &#x25B8;       &#x25B8;       <span class="hljs-keyword">bool</span> unlocked = <span class="hljs-literal">false</span>;
+<span class="hljs-number">1916</span> &#x25B8;       &#x25B8;       r = fixup_user_fault(current-&gt;mm, addr,
+<span class="hljs-number">1917</span> &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;            (write_fault ? FAULT_FLAG_WRITE : <span class="hljs-number">0</span>),
+<span class="hljs-number">1918</span> &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;            &amp;unlocked);
+virt/kvm/kvm_main.c
+</code></pre>
+<pre><code class="lang-c"><span class="hljs-number">1171</span> <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">fixup_user_fault</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> mm_struct *mm,
+<span class="hljs-number">1172</span> &#x25B8;       &#x25B8;            <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> address, <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> fault_flags,
+<span class="hljs-number">1173</span> &#x25B8;       &#x25B8;            <span class="hljs-keyword">bool</span> *unlocked)</span>
+1174 </span>{
+...
+<span class="hljs-number">1195</span> &#x25B8;       ret = handle_mm_fault(vma, address, fault_flags, <span class="hljs-literal">NULL</span>);
+mm/gup.c
+</code></pre>
+<pre><code>4592 vm_fault_t handle_mm_fault(struct vm_area_struct *vma, unsigned long address,
+4593 &#x25B8;       &#x25B8;       &#x25B8;          unsigned int flags, struct pt_regs *regs)
+4594 {
+4595 &#x25B8;       vm_fault_t ret;
+...
+4619 &#x25B8;       else
+4620 &#x25B8;       &#x25B8;       ret = __handle_mm_fault(vma, address, flags);
+4621
+...
+</code></pre><pre><code class="lang-c"><span class="hljs-number">4430</span> <span class="hljs-comment">/*
+4431  * By the time we get here, we already hold the mm semaphore
+4432  *
+4433  * The mmap_lock may have been released depending on flags and our
+4434  * return value.  See filemap_fault() and __lock_page_or_retry().
+4435  */</span>
+<span class="hljs-number">4436</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">vm_fault_t</span> __handle_mm_fault(<span class="hljs-keyword">struct</span> vm_area_struct *vma,
+<span class="hljs-number">4437</span> &#x25B8;       &#x25B8;       <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> address, <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> flags)
+<span class="hljs-number">4438</span> {
+
+<span class="hljs-number">4452</span> &#x25B8;       pgd = pgd_offset(mm, address);
+<span class="hljs-number">4453</span> &#x25B8;       p4d = p4d_alloc(mm, pgd, address);
+...
+<span class="hljs-number">4457</span> &#x25B8;       vmf.pud = pud_alloc(mm, p4d, address);
+...
+
+<span class="hljs-number">4484</span> &#x25B8;       vmf.pmd = pmd_alloc(mm, vmf.pud, address);
+...
+<span class="hljs-number">4522</span> &#x25B8;       <span class="hljs-keyword">return</span> handle_pte_fault(&amp;vmf);
+<span class="hljs-number">4523</span> }
+
+...
+<span class="hljs-number">4343</span> <span class="hljs-function"><span class="hljs-keyword">static</span> vm_fault_t <span class="hljs-title">handle_pte_fault</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> vm_fault *vmf)</span>
+4344 </span>{
+<span class="hljs-number">4345</span> &#x25B8;       <span class="hljs-keyword">pte_t</span> entry;
+<span class="hljs-number">4346</span>
+<span class="hljs-number">4347</span> &#x25B8;       <span class="hljs-keyword">if</span> (unlikely(pmd_none(*vmf-&gt;pmd))) {
+...
+<span class="hljs-number">4383</span> &#x25B8;       <span class="hljs-keyword">if</span> (!vmf-&gt;pte) {
+<span class="hljs-number">4384</span> &#x25B8;       &#x25B8;       <span class="hljs-keyword">if</span> (vma_is_anonymous(vmf-&gt;vma))
+<span class="hljs-number">4385</span> &#x25B8;       &#x25B8;       &#x25B8;       <span class="hljs-keyword">return</span> do_anonymous_page(vmf);
+<span class="hljs-number">4386</span> &#x25B8;       &#x25B8;       <span class="hljs-keyword">else</span>
+<span class="hljs-number">4387</span> &#x25B8;       &#x25B8;       &#x25B8;       <span class="hljs-keyword">return</span> do_fault(vmf);
+<span class="hljs-number">4388</span> &#x25B8;       }
+<span class="hljs-number">4389</span>
+
+mm/memory.c
+</code></pre>
+<p>For the memory allocated by qemu/host process, it is anonymous mmap. Otherwise, this memory may be backed by fd(e.g. file backend or mmio backend)</p>
+<pre><code class="lang-c"><span class="hljs-number">3482</span> <span class="hljs-function"><span class="hljs-keyword">static</span> vm_fault_t <span class="hljs-title">do_anonymous_page</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> vm_fault *vmf)</span>
+3483 </span>{
+...
+<span class="hljs-number">3535</span> &#x25B8;       page = alloc_zeroed_user_highpage_movable(vma, vmf-&gt;address);
+<span class="hljs-number">3536</span> &#x25B8;       <span class="hljs-keyword">if</span> (!page)
+<span class="hljs-number">3537</span> &#x25B8;       &#x25B8;       <span class="hljs-keyword">goto</span> oom;
+...
+<span class="hljs-number">3576</span> setpte:
+<span class="hljs-number">3577</span> &#x25B8;       set_pte_at(vma-&gt;vm_mm, vmf-&gt;address, vmf-&gt;pte, entry);
+...
+mm/memory.c
+</code></pre>
+<p>Finally, we go to the place to allocate a real page frame by buddy system</p>
+<pre><code class="lang-c"><span class="hljs-number">193</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">inline</span> <span class="hljs-keyword">struct</span> page *
+<span class="hljs-number">194</span> alloc_zeroed_user_highpage_movable(<span class="hljs-keyword">struct</span> vm_area_struct *vma,
+<span class="hljs-number">195</span> &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;       &#x25B8;       <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> vaddr)
+<span class="hljs-number">196</span> {
+<span class="hljs-number">197</span> &#x25B8;       <span class="hljs-keyword">return</span> __alloc_zeroed_user_highpage(__GFP_MOVABLE, vma, vaddr);
+<span class="hljs-number">198</span> }
+include/linux/highmem.h
+...
+<span class="hljs-number">37</span> <span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> __alloc_zeroed_user_highpage(movableflags, vma, vaddr) \
+38 &#x25B8;       alloc_page_vma(GFP_HIGHUSER | __GFP_ZERO | movableflags, vma, vaddr)</span>
+arch/x86/include/<span class="hljs-keyword">asm</span>/page.h
+...
+<span class="hljs-number">565</span> <span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> alloc_page_vma(gfp_mask, vma, addr)&#x25B8;    &#x25B8;       &#x25B8;       \
+566 &#x25B8;       alloc_pages_vma(gfp_mask, 0, vma, addr, numa_node_id(), false)</span>
+include/linux/gfp.h
+</code></pre>
+<p>The whole sequence diagram is like below:</p>
+<p><img src="../images/How_qemu_kvm_manage_mem_part1_02.png" alt="How_qemu_kvm_manage_mem_part1_02"></p>
+<h1 id="5-reference">5. Reference</h1>
+<ul>
+<li><a href="https://docs.oracle.com/en/virtualization/virtualbox/6.0/admin/hwvirt-details.html" target="_blank">https://docs.oracle.com/en/virtualization/virtualbox/6.0/admin/hwvirt-details.html</a></li>
+<li><a href="https://www.cnblogs.com/practicer/articles/3013774.html" target="_blank">https://www.cnblogs.com/practicer/articles/3013774.html</a></li>
+<li><a href="https://abelsu7.top/2019/07/07/kvm-memory-virtualization/#1-%E5%86%85%E5%AD%98%E8%99%9A%E6%8B%9F%E5%8C%96%E6%A6%82%E8%BF%B0" target="_blank">https://abelsu7.top/2019/07/07/kvm-memory-virtualization/#1-%E5%86%85%E5%AD%98%E8%99%9A%E6%8B%9F%E5%8C%96%E6%A6%82%E8%BF%B0</a></li>
+<li><a href="https://blog.csdn.net/huang987246510/article/details/104650146" target="_blank">https://blog.csdn.net/huang987246510/article/details/104650146</a></li>
+<li><a href="https://www.codenong.com/cs106434119/" target="_blank">https://www.codenong.com/cs106434119/</a></li>
+<li><a href="https://royhunter.github.io/2014/06/18/KVM-EPT/" target="_blank">https://royhunter.github.io/2014/06/18/KVM-EPT/</a></li>
+<li><a href="https://www.codenong.com/cs106477291/" target="_blank">https://www.codenong.com/cs106477291/</a></li>
+</ul>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="./" class="navigation navigation-prev " aria-label="Previous page: Cloud">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="How_qemu_kvm_manage_mem_part2.html" class="navigation navigation-next " aria-label="Next page: How Qemu/KVM manage VM memory: Part2 mmio">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"typora-root-url":"..","title":"How Qemu/KVM manage VM memory: Part1 system ram","level":"1.2.1","depth":2,"next":{"title":"How Qemu/KVM manage VM memory: Part2 mmio","level":"1.2.2","depth":2,"path":"Cloud/How_qemu_kvm_manage_mem_part2.md","ref":"Cloud/How_qemu_kvm_manage_mem_part2.md","articles":[]},"previous":{"title":"Cloud","level":"1.2","depth":1,"path":"Cloud/README.md","ref":"Cloud/README.md","articles":[{"title":"How Qemu/KVM manage VM memory: Part1 system ram","level":"1.2.1","depth":2,"path":"Cloud/How_qemu_kvm_manage_mem_part1.md","ref":"Cloud/How_qemu_kvm_manage_mem_part1.md","articles":[]},{"title":"How Qemu/KVM manage VM memory: Part2 mmio","level":"1.2.2","depth":2,"path":"Cloud/How_qemu_kvm_manage_mem_part2.md","ref":"Cloud/How_qemu_kvm_manage_mem_part2.md","articles":[]},{"title":"Linux Macvlan and NIC offload","level":"1.2.3","depth":2,"path":"Cloud/linux_macvlan_and_nic_offload.md","ref":"Cloud/linux_macvlan_and_nic_offload.md","articles":[]},{"title":"Linux switchdev and DPDK port representor","level":"1.2.4","depth":2,"path":"Cloud/switchdev_and_port_representor.md","ref":"Cloud/switchdev_and_port_representor.md","articles":[]},{"title":"CPU memory order: Part1 summary","level":"1.2.5","depth":2,"path":"Cloud/cpu_memory_order_part1.md","ref":"Cloud/cpu_memory_order_part1.md","articles":[]},{"title":"CPU memory order: Part2 total store ordering ","level":"1.2.6","depth":2,"path":"Cloud/cpu_memory_order_part2.md","ref":"Cloud/cpu_memory_order_part2.md","articles":[]},{"title":"CPU memory order: Part3 weak memory ordering","level":"1.2.7","depth":2,"path":"Cloud/cpu_memory_order_part3.md","ref":"Cloud/cpu_memory_order_part3.md","articles":[]},{"title":"CPU memory order: Part4 memory barrier","level":"1.2.8","depth":2,"path":"Cloud/cpu_memory_order_part4.md","ref":"Cloud/cpu_memory_order_part4.md","articles":[]},{"title":"Stateless offload: USO and UFO","level":"1.2.9","depth":2,"path":"Cloud/Stateless_offload_uso_ufo.md","ref":"Cloud/Stateless_offload_uso_ufo.md","articles":[]},{"title":"Dump function call trace in linux kernel/user","level":"1.2.10","depth":2,"path":"Cloud/dump_function_call.md","ref":"Cloud/dump_function_call.md","articles":[]},{"title":"Lock Free Programming","level":"1.2.11","depth":2,"path":"Cloud/lock_free_programming.md","ref":"Cloud/lock_free_programming.md","articles":[]},{"title":"Meson build guide for local installed library","level":"1.2.12","depth":2,"path":"Cloud/meson_build_for_local_lib.md","ref":"Cloud/meson_build_for_local_lib.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"Cloud/How_qemu_kvm_manage_mem_part1.md","mtime":"2021-12-31T02:35:45.961Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-05-16T08:19:50.512Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

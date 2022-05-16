@@ -1,0 +1,524 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>CPU memory order: Part1 summary · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="cpu_memory_order_part2.html" />
+    
+    
+    <link rel="prev" href="switchdev_and_port_representor.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    About Me
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Cloud
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="How_qemu_kvm_manage_mem_part1.html">
+            
+                <a href="How_qemu_kvm_manage_mem_part1.html">
+            
+                    
+                    How Qemu/KVM manage VM memory: Part1 system ram
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="How_qemu_kvm_manage_mem_part2.html">
+            
+                <a href="How_qemu_kvm_manage_mem_part2.html">
+            
+                    
+                    How Qemu/KVM manage VM memory: Part2 mmio
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="linux_macvlan_and_nic_offload.html">
+            
+                <a href="linux_macvlan_and_nic_offload.html">
+            
+                    
+                    Linux Macvlan and NIC offload
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="switchdev_and_port_representor.html">
+            
+                <a href="switchdev_and_port_representor.html">
+            
+                    
+                    Linux switchdev and DPDK port representor
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2.5" data-path="cpu_memory_order_part1.html">
+            
+                <a href="cpu_memory_order_part1.html">
+            
+                    
+                    CPU memory order: Part1 summary
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6" data-path="cpu_memory_order_part2.html">
+            
+                <a href="cpu_memory_order_part2.html">
+            
+                    
+                    CPU memory order: Part2 total store ordering 
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7" data-path="cpu_memory_order_part3.html">
+            
+                <a href="cpu_memory_order_part3.html">
+            
+                    
+                    CPU memory order: Part3 weak memory ordering
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8" data-path="cpu_memory_order_part4.html">
+            
+                <a href="cpu_memory_order_part4.html">
+            
+                    
+                    CPU memory order: Part4 memory barrier
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9" data-path="Stateless_offload_uso_ufo.html">
+            
+                <a href="Stateless_offload_uso_ufo.html">
+            
+                    
+                    Stateless offload: USO and UFO
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.10" data-path="dump_function_call.html">
+            
+                <a href="dump_function_call.html">
+            
+                    
+                    Dump function call trace in linux kernel/user
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.11" data-path="lock_free_programming.html">
+            
+                <a href="lock_free_programming.html">
+            
+                    
+                    Lock Free Programming
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.12" data-path="meson_build_for_local_lib.html">
+            
+                <a href="meson_build_for_local_lib.html">
+            
+                    
+                    Meson build guide for local installed library
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../Archive/">
+            
+                <a href="../Archive/">
+            
+                    
+                    网易博客存档
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../Archive/fsl_imx6_ethernet_01.html">
+            
+                <a href="../Archive/fsl_imx6_ethernet_01.html">
+            
+                    
+                    Freescale i.MX6 Linux Ethernet Driver驱动源码分析01
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../Archive/fsl_imx6_ethernet_02.html">
+            
+                <a href="../Archive/fsl_imx6_ethernet_02.html">
+            
+                    
+                    Freescale i.MX6 Linux Ethernet Driver驱动源码分析02
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../Archive/linux_books.html">
+            
+                <a href="../Archive/linux_books.html">
+            
+                    
+                    Linux Programming 经典书单
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >CPU memory order: Part1 summary</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="cpu-memory-order-part-1-summary">CPU memory order: Part 1 summary</h1>
+<h1 id="1-introduction">1. Introduction</h1>
+<p>This article summarizes all the memory order related resouce since it is a hard to understand concept</p>
+<h1 id="2-target-audience">2. Target Audience</h1>
+<p>Developer with basic cpu background</p>
+<h1 id="3-summary">3. Summary</h1>
+<p>As described in <em>Computer Architecture: A Quantitative Approach</em> Chapter 5.6:</p>
+<p>The most straightforward model for memory consistency is called <strong>sequential consistency</strong>. Sequential consistency requires that the result of any execution be  the same as if the memory accesses executed by each processor were kept in  order and the accesses among different processors were arbitrarily interleaved.</p>
+<p>The key idea in relaxed consistency models is to allow reads and writes to complete out of order, but to use synchronization operations to enforce ordering, so  that a synchronized program behaves as if the processor were sequentially consistent. There are a variety of relaxed models that are classified according to what  read and write orderings they relax. We specify the orderings by a set of rules of  the form X&#x2192;Y, meaning that operation X must complete before operation Y is  done. Sequential consistency requires maintaining all four possible orderings:  R&#x2192;W, R&#x2192;R, W&#x2192;R, and W&#x2192;W. The relaxed models are defined by which of  these four sets of orderings they relax:  </p>
+<ol>
+<li>Relaxing the W&#x2192;R ordering yields a model known as <strong>total store ordering</strong> or  processor consistency. Because this ordering retains ordering among writes, many programs that operate under sequential consistency operate under this  model, without additional synchronization.  </li>
+<li>Relaxing the W&#x2192;W ordering yields a model known as <strong>partial store order</strong>.  </li>
+<li>Relaxing the R&#x2192;W and R&#x2192;R orderings yields a variety of models including  <strong>weak ordering</strong>, the PowerPC consistency model, and release consistency,  depending on the details of the ordering restrictions and how synchronization  operations enforce ordering</li>
+</ol>
+<p>From the implmentation perspective:</p>
+<p>In <strong>Sequential Consistency</strong> model, in a multi-core architecture, each CPU has a dedicated L1/L2 cache and share L3 cache. From my understanding, instruction execution and memory commit is observable globally(can be seen by other core), as indicated by definition:
+&quot;<em>... the result of any execution is the same as if the operations of all the processors were executed in some sequential order, and the operations of each individual processor appear in this sequence in the order specified by its program</em>&quot;</p>
+<p><img src="../images/cpu_memory_order_part1_01.png" alt="part1_01"></p>
+<p>(from <a href="https://www.codedump.info/post/20191214-cxx11-memory-model-1/" target="_blank">C++11&#x4E2D;&#x7684;&#x5185;&#x5B58;&#x6A21;&#x578B;&#x4E0A;&#x7BC7; - &#x5185;&#x5B58;&#x6A21;&#x578B;&#x57FA;&#x7840; - codedump&#x7684;&#x7F51;&#x7EDC;&#x65E5;&#x5FD7;</a>)</p>
+<p>In <strong>TSO</strong> memory model, Store FIFO is introduced between cache and execution unit, which is a significant difference between TSO and Sequential Consistency. So that Store-Load re-ordering is permitted.</p>
+<p><img src="../images/cpu_memory_order_part1_02.png" alt="part1_02"></p>
+<p>(from <a href="https://www.codedump.info/post/20191214-cxx11-memory-model-1/" target="_blank">C++11&#x4E2D;&#x7684;&#x5185;&#x5B58;&#x6A21;&#x578B;&#x4E0A;&#x7BC7; - &#x5185;&#x5B58;&#x6A21;&#x578B;&#x57FA;&#x7840; - codedump&#x7684;&#x7F51;&#x7EDC;&#x65E5;&#x5FD7;</a>)</p>
+<p>In <strong>Weak</strong> memory model, invalid queue is introduced to cache the &quot;invalidation message of cache line&quot;, so that even cpu0 write 1 into x and flush store buffer into cache. Then cpu1 read x as 0 is still permitted&#x3002;Because invalidation message for this cache line is still buffered in invalid queue and not take effect.
+<img src="../images/cpu_memory_order_part1_03.jpg" alt="part1_03"></p>
+<p>(from <a href="https://zhuanlan.zhihu.com/p/45808885" target="_blank">&#x5F53;&#x6211;&#x4EEC;&#x5728;&#x8C08;&#x8BBA;cpu&#x6307;&#x4EE4;&#x4E71;&#x5E8F;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x7A76;&#x7ADF;&#x5728;&#x8C08;&#x8BBA;&#x4EC0;&#x4E48;&#xFF1F;</a>)</p>
+<p>Memory mode summary and comparison: 
+| memory model              | ordering                                                                 | CPU ISA                                        | C++ 11 Atomic type                                                     |
+| ------------------------- | ------------------------------------------------------------------------ | ---------------------------------------------- | ---------------------------------------------------------------------- |
+| Sequency consistency      | no re-order                                                              | 80386<br>arm(in-order execution, a53)         | memory_order_seq_cst                                                   |
+| total store ordering(TSO) | Store-Load<br>re-order                                                  | modern x86                                     | memory_order_acquire<br>memory_order_release<br>memory_order_acq_rel |
+| weak consistency          | Store-Load<br>Store-Store<br>Load-Load<br>Load-Store<br>all re-order | arm(out-of-order Execution, ares),<br>PowerPC | memory_order_relaxed                                                   |</p>
+<p>When we are talking about store buffer, there introduces the concept of <strong>store atomicity </strong>as defined by  <a href="https://www.cs.tufts.edu/~nr/cs257/archive/arvind/wmm.pdf" target="_blank">Weak Memory Models: Balancing Definitional Simplicity and Implementation Flexibility</a> :</p>
+<ul>
+<li><p><em>Single-copy atomic</em>: a store becomes visible to all processors at the same time, e.g., in SC.</p>
+</li>
+<li><p><em>Multi-copy atomic</em>: a store becomes visible to the issuing
+processor before it is advertised simultaneously to all other
+processors, e.g., in TSO and Alpha.</p>
+</li>
+<li><p><em>Non-atomic (or non-multi-copy-atomic)</em>: a store becomes
+visible to different processors at different times, e.g., in
+POWER and ARM.</p>
+</li>
+</ul>
+<p>Single-copy atomic is too strict which is only available on Sequential Consistency.</p>
+<p>Multi-copy atomic is mostly common on moder x86 which is TSO. And in some recent ARMv8 revision, it is also supported <a href="https://developer.arm.com/documentation/ka002179/latest" target="_blank">Multi-copy Atomicity and Barriers</a> . </p>
+<p>Non-atomic is mostly seen on the early ARMv8 revision and ARMv7 architecture.</p>
+<h1 id="4-reference">4. Reference</h1>
+<ol>
+<li><p><a href="https://preshing.com/20120930/weak-vs-strong-memory-models/" target="_blank">Weak vs. Strong Memory Models</a></p>
+</li>
+<li><p><a href="https://preshing.com/20120710/memory-barriers-are-like-source-control-operations/" target="_blank">Memory Barriers Are Like Source Control Operations</a></p>
+</li>
+<li><p><a href="https://preshing.com/20120913/acquire-and-release-semantics/" target="_blank">Acquire and Release Semantics</a></p>
+</li>
+<li><p><a href="https://preshing.com/20120625/memory-ordering-at-compile-time/" target="_blank">Memory Ordering at Compile Time</a></p>
+</li>
+<li><p><a href="https://www.zhihu.com/question/23572082" target="_blank">&#x5982;&#x4F55;&#x7CFB;&#x7EDF;&#x7684;&#x5B66;&#x4E60; Memory Model?</a></p>
+</li>
+<li><p><a href="https://www.arangodb.com/2021/02/cpp-memory-model-migrating-from-x86-to-arm/" target="_blank">C++ Memory Model: Migrating from X86 to ARM</a></p>
+</li>
+</ol>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="switchdev_and_port_representor.html" class="navigation navigation-prev " aria-label="Previous page: Linux switchdev and DPDK port representor">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="cpu_memory_order_part2.html" class="navigation navigation-next " aria-label="Next page: CPU memory order: Part2 total store ordering ">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"CPU memory order: Part1 summary","level":"1.2.5","depth":2,"next":{"title":"CPU memory order: Part2 total store ordering ","level":"1.2.6","depth":2,"path":"Cloud/cpu_memory_order_part2.md","ref":"Cloud/cpu_memory_order_part2.md","articles":[]},"previous":{"title":"Linux switchdev and DPDK port representor","level":"1.2.4","depth":2,"path":"Cloud/switchdev_and_port_representor.md","ref":"Cloud/switchdev_and_port_representor.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"Cloud/cpu_memory_order_part1.md","mtime":"2022-05-16T08:17:00.425Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-05-16T08:43:12.999Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
